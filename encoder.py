@@ -224,6 +224,65 @@ class ConvFoldingPoolLayer(object):
         return pool_out
 
 
+class LogisticRegressionLayer(object):
+    """Logistic Regression Layer used to classify"""
+    def __init__(self, rng, n_in, n_out, W=None, b=None):
+        """
+        :type rng: numpy.random.RandomState
+        :param rng: random number generator
+
+        :type n_in: int
+        :param n_in: number of input units 
+
+        :type n_out: int
+        :type n_out: numbef of output class
+
+        :type W: theano.tensor.matrix
+        :param W: the weighted maxtrix, (n_in, n_out)
+
+        :type b: theano.tensor.vector
+        :param b: the bias parameter, (n_out, )
+        """
+        self.n_in = n_in
+        self.n_out = n_out
+        
+        if W is not None:
+            self.W = W
+        else:
+            w_bound = np.sqrt(6./(n_in + n_out))
+            w_val = rng.uniform(-w_bound, w_bound, size=(n_in, n_out))
+            self.W = shared(
+                    np.asarray(w_val, dtype=theano.config.floatX),
+                    borrow=True
+                    )
+
+        if b is not None:
+            self.b = b
+        else:
+            b_val = np.zeros((n_out,), dtype=theano.config.floatX)
+            self.b = shared(b_val,
+                    borrow=True)
+
+    def negtive_log_likelihood(self, x, y):
+        """ compute the negative log likelihood 
+        :type x: theano.tensor.fvector
+        :param x: input to the logistic regression layer
+
+        :type y: theano.tensor.vector
+        :param y: the true label with one hot representation
+        """
+        prob_y_given_x = T.nnet.softmax(T.dot(x, self.W) + self.b)
+        return T.mean(-1 * T.log(prob_y_given_x[T.arange(y.shape[0]), y]))
+    
+    def predict(self, x):
+        prob_y_given_x = T.nnet.softmax(T.dot(x, self.W) + self.b)
+        pred_y = T.argmax(prob_y_given_x)
+        return pred_y
+
+    def errors(self, x, y):
+        pred_y = self.predict(x)
+        return T.mean(T.neq(pred_y, y))
+
 def test():
     # construct model
     doc = theano.typed_list.TypedListType(theano.tensor.ivector)()
