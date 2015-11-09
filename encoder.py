@@ -12,6 +12,7 @@ import theano.tensor as T
 import theano.typed_list
 import numpy as np
 from theano.printing import Print
+from util import dataset
 
 class DocumentLayer(object):
     """
@@ -70,13 +71,13 @@ class DocumentLayer(object):
             embedding_val[vocab_size -1, :] = 0.0 # initiate <PADDING> character as 0
             self.embedding = shared(np.asarray(embedding_val, 
                 dtype=theano.config.floatX),
-                borrow=True,
-                name='embedding')
+                borrow=True
+                )
 
         self.embed_dm = embed_dm
         self.input = input
         
-        
+
         # construct first layer parameters
         filter_shape0 = (n_kerns[0], 1, 1, filter_widths[0])
         k0 = ks[0]
@@ -122,13 +123,16 @@ class DocumentLayer(object):
             
             return layer1_output.flatten(1)
 
-        num_sens = theano.typed_list.length(self.input)
+        doc = self.input
+        num_sens = theano.typed_list.length(doc)
         output, _ = theano.scan(fn=generate_sen_rep,
-                non_sequences=[self.input],
+                non_sequences=[doc],
                 sequences=[T.arange(num_sens, dtype='int64')])
 
-        # the output is the list of sentence representation 
-        self.output = output
+        # the output is the list of sentence representation
+        self.output = output[:]
+        print "-----------DocLayer output", self.output
+        self.params = [self.embedding, self.W0, self.b0, self.W1, self.b1]
             
 
 class ConvFoldingPoolLayer(object):
@@ -262,6 +266,7 @@ class LogisticRegressionLayer(object):
             b_val = np.zeros((n_out,), dtype=theano.config.floatX)
             self.b = shared(b_val,
                     borrow=True)
+        self.params = [self.W, self.b]
 
     def negtive_log_likelihood(self, x, y):
         """ compute the negative log likelihood 
@@ -282,6 +287,7 @@ class LogisticRegressionLayer(object):
     def errors(self, x, y):
         pred_y = self.predict(x)
         return T.mean(T.neq(pred_y, y))
+
 
 def test():
     # construct model
@@ -305,6 +311,98 @@ def test():
 
     print test_doc_layer(input_doc)
 
+
+def train_encoder(data_file="./data/dataset.pkl"):
+    rng = np.random.RandomState(10)
     
+    train_set, valid_set, test_set, word2id, pop2id, type2id = dataset.load_data(data_file)
+    vocab_size = len(word2id)
+    embed_dm = 80
+    doc_conv_layer_n = 2
+    doc_n_kerns = [6, 3]
+    doc_ks = [3, 3]
+    doc_filter_widths = [5, 3]
+    doc_activation = T.tanh
+    learning_rate = 0.01
+
+    # define input variables
+    index = T.lscalar()
+    doc = theano.typed_list.TypedListType(theano.tensor.ivector)()
+    docLayer = DocumentLayer(rng, doc, vocab_size, embed_dm, 
+            doc_conv_layer_n, doc_n_kerns, 
+            doc_filter_widths, doc_ks, doc_activation)
+
+    doc_sen = docLayer.output # set doc_sen as (num of sentence * sen_dim)
+
+    #####################
+    # TASK 1 Event Type #
+    #####################
+    t1_conv_layer_n = 1
+    t1_n_kerns = [5]
+    t1_ks = [3]
+    t1_filter_widths = [1]
+    t1_activation = T.tanh
+
+    t1_filter_shape = [t1_n_kerns[0], 1, 1, t1_filter_widths[0]]
+    t1_conv_layer = ConvFoldingPoolLayer(rng, t1_filter_shape, t1_ks[0], t1_activation)
+    t1_conv_input = doc_sen.reshape((1, 1, doc_sen.shape[1], doc_sen.shape[0]))
+    t1_conv_output = t1_conv_layer.output(t1_conv_input).flatten(2)
+
+    t1_n_in = embed_dm * doc_n_kerns[-1] * doc_ks[-1] * t1_n_kerns[-1] * t1_ks[-1] / 8
+    t1_n_out = len(type2id)
+    t1_logis_layer = LogisticRegressionLayer(rng, t1_n_in, t1_n_out)
+    t1_y = T.ivector()
+    t1_cost = t1_logis_layer.negtive_log_likelihood(t1_conv_output, t1_y)
+
+    #####################
+    # TASK 2 Population #
+    #####################
+    t2_conv_layer_n = 1
+    t2_n_kerns = [5]
+    t2_ks = [3]
+    t2_filter_widths = [1]
+    t2_activation = T.tanh
+
+    t2_filter_shape = [t2_n_kerns[0], 1, 1, t2_filter_widths[0]]
+    t2_conv_layer = ConvFoldingPoolLayer(rng, t2_filter_shape, t2_ks[0], t2_activation)
+    t2_conv_input = doc_sen.reshape((1, 1, doc_sen.shape[1], doc_sen.shape[0]))
+    t2_conv_output = t2_conv_layer.output(t2_conv_input).flatten(2)
+
+    t2_n_in = embed_dm * doc_n_kerns[-1] * doc_ks[-1] * t2_n_kerns[-1] * t2_ks[-1] / 8
+    t2_n_out = len(pop2id)
+    t2_logis_layer = LogisticRegressionLayer(rng, t2_n_in, t2_n_out)
+    t2_y = T.ivector()
+    t2_cost = t2_logis_layer.negtive_log_likelihood(t2_conv_output, t2_y)
+
+    ###################
+    # CONSTRUCT MODEL #
+    ###################
+    cost = t1_cost + t2_cost
+    t1_params = [docLayer.W0] + t1_conv_layer.params + t1_logis_layer.params
+    t2_params = [docLayer.W0] + t2_conv_layer.params + t2_logis_layer.params
+
+    #params = t1_conv_layer.params + t1_logis_layer.params + t2_conv_layer.params + t2_logis_layer.params
+    for param in t1_params:
+        print 'Param -> ', param
+        print 'grad ->' ,T.grad(t1_cost, param)
+    print "Fnish P1 set"
+    for param in t2_params:
+        print 'Param -> ', param
+        print 'grad ->' ,T.grad(t2_cost, param)
+    """
+    param_grads = [T.grad(cost, param) for param in params]
+    updates = [(param, param - learning_rate * pgrad) 
+            for param, pgrad in zip(params, param_grads)]
+    
+    train_model = function(
+            inputs=[doc, t1_y, t2_y],
+            outputs=cost,
+            updates=updates
+            )
+    """
+
+
+
 if __name__ == "__main__":
-    test()
+    #test()
+    train_encoder()
