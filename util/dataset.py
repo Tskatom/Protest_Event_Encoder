@@ -52,6 +52,13 @@ def nstr(s, lower=True):
     else:
         return s.encode('ASCII', 'ignore').strip()
 
+def to_unicode(s):
+    """transform the string to unicode"""
+    if isinstance(s, unicode):
+        return s
+    else:
+        return s.decode('utf-8')
+
 def generate_docs(gsr_file):
     """ Generate doc and gsr list from gsr articles
     divide the whole set into train/valid/test set
@@ -76,13 +83,13 @@ def generate_docs(gsr_file):
             for idx, token in enumerate(tokens):
                 if token['POS'] == 'SENT':
                     offset = "%d:%d" % (pre_idx, idx+1)
-                    sen.append(token["value"].lower())
+                    sen.append(to_unicode(token["value"]))
                     doc.append(sen)
                     sen_offsets.append(offset)
                     sen = []
                     pre_idx = idx
                 else:
-                    sen.append(token["value"].lower())
+                    sen.append(to_unicode(token["value"]))
             if len(sen) > 0:
                 doc.append(sen)
                 offset = "%d:%d" % (pre_idx, idx+1)
@@ -132,6 +139,61 @@ def generate_docs(gsr_file):
             docs.append(doc)
     return docs, gsrs
 
+def dump_data_2_pickle_wiki(gsr_file, pickle_file, wiki_word2vec):
+    """ dump the text gsr file into pickle based on wiki vocab
+    :type gsr_file: string
+    :param gsr_file: path to gsr file, default: gsr_article/gsr_spanish.txt 
+
+    :type pickle_file: string
+    :param pickle_file: path to the dumped pickle file
+    """
+    # generate docs and gsrs
+    docs, gsrs = generate_docs(gsr_file)
+    # divide the dataset into train/valid/test set
+    dataset = zip(docs, gsrs)
+    train_set, test_set = train_test_split(dataset, 
+            test_size=0.3, 
+            random_state=10)
+    valid_set, test_set = train_test_split(test_set, 
+            test_size=0.5, 
+            random_state=11)
+
+    # load wiki word2vec
+    wikifile= open(wiki_word2vec)
+    wiki = cPickle.load(wikifile)
+    wikifile.close()
+    vocab = wiki[0]
+    embedding = wiki[1]
+    word2id = {v:i for i, v in enumerate(vocab)}
+    pop2id = {}
+    type2id = {}
+
+    pid = 0
+    tid = 0
+    for doc, gsr in train_set:
+        pop = gsr["population"]
+        eType = gsr["eventType"]
+        if pop not in pop2id:
+            pop2id[pop] = pid
+            pid += 1
+
+        if eType not in type2id:
+            type2id[eType] = tid
+            tid += 1
+
+    train_set = transform_set(train_set, word2id, pop2id, type2id)
+    valid_set = transform_set(valid_set, word2id, pop2id, type2id)
+    test_set = transform_set(test_set, word2id, pop2id, type2id)
+
+    with open(pickle_file, 'w') as pf:
+        cPickle.dump(train_set, pf)
+        cPickle.dump(valid_set, pf)
+        cPickle.dump(test_set, pf)
+        cPickle.dump(word2id, pf)
+        cPickle.dump(pop2id, pf)
+        cPickle.dump(type2id, pf)
+
+
 def dump_data_2_pickle(gsr_file, pickleFile):
     """
     dump the txt gsr file data into picke
@@ -155,11 +217,14 @@ def dump_data_2_pickle(gsr_file, pickleFile):
     # construct the vocab list and transfer the data into word num
     word2id = {}
     # set UNKNOW word as UUKK
-    word2id["UUKK"] = -1
+    word2id["UNK"] = 0
+    word2id["<S>"] = 1
+    word2id["</S>"] = 2
+    word2id["<PAD>"] = 3
     pop2id = {}
     type2id = {}
 
-    wid = 0
+    wid = 4
     pid = 0
     tid = 0
     for doc, gsr in train_set:
@@ -190,7 +255,6 @@ def dump_data_2_pickle(gsr_file, pickleFile):
         cPickle.dump(pop2id, pf)
         cPickle.dump(type2id, pf)
 
-
 def transform_set(dataset, word2id, pop2id, type2id):
     """transform the tokens into id
     :type dataset: list of list
@@ -209,32 +273,51 @@ def transform_set(dataset, word2id, pop2id, type2id):
     if len(dataset[0]) == 1: # only transform tokens
         new_set = []
         for doc in dataset:
-            new_doc = []
+            new_doc = [] # add <PADDING> to make sure every sentence has the same length
+            max_sen_len = max([len(s) for s in doc])
             for sen in doc:
-                new_sen = []
+                new_sen = [1] # add <s> at begin
                 for token in sen:
-                    wid = word2id.get(token, '-1')
+                    wid = word2id.get(token, 0)
                     new_sen.append(wid)
+                new_sen.append(2) # add </s> to the end of sentence
+                # add <PADDING>
+                sen_len = len(sen)
+                new_sen += [3] * (max_sen_len - sen_len) # 3 is code for <PADDING>
                 new_doc.append(new_sen)
             new_set.append(doc)
     elif len(dataset[0]) == 2:
         new_set = []
+        docs = []
+        pop_y = []
+        type_y = []
+        location_y = []
         for doc, gsr in dataset:
             new_doc = []
             new_gsr = {}
+            max_sen_len = max([len(s) for s in doc])
             for sen in doc:
-                new_sen = []
+                new_sen = [1] # add <s> at the begin of sentence
                 for token in sen:
-                    new_sen.append(word2id.get(token, '-1'))
+                    new_sen.append(word2id.get(token, 0))
+                new_sen.append(2) # add </s> at the end of sentence
+                sen_len = len(sen)
+                new_sen += [3] * (max_sen_len - sen_len) # 3 is code for <PADDING>
                 new_doc.append(new_sen)
             
-            new_gsr["population"] = pop2id[gsr["population"]]
-            new_gsr['eventType'] = type2id[gsr["eventType"]]
-            new_gsr["loc_sen_labs"] = gsr["loc_sen_labs"]
-            new_set.append([new_doc, new_gsr])
+            pop_y.append(pop2id[gsr["population"]])
+            type_y.append(type2id[gsr["eventType"]])
+            loc_sen_labels = [0] * len(doc)
+            for sid, flag in gsr["loc_sen_labs"].items():
+                if flag:
+                    loc_sen_labels[sid] = 1
+                else:
+                    loc_sen_labels[sid] = -1
+            location_y.append(loc_sen_labels)
+            docs.append(new_doc)
+        new_set = [docs, [pop_y, type_y, location_y]]
 
     return new_set
-
 
 def load_data(pklfile):
     """ load the experiment data from pickle

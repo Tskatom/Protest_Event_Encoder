@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+"""
+Using only one convolution layer to model the sentence
+and also using only one to model the doc vector
+"""
+
 __author__ = "Wei Wang"
 __email__ = "tskatom@vt.edu"
 
@@ -20,6 +25,8 @@ from theano.printing import Print as PP
 
 #theano.config.exception_verbosity = 'high'
 #theano.config.optimizer='fast_compile'
+
+__process__ = "encoder_v4.log"
 
 class DocumentLayer(object):
     """
@@ -117,6 +124,7 @@ class DocumentLayer(object):
             b_val = np.ones((filter_shape0[0],), dtype=theano.config.floatX) * 0.1
             self.b0 = shared(b_val, borrow=True)
 
+        """
         # construct second layer parameters       
         filter_shape1 = (n_kerns[1], n_kerns[0], 1, filter_widths[1])
         k1 = ks[1]
@@ -146,17 +154,19 @@ class DocumentLayer(object):
             b_val = np.ones((filter_shape1[0],), dtype=theano.config.floatX) * 0.1
             self.b1 = shared(b_val, borrow=True)
     
+        """
             
         layer0 = ConvFoldingPoolLayer(rng, filter_shape0, k0, activation, self.W0, self.b0)
-        layer1 = ConvFoldingPoolLayer(rng, filter_shape1, k1, activation, self.W1, self.b1)
+        # layer1 = ConvFoldingPoolLayer(rng, filter_shape1, k1, activation, self.W1, self.b1)
         
         doc_rep = self.embedding[input].dimshuffle(0,'x',2,1)
         layer0_output = layer0.output(doc_rep)
-        layer1_output = layer1.output(layer0_output)
+        # layer1_output = layer1.output(layer0_output)
 
         # the output is the list of sentence representation
-        self.output = layer1_output.flatten(2)
-        self.params = [self.embedding, self.W0, self.b0, self.W1, self.b1]
+        self.output = layer0_output.flatten(2)
+        # self.params = [self.embedding, self.W0, self.b0, self.W1, self.b1]
+        self.params = [self.embedding, self.W0, self.b0]
             
 
 class ConvFoldingPoolLayer(object):
@@ -336,7 +346,7 @@ class LogisticRegressionLayer(object):
 
 def train_encoder(data_file="./data/dataset.pkl", embedding_file = None):
     
-    logging.basicConfig(filename='./log/encoder.log', level=logging.INFO)
+    logging.basicConfig(filename='./log/%s' % __process__, level=logging.INFO)
     
     rng = np.random.RandomState(10)
     print 'Start to Load Data....' 
@@ -355,9 +365,9 @@ def train_encoder(data_file="./data/dataset.pkl", embedding_file = None):
         embed_dm = embedding.shape[1]
 
     doc_conv_layer_n = 2
-    doc_n_kerns = [6, 3]
-    doc_ks = [3, 3]
-    doc_filter_widths = [5, 3]
+    doc_n_kerns = [6]
+    doc_ks = [3]
+    doc_filter_widths = [5]
     doc_activation = T.nnet.relu
     learning_rate = 0.01
 
@@ -385,7 +395,7 @@ def train_encoder(data_file="./data/dataset.pkl", embedding_file = None):
     t1_conv_input = doc_sen.reshape((1, 1, doc_sen.shape[1], doc_sen.shape[0]))
     t1_conv_output = t1_conv_layer.output(t1_conv_input).flatten(2)
 
-    t1_n_in = embed_dm * doc_n_kerns[-1] * doc_ks[-1] * t1_n_kerns[-1] * t1_ks[-1] / 8
+    t1_n_in = embed_dm * doc_n_kerns[-1] * doc_ks[-1] * t1_n_kerns[-1] * t1_ks[-1] / 4 
     t1_n_out = n_type_class
     t1_logis_layer = LogisticRegressionLayer(rng, t1_n_in, t1_n_out)
     t1_y = T.ivector()
@@ -408,7 +418,7 @@ def train_encoder(data_file="./data/dataset.pkl", embedding_file = None):
     t2_conv_input = doc_sen.reshape((1, 1, doc_sen.shape[1], doc_sen.shape[0]))
     t2_conv_output = t2_conv_layer.output(t2_conv_input).flatten(2)
 
-    t2_n_in = embed_dm * doc_n_kerns[-1] * doc_ks[-1] * t2_n_kerns[-1] * t2_ks[-1] / 8
+    t2_n_in = embed_dm * doc_n_kerns[-1] * doc_ks[-1] * t2_n_kerns[-1] * t2_ks[-1] / 4
     t2_n_out = n_pop_class
     t2_logis_layer = LogisticRegressionLayer(rng, t2_n_in, t2_n_out)
     t2_y = T.ivector()
@@ -576,14 +586,14 @@ class Extractor(object):
         t1_conv_input = doc_sen.reshape((1, 1, doc_sen.shape[1], doc_sen.shape[0]))
         t1_conv_output = t1_conv_layer.output(t1_conv_input).flatten(2)
 
-        t1_n_in = embed_dm * doc_n_kerns[-1] * doc_ks[-1] * t1_n_kerns[-1] * t1_ks[-1] / 8
+        t1_n_in = embed_dm * doc_n_kerns[-1] * doc_ks[-1] * t1_n_kerns[-1] * t1_ks[-1] / 4
         t1_n_out = n_type_class
         t1_logis_layer = LogisticRegressionLayer(rng, t1_n_in, t1_n_out,
                 t1_logis_w, t1_logis_b)
         t1_y = T.ivector()
         t1_cost = t1_logis_layer.negtive_log_likelihood(t1_conv_output, t1_y)
         t1_error = t1_logis_layer.errors(t1_conv_output, t1_y)
-        t1_pred = t1_logis_layer.predict_prob(t1_conv_output)
+        t1_pred = t1_logis_layer.predict(t1_conv_output)
 
         #####################
         # TASK 2 Population #
@@ -601,14 +611,14 @@ class Extractor(object):
         t2_conv_input = doc_sen.reshape((1, 1, doc_sen.shape[1], doc_sen.shape[0]))
         t2_conv_output = t2_conv_layer.output(t2_conv_input).flatten(2)
 
-        t2_n_in = embed_dm * doc_n_kerns[-1] * doc_ks[-1] * t2_n_kerns[-1] * t2_ks[-1] / 8
+        t2_n_in = embed_dm * doc_n_kerns[-1] * doc_ks[-1] * t2_n_kerns[-1] * t2_ks[-1] / 4
         t2_n_out = n_pop_class
         t2_logis_layer = LogisticRegressionLayer(rng, t2_n_in, t2_n_out,
                 t2_logis_w, t2_logis_b)
         t2_y = T.ivector()
         t2_cost = t2_logis_layer.negtive_log_likelihood(t2_conv_output, t2_y)
         t2_error = t2_logis_layer.errors(t2_conv_output, t2_y)
-        t2_pred = t2_logis_layer.predict_prob(t2_conv_output)
+        t2_pred = t2_logis_layer.predict(t2_conv_output)
 
         ###################
         # CONSTRUCT MODEL #
