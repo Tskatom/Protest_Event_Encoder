@@ -194,6 +194,23 @@ def dump_data_2_pickle_wiki(gsr_file, pickle_file, wiki_word2vec):
         cPickle.dump(type2id, pf)
 
 
+def generate_testset(pickle_file='../data/wikibased_dataset.pkl'):
+    train_set, valid_set, test_set, word2id, pop2id, type2id=load_data(pickle_file)
+    outfile = "../data/test_wikibased_dataset.pkl"
+    with open(outfile, 'w') as pf:
+        new_train_set = []
+        train_x, train_y = train_set
+        pop_y, type_y, loc_y = train_y
+        new_train_set = [train_x[:10], [pop_y[:10], type_y[:10], loc_y[:10]]]
+
+        cPickle.dump(new_train_set, pf)
+        cPickle.dump([], pf)
+        cPickle.dump([], pf)
+        cPickle.dump(word2id, pf)
+        cPickle.dump(pop2id, pf)
+        cPickle.dump(type2id, pf)
+
+
 def dump_data_2_pickle(gsr_file, pickleFile):
     """
     dump the txt gsr file data into picke
