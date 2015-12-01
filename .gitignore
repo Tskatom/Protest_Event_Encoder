@@ -19,6 +19,10 @@ lib64/
 parts/
 sdist/
 var/
+.settings/
+.project
+.pydevproject
+data/*.txt
 notebook/
 *.egg-info/
 .installed.cfg
