@@ -157,7 +157,7 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
 
     test_pred_layers = []
     test_size = test_set_x.shape[0]
-    test_layer0_input = words[T.cast(x.flatten(), dtype="int32")].reshape(test_size, 1, input_height, input_width)
+    test_layer0_input = words[T.cast(x.flatten(), dtype="int32")].reshape((test_size, 1, input_height, input_width))
     for conv_layer in conv_layers:
         test_layer0_output = conv_layer.predict(test_layer0_input, test_size)
         test_pred_layers.append(test_layer0_output.flatten(2))
