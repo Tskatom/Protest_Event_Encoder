@@ -14,7 +14,7 @@ import sys
 from collections import defaultdict
 import cPickle
 import numpy as np
-    
+import cPickle
 
 def generate_docs(gsr_file, clean_str=False):
     # load the docs
@@ -56,6 +56,7 @@ def generate_docs(gsr_file, clean_str=False):
                 
             doc["tokens"] = tokens
             doc["length"] = len(tokens)
+            doc["cv"] = np.random.randint(0, 10)
             docs.append(doc)
     return docs, vocab, type2id, pop2id
 
@@ -86,26 +87,75 @@ def load_wikiword2vec(wiki_word2vec):
     embedding = wiki[1]
     return vocab, embedding
 
+def get_word2vec(wiki_cab, wiki_embedding, vocab):
+    wiki_cab_dict = {v:i  for i,v in enumerate(wiki_cab)}
+    word2vec = {}
+    for v in vocab:
+        if v in wiki_cab_dict:
+            word2vec[v] = wiki_embedding[wiki_cab_dict[v]]
+    return word2vec
+
+def add_unknowwords(word2vec, vocab, k=64, min_df=1):
+    "Randomize a vec for unknow words"
+    for word in vocab:
+        if word not in word2vec:
+            word2vec[word] = np.random.uniform(-0.25, 0.25, k)
+
+def get_embedding(word2vec, k=64):
+    """
+    Get the embedding matrix
+    """
+    word2id = {}
+    vocab_size = len(word2vec)
+    embedding = np.zeros((vocab_size + 2, k)) # add 0 for paddings
+    i = 2
+    for word in word2vec:
+        embedding[i] = word2vec[word]
+        word2id[word] = i
+        i += 1
+    embedding[0]= np.zeros(k)
+    embedding[1] = np.zeros(k) # unknow words
+    return embedding, word2id
+    
 
 if __name__ == "__main__":
     # compute the summary of the document
+    import pandas as pds
+    from collections import Counter
+    import matplotlib.pyplot as plt
     gsr_file = "../data/gsr_spanish.txt"
     wiki_file = "../data/polyglot-es.pkl"
     docs, vocab, type2id, pip2id = generate_docs(gsr_file, clean_str=False)
     wiki_vocab, wiki_embedding = load_wikiword2vec(wiki_file)
     
+    word2vec = get_word2vec(wiki_vocab, wiki_embedding, vocab)
+    print "Total %d words in wiki_vocab, %d words in vocab and %d word from vocab in wiki_vocab" % (len(wiki_vocab), len(vocab), len(word2vec))
+    
     max_doc_len = np.max([d["length"] for d in docs])
     min_doc_len = np.min([d["length"] for d in docs])
-    
     print "doc_max_len=%d, doc_min_len=%d" % (max_doc_len, min_doc_len)
-
-
+    """
+    lens = [d["length"] for d in docs]
+    lens_count = Counter(lens)
+    keys = sorted(lens_count.keys())
+    counts = [lens_count[k] for k in keys]
+    total = 1.0 * sum(counts)
+    s = pds.Series(counts)
+    s = s.cumsum()
     
-            
-            
-            
-            
-            
-            
-            
-    
+    plt.plot(keys, s/total)
+    plt.show()
+    """
+    # add unknow words
+    add_unknowwords(word2vec, vocab)
+    embedding, word2id = get_embedding(word2vec)
+
+    # randomlize the word vector
+    randvec = {}
+    add_unknowwords(randvec, vocab)
+    rand_embedding, _ = get_embedding(randvec)
+    # dump the data
+    data = [docs, type2id, pip2id, word2id, embedding, rand_embedding]
+
+    with open("../data/experiment_dataset1", "wb") as ed:
+        cPickle.dump(data, ed)
