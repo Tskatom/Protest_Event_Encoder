@@ -38,7 +38,7 @@ def train_encoder():
     embed_dm = embedding.shape[1]
     # sentenceLayer
     doc = T.lmatrix('doc') # num sentence * num words
-    num_pop_class = 13
+    num_pop_class = 11
     
     embed_dm = 20
 

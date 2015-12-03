@@ -236,10 +236,10 @@ class ConvPoolLayer(object):
         self.params = [self.W, self.b]
 
     def predict(self, new_data, batch_size):
-        image_shape = (batch_size, 1, self.image_shape[2], self.image_shape[3])
+        image_shape = (batch_size, 1, self.input_shape[2], self.input_shape[3])
         conv_out = conv.conv2d(input=new_data, filters=self.W,
                                filter_shape=self.filter_shape,
-                               input_shape=image_shape)
+                               image_shape=image_shape)
         act_conv_out = self.activation(conv_out +
                                        self.b.dimshuffle('x', 0, 'x', 'x'))
         pool_out = downsample.max_pool_2d(input=act_conv_out,
