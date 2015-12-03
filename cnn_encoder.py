@@ -298,6 +298,7 @@ def parse_args():
         help="Use pretrained word2vec")
     ap.add_argument("--static", action="store_true",
         help="Don't update the word2vec")
+    ap.add_argument("--test", action="store_true")
     return ap.parse_args()
 
 
@@ -305,8 +306,11 @@ if __name__ == "__main__":
     print "Start Loading the data"
     data = cPickle.load(open("./data/experiment_dataset1"))
     docs, type2id, pip2id, word2id, embedding, rand_embedding = data
-
+    
     args = parse_args()
+    if args.test:
+        docs = docs[:500]
+
     if args.rand:
         word2vec = rand_embedding
     elif args.word2vec:
