@@ -50,7 +50,7 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
                       sqr_norm_lim=9,
                       non_static=True):
     rng = np.random.RandomState(1234)
-    input_height = len(datasets[0][0]) - 1
+    input_height = len(datasets[0][0]) - 2
     filter_width = input_width
     feature_maps = hidden_units[0]
     filter_shapes = []
@@ -96,26 +96,54 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
 
     layer1_input = T.concatenate(layer1_inputs, 1)
 
+    ###################
+    # Population Task #
+    ###################
     hidden_units[0] = feature_maps * len(filter_hs)
 
-    classifier = nn.MLPDropout(rng,
+    pop_classifier = nn.MLPDropout(rng,
         input=layer1_input,
         layer_sizes=hidden_units,
         dropout_rates=dropout_rate,
         activations=activations)
 
-    params = classifier.params
+    pop_params = pop_classifier.params
     for conv_layer in conv_layers:
-        params += conv_layer.params
+        pop_params += conv_layer.params
 
     if non_static:
-        params.append(words)
+        pop_params.append(words)
 
 
-    cost = classifier.negative_log_likelihood(y)
-    dropout_cost = classifier.dropout_negative_log_likelihood(y)
+    pop_cost = pop_classifier.negative_log_likelihood(y)
+    pop_dropout_cost = pop_classifier.dropout_negative_log_likelihood(y)
 
-    grad_updates = sgd_updates_adadelta(params, dropout_cost, lr_decay, 1e-6, sqr_norm_lim)
+    pop_grad_updates = sgd_updates_adadelta(pop_params, pop_dropout_cost, lr_decay, 1e-6, sqr_norm_lim)
+
+    ###################
+    # EventType Task #
+    ###################
+    event_type_hidden_units = [feature_maps * len(filter_hs), 12]
+    type_classifier = nn.MLPDropout(rng, 
+        input=layer1_input,
+        layer_sizes=event_type_hidden_units,
+        dropout_rates=dropout_rate,
+        activations=activations)
+    type_params = type_classifier.params
+    for conv_layer in conv_layers:
+        type_params += conv_layer.params
+
+    if non_static:
+        type_params.append(words)
+
+    type_cost = type_classifier.negative_log_likelihood(y)
+    type_dropout_cost = type_classifier.dropout_negative_log_likelihood(y)
+    type_grad_updates = sgd_updates_adadelta(type_params, type_dropout_cost, lr_decay, 1e-6, sqr_norm_lim)
+
+
+    ######################
+    # Construct Data Set #
+    ######################
 
     np.random.seed(1234)
     if datasets[0].shape[0] % batch_size > 0:
@@ -132,31 +160,64 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
 
     # divide the train set intp train/val sets
     test_set_x = datasets[1][:,:input_height]
-    test_set_y = np.asarray(datasets[1][:,-1], "int32")
+    test_set_pop_y = np.asarray(datasets[1][:,-2], "int32")
+    test_set_type_y = np.asarray(datasets[1][:,-1], "int32")
 
     train_set = new_data[:n_train_batches*batch_size,:]
     val_set = new_data[n_train_batches*batch_size:,:]
+
     print train_set[:,-1]
-    train_set_x, train_set_y = shared_dataset((train_set[:,:input_height],train_set[:,-1]))
-    val_set_x, val_set_y = shared_dataset((val_set[:,:input_height],val_set[:,-1]))
+    borrow = True
+    train_set_x = theano.shared(np.asarray(train_set[:,:input_height],dtype=theano.config.floatX),borrow=borrow)
+    train_set_pop_y = T.cast(theano.shared(np.asarray(train_set[:,-2], dtype=theano.config.floatX), borrow=borrow), 'int32')
+    train_set_type_y = T.cast(theano.shared(np.asarray(train_set[:,-1], dtype=theano.config.floatX), borrow=borrow), 'int32')
+
+    val_set_x = theano.shared(np.asarray(val_set[:,:input_height],dtype=theano.config.floatX),borrow=borrow)
+    val_set_pop_y = T.cast(theano.shared(np.asarray(val_set[:,-2], dtype=theano.config.floatX), borrow=borrow), 'int32')
+    val_set_type_y = T.cast(theano.shared(np.asarray(val_set[:,-1], dtype=theano.config.floatX), borrow=borrow), 'int32')
+
 
     n_val_batches = n_batches - n_train_batches
-    val_model = function([index], classifier.errors(y),
+
+    ####################
+    # Train Model Func #
+    ####################
+    # population model
+    val_pop_model = function([index], pop_classifier.errors(y),
         givens={
             x: val_set_x[index * batch_size: (index + 1) * batch_size],
-            y: val_set_y[index * batch_size: (index + 1) * batch_size]
+            y: val_set_pop_y[index * batch_size: (index + 1) * batch_size]
         })
 
-    test_model = function([index], classifier.errors(y),
+    test_pop_model = function([index], pop_classifier.errors(y),
         givens={
             x: train_set_x[index * batch_size: (index + 1) * batch_size],
-            y: train_set_y[index * batch_size: (index + 1) * batch_size]
+            y: train_set_pop_y[index * batch_size: (index + 1) * batch_size]
         })
 
-    train_model = function([index], cost, updates=grad_updates,
+    train_pop_model = function([index], pop_cost, updates=pop_grad_updates,
         givens={
             x: train_set_x[index*batch_size:(index+1)*batch_size],
-            y: train_set_y[index*batch_size:(index+1)*batch_size]
+            y: train_set_pop_y[index*batch_size:(index+1)*batch_size]
+        })
+
+    # event type model
+    val_type_model = function([index], type_classifier.errors(y),
+        givens={
+            x: val_set_x[index * batch_size: (index + 1) * batch_size],
+            y: val_set_type_y[index * batch_size: (index + 1) * batch_size]
+        })
+
+    test_type_model = function([index], type_classifier.errors(y),
+        givens={
+            x: train_set_x[index * batch_size: (index + 1) * batch_size],
+            y: train_set_type_y[index * batch_size: (index + 1) * batch_size]
+        })
+
+    train_type_model = function([index], type_cost, updates=type_grad_updates,
+        givens={
+            x: train_set_x[index*batch_size:(index+1)*batch_size],
+            y: train_set_type_y[index*batch_size:(index+1)*batch_size]
         })
 
     test_pred_layers = []
@@ -167,39 +228,63 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
         test_pred_layers.append(test_layer0_output.flatten(2))
 
     test_layer1_input = T.concatenate(test_pred_layers, 1)
-    test_y_pred = classifier.predict(test_layer1_input)
-    test_error = T.mean(T.neq(test_y_pred, y))
-    test_model_all = function([x, y], test_error)
+
+    test_pop_y_pred = pop_classifier.predict(test_layer1_input)
+    test_pop_error = T.mean(T.neq(test_pop_y_pred, y))
+    test_pop_model_all = function([x, y], test_pop_error)
+
+    test_type_y_pred = type_classifier.predict(test_layer1_input)
+    test_type_error = T.mean(T.neq(test_type_y_pred, y))
+    test_type_model_all = function([x, y], test_type_error)
 
     # start to training the model
     print "Start training the model...."
     epoch = 0
-    best_val_perf = 0
-    val_perf = 0
-    cost_epoch = 0
+    best_pop_val_perf = 0
+    best_type_val_perf = 0
+
     while(epoch < n_epochs):
         epoch += 1
         if shuffle_batch:
             for minibatch_index in np.random.permutation(range(n_train_batches)):
                 print minibatch_index
-                cost_epoch = train_model(minibatch_index)
+                cost_pop_epoch = train_pop_model(minibatch_index)
+                set_zero(zero_vec)
+                cost_type_epoch = train_type_model(minibatch_index)
                 set_zero(zero_vec)
         else:
             for minibatch_index in xrange(n_train_batches):
-                cost_epoch = train_model(minibatch_index)
+                cost_pop_epoch = train_pop_model(minibatch_index)
                 set_zero(zero_vec)
-        train_losses = [test_model(i) for i in xrange(n_train_batches)]
-        train_perf = 1 - np.mean(train_losses)
-        
-        val_losses = [val_model(i) for i in xrange(n_val_batches)]
-        val_perf = 1 - np.mean(val_losses)
-        print('epoch %i, train perf %f %%, val perf %f' % (epoch, train_perf * 100., val_perf*100.))
+                cost_type_epoch = train_type_model(minibatch_index)
+                set_zero(zero_vec)
 
-        if val_perf >= best_val_perf:
-            best_val_perf = val_perf
-            test_losses = test_model_all(test_set_x, test_set_y)
-            test_perf = 1 - test_losses
-            print "Test Performance %f under Current Best Valid perf %f" % (test_perf, val_perf)
+        train_pop_losses = [test_pop_model(i) for i in xrange(n_train_batches)]
+        train_pop_perf = 1 - np.mean(train_pop_losses)
+
+        train_type_losses = [test_type_model(i) for i in xrange(n_train_batches)]
+        train_type_perf = 1 - np.mean(train_type_losses)
+        
+        val_pop_losses = [val_pop_model(i) for i in xrange(n_val_batches)]
+        val_pop_perf = 1 - np.mean(val_pop_losses)
+
+        val_type_losses = [val_type_model(i) for i in xrange(n_val_batches)]
+        val_type_perf = 1 - np.mean(val_type_losses)
+
+        print('epoch %i, train pop perf %f %%, val pop perf %f' % (epoch, train_pop_perf * 100., val_pop_perf*100.))
+        print('epoch %i, train type perf %f %%, val type perf %f' % (epoch, train_type_perf * 100., val_type_perf*100.))
+
+        if val_pop_perf >= best_pop_val_perf:
+            best_pop_val_perf = val_pop_perf
+            test_pop_losses = test_pop_model_all(test_set_x, test_set_pop_y)
+            test_pop_perf = 1 - test_pop_losses
+            print "Test POP Performance %f under Current Best Valid perf %f" % (test_pop_perf, val_pop_perf)
+
+        if val_type_perf >= best_type_val_perf:
+            best_type_val_perf = val_type_perf
+            test_type_losses = test_type_model_all(test_set_x, test_set_type_y)
+            test_type_perf = 1 - test_type_losses
+            print "Test Type Performance %f under Current Best Valid perf %f" % (test_type_perf, val_type_perf)
 
     return test_perf
 
@@ -282,6 +367,7 @@ def make_data_cv(docs, i, word2id, max_l=5687, filter_h=5):
         tokens = doc["tokens"]
         doc_ids = doc_to_id(tokens, word2id, max_l, filter_h)
         doc_ids.append(doc["pop"]) # population type
+        doc_ids.append(doc["etype"])
         if cv == i:
             test.append(doc_ids)
         else:
