@@ -38,7 +38,7 @@ def train_encoder():
     embed_dm = embedding.shape[1]
     # sentenceLayer
     doc = T.lmatrix('doc') # num sentence * num words
-    num_pop_class = 13
+    num_pop_class = 11
     
     embed_dm = 20
 
@@ -92,8 +92,7 @@ def train_encoder():
     f_out = num_pop_class
     w_bound = np.sqrt(6./(f_in + f_out))
     w_bound = 0.5
-    W3 = theano.shared(np.asarray(rng.normal(size=(f_in, f_out)),
-        dtype=theano.config.floatX), borrow=True)
+    W3 = theano.shared(np.zeros((f_in, f_out), dtype=theano.config.floatX), borrow=True)
     b3 = theano.shared(np.zeros(f_out, dtype=theano.config.floatX),
         borrow=True)
     pop_preact = T.dot(hidd0_output, W3) + b3
@@ -105,7 +104,7 @@ def train_encoder():
     # construct the model
     params = [embedding, W0, b0, W1, b1, W2, b2, W3, b3]
     grads = [T.grad(pop_cost, param) for param in params]
-    updates = [(p, p - 0.005*g) for p, g in zip(params, grads)]
+    updates = [(p, p - 0.06*g) for p, g in zip(params, grads)]
 
     train_func = theano.function([doc, pop_y], pop_cost, updates=updates)
     test_func= theano.function(inputs=[doc, pop_y], outputs=pop_error)
@@ -127,7 +126,7 @@ def train_encoder():
     test_set_pop_y, test_set_type_y, test_set_loc_y = test_set_y
 
     print "Data Loaded..."
-    n_epochs = 200
+    n_epochs = 1000
     epoch = 0
     train_size = len(train_set_x)
     done_looping = False
@@ -135,16 +134,16 @@ def train_encoder():
     train_set_x, train_set_y = train_set
     train_set_pop_y, train_set_type_y, train_set_loc_y = train_set_y
 
-    train_set_x = train_set_x[:2000]
-    train_set_pop_y = train_set_pop_y[:2000]
-    train_set_type_y = train_set_type_y[:2000]
+    train_set_x = train_set_x[:500]
+    train_set_pop_y = train_set_pop_y[:500]
+    train_set_type_y = train_set_type_y[:500]
     
     # print out the distribution of each class
     counter = Counter(train_set_pop_y)
     print counter
     while epoch < n_epochs and not done_looping:
         # shuffle the train_set for each epoch
-        train_size = 2000
+        train_size = 500
         indexs = range(train_size)
         random.shuffle(indexs)
         epoch += 1
@@ -159,7 +158,7 @@ def train_encoder():
                 # compute the train error
                 # valid set
                 train_error_pops = []
-                for index in xrange(len(train_set_x[:1000])):
+                for index in xrange(len(train_set_x[:500])):
                     x = np.asarray(train_set_x[index])
                     pop_y = train_set_pop_y[index]
                     train_error_pops.append(test_func(x, pop_y))

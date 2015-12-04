@@ -10,6 +10,9 @@ from collections import OrderedDict
 import cPickle
 import argparse
 
+#theano.config.exception_verbosity = 'high'
+#theano.config.optimizer = 'None'
+
 """
 Implemente the CNN classifier for Population and Event Type
 """
@@ -133,6 +136,7 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
 
     train_set = new_data[:n_train_batches*batch_size,:]
     val_set = new_data[n_train_batches*batch_size:,:]
+    print train_set[:,-1]
     train_set_x, train_set_y = shared_dataset((train_set[:,:input_height],train_set[:,-1]))
     val_set_x, val_set_y = shared_dataset((val_set[:,:input_height],val_set[:,-1]))
 
@@ -177,6 +181,7 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
         epoch += 1
         if shuffle_batch:
             for minibatch_index in np.random.permutation(range(n_train_batches)):
+                print minibatch_index
                 cost_epoch = train_model(minibatch_index)
                 set_zero(zero_vec)
         else:
@@ -293,6 +298,7 @@ def parse_args():
         help="Use pretrained word2vec")
     ap.add_argument("--static", action="store_true",
         help="Don't update the word2vec")
+    ap.add_argument("--test", action="store_true")
     return ap.parse_args()
 
 
@@ -300,8 +306,11 @@ if __name__ == "__main__":
     print "Start Loading the data"
     data = cPickle.load(open("./data/experiment_dataset1"))
     docs, type2id, pip2id, word2id, embedding, rand_embedding = data
-
+    
     args = parse_args()
+    if args.test:
+        docs = docs[:500]
+
     if args.rand:
         word2vec = rand_embedding
     elif args.word2vec:
@@ -317,7 +326,7 @@ if __name__ == "__main__":
         datasets = make_data_cv(docs, i, word2id, max_l=5687, filter_h=5)
         performance = train_cnn_encoder(datasets, word2vec, input_width=64,
                       filter_hs=[3, 4, 5],
-                      hidden_units=[100, 2],
+                      hidden_units=[100, 13],
                       dropout_rate=[0.5],
                       shuffle_batch=True,
                       n_epochs=100,
