@@ -286,7 +286,7 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
             test_type_perf = 1 - test_type_losses
             print "Test Type Performance %f under Current Best Valid perf %f" % (test_type_perf, val_type_perf)
 
-    return test_perf
+    return test_pop_perf, test_type_perf
 
 
 def shared_dataset(data_xy, borrow=True):
@@ -410,7 +410,7 @@ if __name__ == "__main__":
     results = []
     for i in folders:
         datasets = make_data_cv(docs, i, word2id, max_l=5687, filter_h=5)
-        performance = train_cnn_encoder(datasets, word2vec, input_width=64,
+        pop_performance, type_performance = train_cnn_encoder(datasets, word2vec, input_width=64,
                       filter_hs=[3, 4, 5],
                       hidden_units=[100, 13],
                       dropout_rate=[0.5],
@@ -421,6 +421,6 @@ if __name__ == "__main__":
                       activations=[ReLU],
                       sqr_norm_lim=9,
                       non_static=non_static)
-        print "CV %d Performance %f" % (i, performance)
-        results.append(performance)
-    print "Average Performance %f" % np.mean(results)
+        print "CV %d Pop Performance %f, Type performance" % (i, pop_performance, type_performance)
+        results.append((pop_performance, type_performance))
+    print "Average pop_Performance %f type_performance %f " % (np.mean([r[0] for r in result]), np.mean([r[1] for r in results]))
