@@ -163,6 +163,7 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
     test_set_pop_y = np.asarray(datasets[1][:,-2], "int32")
     test_set_type_y = np.asarray(datasets[1][:,-1], "int32")
 
+
     train_set = new_data[:n_train_batches*batch_size,:]
     val_set = new_data[n_train_batches*batch_size:,:]
 
@@ -247,7 +248,8 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
         epoch += 1
         if shuffle_batch:
             for minibatch_index in np.random.permutation(range(n_train_batches)):
-                print minibatch_index
+                if minibatch_index % 10 == 0:
+                    print minibatch_index
                 cost_pop_epoch = train_pop_model(minibatch_index)
                 set_zero(zero_vec)
                 cost_type_epoch = train_type_model(minibatch_index)
@@ -415,12 +417,12 @@ if __name__ == "__main__":
                       hidden_units=[100, 13],
                       dropout_rate=[0.5],
                       shuffle_batch=True,
-                      n_epochs=100,
-                      batch_size=50,
+                      n_epochs=20,
+                      batch_size=200,
                       lr_decay=0.95,
                       activations=[ReLU],
                       sqr_norm_lim=9,
                       non_static=non_static)
-        print "CV %d Pop Performance %f, Type performance" % (i, pop_performance, type_performance)
+        print "CV %d Pop Performance %f, Type performance %f" % (i, pop_performance, type_performance)
         results.append((pop_performance, type_performance))
     print "Average pop_Performance %f type_performance %f " % (np.mean([r[0] for r in result]), np.mean([r[1] for r in results]))
