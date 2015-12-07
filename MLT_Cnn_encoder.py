@@ -9,6 +9,7 @@ import nn_layers as nn
 from collections import OrderedDict
 import cPickle
 import argparse
+import timeit
 
 #theano.config.exception_verbosity = 'high'
 #theano.config.optimizer = 'None'
@@ -49,6 +50,9 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
                       activations=[ReLU],
                       sqr_norm_lim=9,
                       non_static=True):
+    
+    start_time = timeit.default_timer()
+
     rng = np.random.RandomState(1234)
     input_height = len(datasets[0][0]) - 2
     filter_width = input_width
@@ -179,6 +183,7 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
 
 
     n_val_batches = n_batches - n_train_batches
+    n_test_batches = test_set_x.shape[0] / batch_size
 
     ####################
     # Train Model Func #
@@ -278,15 +283,21 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
 
         if val_pop_perf >= best_pop_val_perf:
             best_pop_val_perf = val_pop_perf
-            test_pop_losses = test_pop_model_all(test_set_x, test_set_pop_y)
-            test_pop_perf = 1 - test_pop_losses
+            #test_pop_losses = test_pop_model_all(test_set_x, test_set_pop_y)
+            test_pop_losses = [test_pop_model(i) for i in xrange(n_test_batches)]
+            test_pop_perf = 1 - np.mean(test_pop_losses)
             print "Test POP Performance %f under Current Best Valid perf %f" % (test_pop_perf, val_pop_perf)
 
         if val_type_perf >= best_type_val_perf:
             best_type_val_perf = val_type_perf
-            test_type_losses = test_type_model_all(test_set_x, test_set_type_y)
-            test_type_perf = 1 - test_type_losses
+            #test_type_losses = test_type_model_all(test_set_x, test_set_type_y)
+            test_type_losses = [test_type_model(i) for i in xrange(n_test_batches)]
+            test_type_perf = 1 - np.mean(test_type_losses)
             print "Test Type Performance %f under Current Best Valid perf %f" % (test_type_perf, val_type_perf)
+
+        end_time = timeit.default_timer()
+        print "Epoch %d finish take time %fm " % (epoch, (end_time - start_time)/60.)
+        start_time = timeit.default_timer()
 
     return test_pop_perf, test_type_perf
 
@@ -397,7 +408,7 @@ if __name__ == "__main__":
     
     args = parse_args()
     if args.test:
-        docs = docs[:500]
+        docs = docs[:10000]
 
     if args.rand:
         word2vec = rand_embedding
