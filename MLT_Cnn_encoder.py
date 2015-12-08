@@ -371,14 +371,27 @@ def doc_to_id(tokens, word2id, max_l=5687, filter_h=5):
     doc_ids += [0] * (filter_h - 1 + max_l - len(tokens))
     return doc_ids
 
+def doc_to_id_cut(tokens, word2id, max_l=1000, filter_h=5):
+    pad = filter_h - 1
+    doc_ids = [0] * pad
+    for i, word in enumerate(tokens):
+        if i < max_l:
+            if word in word2id:
+                doc_ids.append(word2id[word])
+            else:
+                doc_ids.append(1)
+    num_suff = max([0, max_l - len(tokens)]) + pad
+    doc_ids += [0] * num_suff
+    return doc_ids
 
-def make_data_cv(docs, i, word2id, max_l=5687, filter_h=5):
+def make_data_cv(docs, i, word2id, max_l=1000, filter_h=5):
     """Construct the train/test set"""
     train, test = [], []
     for doc in docs:
         cv = doc["cv"]
         tokens = doc["tokens"]
-        doc_ids = doc_to_id(tokens, word2id, max_l, filter_h)
+        doc_ids = doc_to_id_cut(tokens, word2id, max_l, filter_h)
+        #doc_ids = doc_to_id(tokens, word2id, max_l, filter_h)
         doc_ids.append(doc["pop"]) # population type
         doc_ids.append(doc["etype"])
         if cv == i:
@@ -403,7 +416,7 @@ def parse_args():
 
 if __name__ == "__main__":
     print "Start Loading the data"
-    data = cPickle.load(open("./data/experiment_dataset1"))
+    data = cPickle.load(open("./data/experiment_dataset2"))
     docs, type2id, pip2id, word2id, embedding, rand_embedding = data
     
     args = parse_args()
@@ -422,13 +435,13 @@ if __name__ == "__main__":
     folders = range(0, 10)
     results = []
     for i in folders:
-        datasets = make_data_cv(docs, i, word2id, max_l=5687, filter_h=5)
+        datasets = make_data_cv(docs, i, word2id, max_l=1000, filter_h=5)
         pop_performance, type_performance = train_cnn_encoder(datasets, word2vec, input_width=64,
                       filter_hs=[3, 4, 5],
                       hidden_units=[100, 13],
                       dropout_rate=[0.5],
                       shuffle_batch=True,
-                      n_epochs=20,
+                      n_epochs=100,
                       batch_size=200,
                       lr_decay=0.95,
                       activations=[ReLU],
