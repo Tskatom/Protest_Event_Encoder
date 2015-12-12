@@ -80,7 +80,7 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
     words = shared(value=word_embedding, name="embedding")
 
     zero_vector_tensor = T.vector()
-    zero_vec = np.zeros(input_width)
+    zero_vec = np.zeros(input_width, dtype=theano.config.floatX)
     set_zero = function([zero_vector_tensor], updates=[(words, T.set_subtensor(words[0,:], zero_vector_tensor))])
 
     layer0_input = words[T.cast(x.flatten(), dtype="int32")].reshape((x.shape[0],1,x.shape[1],words.shape[1]))
@@ -427,6 +427,8 @@ if __name__ == "__main__":
         word2vec = rand_embedding
     elif args.word2vec:
         word2vec = embedding
+    
+    word2vec = np.asarray(word2vec, dtype=theano.config.floatX)
 
     non_static = True
     if args.static:
@@ -441,7 +443,7 @@ if __name__ == "__main__":
                       hidden_units=[100, 13],
                       dropout_rate=[0.5],
                       shuffle_batch=True,
-                      n_epochs=100,
+                      n_epochs=300,
                       batch_size=200,
                       lr_decay=0.95,
                       activations=[ReLU],
