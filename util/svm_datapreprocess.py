@@ -1,5 +1,7 @@
+import numpy as np
 import json
 import cPickle
+from collections import defaultdict
 
 def generate_rupen_docs(gsr_file, clean_str=False):
     docs = []
