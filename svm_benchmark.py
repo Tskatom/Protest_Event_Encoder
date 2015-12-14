@@ -6,7 +6,7 @@ from sklearn import svm
 from collections import namedtuple
 from gensim.models import Doc2Vec
 import timeit
-import gesim
+import gensim
 
 def make_cv_dataset(datasets, cv, batch_size=200):
     train_set = []
@@ -137,7 +137,7 @@ def svm_avg_doc2vec(dataset_file='./data/svm_dataset', cores=4):
     for doc in docs:
         sens = doc["sens"]
         sentences.extend(sens)
-    word_model = gesim.models.Word2Vec(sentences, min_count=1, size=300, workers=cores)
+    word_model = gensim.models.Word2Vec(sentences, min_count=1, size=300, workers=cores)
     # save the model
     print '..saving the word vector'
     word_model.save('./data/svm_word_vector.model')
