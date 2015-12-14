@@ -106,24 +106,25 @@ def svm_doc2vec(dataset_file, train_epochs=100, cores=4):
             doc['vec'] = doc_vecs[idx]
             new_docs.append(doc)
 
-        train_set, valid_set, test_set = make_cv_dataset(new_docs, 0)
-        print len(train_set), len(valid_set), len(test_set)
-        train_set_x = np.asarray([d['vec'] for d in train_set])
-        train_set_pop = [d['pop'] for d in train_set]
-        train_set_type = [d['etype'] for d in train_set]
-        valid_set_x = np.asarray([d['vec'] for d in valid_set])
-        valid_set_pop = [d['pop'] for d in valid_set]
-        valid_set_type = [d['etype'] for d in valid_set]
-        test_set_x = np.asarray([d['vec'] for d in test_set])
-        test_set_pop = [d['pop'] for d in test_set]
-        test_set_type = [d['etype'] for d in test_set]
+        if epoch % 10 == 0:
+            train_set, valid_set, test_set = make_cv_dataset(new_docs, 0)
+            print len(train_set), len(valid_set), len(test_set)
+            train_set_x = np.asarray([d['vec'] for d in train_set])
+            train_set_pop = [d['pop'] for d in train_set]
+            train_set_type = [d['etype'] for d in train_set]
+            valid_set_x = np.asarray([d['vec'] for d in valid_set])
+            valid_set_pop = [d['pop'] for d in valid_set]
+            valid_set_type = [d['etype'] for d in valid_set]
+            test_set_x = np.asarray([d['vec'] for d in test_set])
+            test_set_pop = [d['pop'] for d in test_set]
+            test_set_type = [d['etype'] for d in test_set]
 
-        print "Start compute the Population Performance"
-        svm_experiment([train_set_x, train_set_pop], [valid_set_x, valid_set_pop], [test_set_x, test_set_pop])
+            print "Start compute the Population Performance"
+            svm_experiment([train_set_x, train_set_pop], [valid_set_x, valid_set_pop], [test_set_x, test_set_pop])
 
-        print "Start compute the Event Type Performance"
-        svm_experiment([train_set_x, train_set_type], [valid_set_x, valid_set_type], [test_set_x, test_set_type])
-        end = timeit.default_timer()
+            print "Start compute the Event Type Performance"
+            svm_experiment([train_set_x, train_set_type], [valid_set_x, valid_set_type], [test_set_x, test_set_type])
+            end = timeit.default_timer()
         print "Epoch %d using time %f m" % (epoch, (end - start)/60.)
         if epoch % 20 == 0 and epoch > 0:
             doc2vec_model.save('./data/doc2vec_%d' % epoch)
@@ -191,7 +192,7 @@ def svm_tfidf(dataset_file):
     train_set_type = [d['etype'] for d in train_set]
 
     word_valid_set = [d['content'].lower() for d in valid_set]
-    validset_pop = [d['pop'] for d in valid_set]
+    valid_set_pop = [d['pop'] for d in valid_set]
     valid_set_type = [d['etype'] for d in valid_set]
 
     word_test_set = [d['content'].lower() for d in test_set]
@@ -204,7 +205,7 @@ def svm_tfidf(dataset_file):
     count_vect = CountVectorizer()
     train_set_count = count_vect.fit_transform(word_train_set)
     valid_set_count = count_vect.transform(word_valid_set)
-    test_set_count = count_vect.transform(word_test_set)train_set_coun
+    test_set_count = count_vect.transform(word_test_set)
 
     # construct tfidf matrix
     tfidf_transformer = TfidfTransformer()
