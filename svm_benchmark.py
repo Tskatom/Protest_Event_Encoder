@@ -5,7 +5,7 @@ from sklearn.grid_search import GridSearchCV
 from sklearn import svm
 from collections import namedtuple
 from gensim.models import Doc2Vec
-
+import timeit
 
 def make_cv_dataset(datasets, cv, batch_size=200):
     train_set = []
@@ -94,6 +94,8 @@ def svm_doc2vec(dataset_file, train_epochs=100, cores=4):
     doc2vec_model.build_vocab(event_docs)
     for epoch in range(train_epochs):
         print epoch
+        start = timeit.default_timer()
+
         doc2vec_model.train(event_docs)
         doc_vecs = [doc2vec_model.docvecs[d.tags[0]] for d in event_docs]
 
@@ -119,7 +121,10 @@ def svm_doc2vec(dataset_file, train_epochs=100, cores=4):
 
         print "Start compute the Event Type Performance"
         svm_experiment([train_set_x, train_set_type], [valid_set_x, valid_set_type], [test_set_x, test_set_type])
-    
+        end = timeit.default_timer()
+        print "Epoch %d using time %f m" % (epoch, (end - start)/60.)
+        if epoch % 20 == 0 and epoch > 0:
+            doc2vec_model.save('./data/doc2vec_%d' % epoch)
     # save the model
     doc2vec_model.save('./data/doc2vec_%d' % epoch)
 
