@@ -411,6 +411,8 @@ def parse_args():
     ap.add_argument("--static", action="store_true",
         help="Don't update the word2vec")
     ap.add_argument("--test", action="store_true")
+    ap.add_argument("--max_epochs", type=int, help='the max iterlations',
+            default=200)
     return ap.parse_args()
 
 
@@ -443,7 +445,7 @@ if __name__ == "__main__":
                       hidden_units=[100, 13],
                       dropout_rate=[0.5],
                       shuffle_batch=True,
-                      n_epochs=300,
+                      n_epochs=args.max_epochs,
                       batch_size=200,
                       lr_decay=0.95,
                       activations=[ReLU],
