@@ -201,6 +201,12 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
             y: train_set_pop_y[index * batch_size: (index + 1) * batch_size]
         })
 
+    real_test_pop_model = function([index], pop_classifier.errors(y),
+        givens={
+            x: test_set_x[index * batch_size: (index + 1) * batch_size],
+            y: test_set_pop_y[index * batch_size: (index + 1) * batch_size]
+        })
+
     train_pop_model = function([index], pop_cost, updates=pop_grad_updates,
         givens={
             x: train_set_x[index*batch_size:(index+1)*batch_size],
@@ -218,6 +224,12 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
         givens={
             x: train_set_x[index * batch_size: (index + 1) * batch_size],
             y: train_set_type_y[index * batch_size: (index + 1) * batch_size]
+        })
+
+    real_test_type_model = function([index], type_classifier.errors(y),
+        givens={
+            x: test_set_x[index * batch_size: (index + 1) * batch_size],
+            y: test_set_type_y[index * batch_size: (index + 1) * batch_size]
         })
 
     train_type_model = function([index], type_cost, updates=type_grad_updates,
@@ -284,14 +296,14 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
         if val_pop_perf >= best_pop_val_perf:
             best_pop_val_perf = val_pop_perf
             #test_pop_losses = test_pop_model_all(test_set_x, test_set_pop_y)
-            test_pop_losses = [test_pop_model(i) for i in xrange(n_test_batches)]
+            test_pop_losses = [real_test_pop_model(i) for i in xrange(n_test_batches)]
             test_pop_perf = 1 - np.mean(test_pop_losses)
             print "Test POP Performance %f under Current Best Valid perf %f" % (test_pop_perf, val_pop_perf)
 
         if val_type_perf >= best_type_val_perf:
             best_type_val_perf = val_type_perf
             #test_type_losses = test_type_model_all(test_set_x, test_set_type_y)
-            test_type_losses = [test_type_model(i) for i in xrange(n_test_batches)]
+            test_type_losses = [real_test_type_model(i) for i in xrange(n_test_batches)]
             test_type_perf = 1 - np.mean(test_type_losses)
             print "Test Type Performance %f under Current Best Valid perf %f" % (test_type_perf, val_type_perf)
 
