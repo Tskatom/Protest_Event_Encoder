@@ -1,12 +1,13 @@
 import cPickle
 import numpy as np
-from sklearn.cross_validation import StratifiedShuffleSplit
-from sklearn.grid_search import GridSearchCV
 from sklearn import svm
 from collections import namedtuple
 from gensim.models import Doc2Vec
 import timeit
 import gensim
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+
 
 def make_cv_dataset(datasets, cv, batch_size=200):
     train_set = []
@@ -177,6 +178,47 @@ def svm_avg_doc2vec(dataset_file='./data/svm_dataset', cores=4):
     end = timeit.default_timer()
     print "Using time %fm " % ((end - start)/60.)
 
+
+def svm_tfidf(dataset_file):
+    print 'Start tfidf experiment'
+    start = timeit.default_timer()
+    datasets = load_data(dataset_file)
+    docs = datasets[0][:10000]
+    train_set, valid_set, test_set = make_cv_dataset(docs, 0)
+    # get the doc tokens
+    word_train_set = [d['content'].lower() for d in train_set]
+    train_set_pop = [d['pop'] for d in train_set]
+    train_set_type = [d['etype'] for d in train_set]
+
+    word_valid_set = [d['content'].lower() for d in valid_set]
+    validset_pop = [d['pop'] for d in valid_set]
+    valid_set_type = [d['etype'] for d in valid_set]
+
+    word_test_set = [d['content'].lower() for d in test_set]
+    test_set_pop = [d['pop'] for d in test_set]
+    test_set_type = [d['etype'] for d in test_set]
+
+    # construct the word count matrix
+    # the input to the CountVectorizer is list of str, each
+    # str is a document
+    count_vect = CountVectorizer()
+    train_set_count = count_vect.fit_transform(word_train_set)
+    valid_set_count = count_vect.transform(word_valid_set)
+    test_set_count = count_vect.transform(word_test_set)train_set_coun
+
+    # construct tfidf matrix
+    tfidf_transformer = TfidfTransformer()
+    train_set_x = tfidf_transformer.fit_transform(train_set_count)
+    valid_set_x = tfidf_transformer.transform(valid_set_count)
+    test_set_x = tfidf_transformer.transform(test_set_count)
+
+    print "Start compute the Population Performance"
+    svm_experiment([train_set_x, train_set_pop], [valid_set_x, valid_set_pop], [test_set_x, test_set_pop])
+
+    print "Start compute the Event Type Performance"
+    svm_experiment([train_set_x, train_set_type], [valid_set_x, valid_set_type], [test_set_x, test_set_type])
+    end = timeit.default_timer()
+    print "Using time %fm " % ((end - start)/60.)
 
 
 if __name__ == "__main__":
