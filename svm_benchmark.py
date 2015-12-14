@@ -6,6 +6,7 @@ from sklearn import svm
 from collections import namedtuple
 from gensim.models import Doc2Vec
 import timeit
+import gesim
 
 def make_cv_dataset(datasets, cv, batch_size=200):
     train_set = []
@@ -127,6 +128,55 @@ def svm_doc2vec(dataset_file, train_epochs=100, cores=4):
             doc2vec_model.save('./data/doc2vec_%d' % epoch)
     # save the model
     doc2vec_model.save('./data/doc2vec_%d' % epoch)
+
+def svm_avg_doc2vec(dataset_file='./data/svm_dataset', cores=4):
+    datasets = load_data(dataset_file)
+    docs = datasets[0][:10000]
+    # train word2vec by conect all the sentence together
+    sentences = []
+    for doc in docs:
+        sens = doc["sens"]
+        sentences.extend(sens)
+    word_model = gesim.models.Word2Vec(sentences, min_count=1, size=300, workers=cores)
+    # save the model
+    print '..saving the word vector'
+    word_model.save('./data/svm_word_vector.model')
+    # construct the doc vector by average the word vector
+    new_docs = []
+    for doc in docs:
+        vecs = []
+        for token in doc['tokens']:
+            if token in word_model:
+                vecs.append(word_model[token])
+            else:
+                print 'something wrong ', token
+                sys.exit()
+        vecs = np.asarray(vecs)
+        # average
+        doc_vec = np.mean(vecs, axis=0)
+        doc["vec"] = doc_vec
+        new_docs.append(doc)
+
+    train_set, valid_set, test_set = make_cv_dataset(new_docs, 0)
+    print len(train_set), len(valid_set), len(test_set)
+    train_set_x = np.asarray([d['vec'] for d in train_set])
+    train_set_pop = [d['pop'] for d in train_set]
+    train_set_type = [d['etype'] for d in train_set]
+    valid_set_x = np.asarray([d['vec'] for d in valid_set])
+    valid_set_pop = [d['pop'] for d in valid_set]
+    valid_set_type = [d['etype'] for d in valid_set]
+    test_set_x = np.asarray([d['vec'] for d in test_set])
+    test_set_pop = [d['pop'] for d in test_set]
+    test_set_type = [d['etype'] for d in test_set]
+
+    print "Start compute the Population Performance"
+    svm_experiment([train_set_x, train_set_pop], [valid_set_x, valid_set_pop], [test_set_x, test_set_pop])
+
+    print "Start compute the Event Type Performance"
+    svm_experiment([train_set_x, train_set_type], [valid_set_x, valid_set_type], [test_set_x, test_set_type])
+    end = timeit.default_timer()
+
+
 
 if __name__ == "__main__":
     dataset_file = "./data/svm_dataset"
