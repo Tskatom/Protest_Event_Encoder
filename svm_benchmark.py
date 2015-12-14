@@ -49,7 +49,7 @@ def svm_experiment(train_set, valid_set, test_set):
     train_set_x, train_set_y = train_set
     valid_set_x, valid_set_y = valid_set
     test_set_x, test_set_y = test_set
-    
+
     c_range = np.logspace(-2, 1, 4)
     # linear svms
     best_score = 0.0
@@ -130,6 +130,7 @@ def svm_doc2vec(dataset_file, train_epochs=100, cores=4):
     doc2vec_model.save('./data/doc2vec_%d' % epoch)
 
 def svm_avg_doc2vec(dataset_file='./data/svm_dataset', cores=4):
+    start = timeit.default_timer()
     datasets = load_data(dataset_file)
     docs = datasets[0][:10000]
     # train word2vec by conect all the sentence together
@@ -150,7 +151,6 @@ def svm_avg_doc2vec(dataset_file='./data/svm_dataset', cores=4):
                 vecs.append(word_model[token])
             else:
                 print 'something wrong ', token
-                sys.exit()
         vecs = np.asarray(vecs)
         # average
         doc_vec = np.mean(vecs, axis=0)
@@ -175,6 +175,7 @@ def svm_avg_doc2vec(dataset_file='./data/svm_dataset', cores=4):
     print "Start compute the Event Type Performance"
     svm_experiment([train_set_x, train_set_type], [valid_set_x, valid_set_type], [test_set_x, test_set_type])
     end = timeit.default_timer()
+    print "Using time %fm " % ((end - start)/60.)
 
 
 
