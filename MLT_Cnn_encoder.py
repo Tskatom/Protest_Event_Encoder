@@ -163,9 +163,16 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
     n_train_batches = int(np.round(n_batches*0.9))
 
     # divide the train set intp train/val sets
-    test_set_x = datasets[1][:,:input_height]
-    test_set_pop_y = np.asarray(datasets[1][:,-2], "int32")
-    test_set_type_y = np.asarray(datasets[1][:,-1], "int32")
+    if datasets[1].shape[0] % batch_size > 0:
+        extra_data_num = batch_size - datasets[1].shape[0] % batch_size
+        test_set = np.random.permutation(datasets[1])
+        extra_data = test_set[:extra_data_num]
+        new_test_data = np.append(datasets[1], extra_data, axis=0)
+    else:
+        new_test_data = datasets[1]
+    test_set_x = new_test_data[:,:input_height]
+    test_set_pop_y = np.asarray(new_test_data[:,-2], "int32")
+    test_set_type_y = np.asarray(new_test_data[:,-1], "int32")
 
 
     train_set = new_data[:n_train_batches*batch_size,:]
@@ -184,6 +191,11 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
 
     n_val_batches = n_batches - n_train_batches
     n_test_batches = test_set_x.shape[0] / batch_size
+    print 'n_test_batches: %d' % n_test_batches
+    # transform the data into shared varibale for GPU computing
+    test_set_x = theano.shared(np.asarray(test_set_x, dtype=theano.config.floatX), borrow=borrow)
+    test_set_pop_y = theano.shared(test_set_pop_y, borrow=True)
+    test_set_type_y = theano.shared(test_set_type_y, borrow=True)
 
     ####################
     # Train Model Func #
@@ -238,6 +250,7 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
             y: train_set_type_y[index*batch_size:(index+1)*batch_size]
         })
 
+    """
     test_pred_layers = []
     test_size = test_set_x.shape[0]
     test_layer0_input = words[T.cast(x.flatten(), dtype="int32")].reshape((test_size, 1, input_height, input_width))
@@ -254,7 +267,7 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
     test_type_y_pred = type_classifier.predict(test_layer1_input)
     test_type_error = T.mean(T.neq(test_type_y_pred, y))
     test_type_model_all = function([x, y], test_type_error)
-
+    """
     # start to training the model
     print "Start training the model...."
     epoch = 0
