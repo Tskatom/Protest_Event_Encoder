@@ -282,8 +282,6 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
         epoch += 1
         if shuffle_batch:
             for minibatch_index in np.random.permutation(range(n_train_batches)):
-                if minibatch_index % 10 == 0:
-                    print minibatch_index
                 if pop:
                     cost_pop_epoch = train_pop_model(minibatch_index)
                     set_zero(zero_vec)
@@ -328,7 +326,15 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
         end_time = timeit.default_timer()
         print "Epoch %d finish take time %fm " % (epoch, (end_time - start_time)/60.)
         start_time = timeit.default_timer()
-
+    # save the model
+    if pop:
+        with open('./data/pop_model.pkl', 'wb') as pop_f:
+            for param in pop_params:
+                cPickle.dump(param.get_value(), pop_f)
+    if etype:
+        with open('./data/type_model.pkl', 'wb') as type_f:
+            for param in type_params:
+                cPickle.dump(param.get_value(), type_f)
     return test_pop_perf, test_type_perf
 
 
