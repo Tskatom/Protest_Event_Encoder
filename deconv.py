@@ -16,6 +16,7 @@ from SIG_Cnn_encoder import make_data_cv, ReLU
 import numpy as np
 from theano import function, shared
 import nn_layers as nn
+import json
 
 def load_model(model_file, non_static=True):
     params = {}
@@ -98,6 +99,7 @@ def construct_model(params, datasets, filter_hs=[3,4,5],batch_size=200):
             bs=bs)
 
     pop_loss = pop_classifier.errors(y)
+    pop_pred = pop_classifier.preds
 
     # construct data set
     if datasets[0].shape[0] % batch_size > 0:
@@ -118,16 +120,22 @@ def construct_model(params, datasets, filter_hs=[3,4,5],batch_size=200):
     print '...construct test function'
     test_fn = function(
             inputs=[index],
-            outputs=pop_loss,
+            outputs=[pop_loss, pop_pred],
             givens={
                 x: train_set_x[index*batch_size:(index+1)*batch_size],
                 y: train_set_pop_y[index*batch_size:(index+1)*batch_size]
                 }
             )
-
-    pop_losses = [test_fn(i) for i in xrange(n_train_batches)]
+    
+    results = [test_fn(i) for i in xrange(n_train_batches)]
+    pop_losses = [r[0] for r in results]
     pop_train_perf = 1 - np.mean(pop_losses)
+    pop_predictions = np.concatenate([r[1] for r in results])
+    rs = {}
+    rs["pop_preds"] = list(pop_predictions)
+    rs["pop_truth"] = list(map(int,train_set[:,-2]))
     print "Population Train Performance %f" % pop_train_perf
+    return rs
 
 
 def check_train_error():
@@ -145,7 +153,11 @@ def check_train_error():
 
     print '....start test the model'
     # construct the model
-    construct_model(params, datasets, filter_hs=[3,4,5], batch_size=200)
+    rs = construct_model(params, datasets, filter_hs=[3,4,5], batch_size=200)
+    rs["pop2id"] = pop2id
+
+    with open('./rs.json', 'w') as r:
+        json.dump(rs, r)
 
 
 if __name__ == "__main__":
