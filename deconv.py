@@ -12,7 +12,10 @@ import os
 import theano
 import theano.tensor as T
 import cPickle
-from SIG_Cnn_encoder import make_data_cv
+from SIG_Cnn_encoder import make_data_cv, ReLU
+import numpy as np
+from theano import function, shared
+import nn_layers as nn
 
 def load_model(model_file, non_static=True):
     params = {}
@@ -72,8 +75,8 @@ def construct_model(params, datasets, filter_hs=[3,4,5],batch_size=200):
                 filter_shape=filter_shape,
                 pool_size=pool_size,
                 activation=ReLU,
-                conv_W,
-                conv_b
+                W=conv_W,
+                b=conv_b
                 )
         conv_layers.append(conv_layer)
         layer1_input = conv_layer.output.flatten(2)
@@ -110,12 +113,12 @@ def construct_model(params, datasets, filter_hs=[3,4,5],batch_size=200):
     n_train_batches = int(np.round(n_batches*0.9))
     train_set = new_data[:n_train_batches*batch_size,:]
     train_set_x = theano.shared(np.asarray(train_set[:,:input_height],dtype=theano.config.floatX),borrow=True)
-    train_set_pop_y = theano.shared(np.asarray(train_set[:,-2], dtype=theano.config.floatX),borrow=True)
+    train_set_pop_y = T.cast(theano.shared(np.asarray(train_set[:,-2], dtype=theano.config.floatX),borrow=True), 'int32')
     
     print '...construct test function'
-    test_fn = theano.function(
+    test_fn = function(
             inputs=[index],
-            outputs=pos_loss,
+            outputs=pop_loss,
             givens={
                 x: train_set_x[index*batch_size:(index+1)*batch_size],
                 y: train_set_pop_y[index*batch_size:(index+1)*batch_size]
@@ -127,9 +130,9 @@ def construct_model(params, datasets, filter_hs=[3,4,5],batch_size=200):
     print "Population Train Performance %f" % pop_train_perf
 
 
-def check_tain_error():
+def check_train_error():
     print '...load the expriment data set'
-    data = cPickle('./data/experiment_dataset2')
+    data = cPickle.load(open('./data/experiment_dataset2'))
     docs, type2id, pop2id, word2id, embedding, rand_embedding = data
     
     print '... construct the train/valid/test set'
@@ -138,7 +141,7 @@ def check_tain_error():
 
     print '....Load model parameters'
     # load the trained parameters
-    params= load_model('./pop_model.pkl')
+    params= load_model('./data/pop_model.pkl')
 
     print '....start test the model'
     # construct the model
