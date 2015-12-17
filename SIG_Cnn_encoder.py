@@ -328,11 +328,11 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
         start_time = timeit.default_timer()
     # save the model
     if pop:
-        with open('./data/pop_model.pkl', 'wb') as pop_f:
+        with open('./data/pop_model_2.pkl', 'wb') as pop_f:
             for param in pop_params:
                 cPickle.dump(param.get_value(), pop_f)
     if etype:
-        with open('./data/type_model.pkl', 'wb') as type_f:
+        with open('./data/type_model_2.pkl', 'wb') as type_f:
             for param in type_params:
                 cPickle.dump(param.get_value(), type_f)
     return test_pop_perf, test_type_perf
@@ -477,10 +477,10 @@ if __name__ == "__main__":
     folders = range(0, 10)
     results = []
     for i in folders:
-        datasets = make_data_cv(docs, i, word2id, max_l=1000, filter_h=5)
+        datasets = make_data_cv(docs, i, word2id, max_l=1000, filter_h=4)
         pop_performance, type_performance = train_cnn_encoder(datasets, word2vec, input_width=64,
-                      filter_hs=[3, 4, 5],
-                      hidden_units=[100, 13],
+                      filter_hs=[2, 3, 4],
+                      hidden_units=[100, 11],
                       dropout_rate=[0.5],
                       shuffle_batch=True,
                       n_epochs=args.max_epochs,
@@ -493,4 +493,4 @@ if __name__ == "__main__":
                       etype=args.etype)
         print "CV %d Pop Performance %f, Type performance %f" % (i, pop_performance, type_performance)
         results.append((pop_performance, type_performance))
-    print "Average pop_Performance %f type_performance %f " % (np.mean([r[0] for r in result]), np.mean([r[1] for r in results]))
+    print "Average pop_Performance %f type_performance %f " % (np.mean([r[0] for r in results]), np.mean([r[1] for r in results]))
