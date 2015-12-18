@@ -129,7 +129,8 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
     ###################
     # EventType Task #
     ###################
-    event_type_hidden_units = [feature_maps * len(filter_hs), 12]
+    event_type_hidden_units = [h for h in hidden_units]
+    event_type_hidden_units[-1] = 12
     type_classifier = nn.MLPDropout(rng,
         input=layer1_input,
         layer_sizes=event_type_hidden_units,
@@ -328,11 +329,11 @@ def train_cnn_encoder(datasets, word_embedding, input_width=64,
         start_time = timeit.default_timer()
     # save the model
     if pop:
-        with open('./data/pop_model_2.pkl', 'wb') as pop_f:
+        with open('./data/pop_model_3.pkl', 'wb') as pop_f:
             for param in pop_params:
                 cPickle.dump(param.get_value(), pop_f)
     if etype:
-        with open('./data/type_model_2.pkl', 'wb') as type_f:
+        with open('./data/type_model_3.pkl', 'wb') as type_f:
             for param in type_params:
                 cPickle.dump(param.get_value(), type_f)
     return test_pop_perf, test_type_perf
@@ -456,7 +457,7 @@ def parse_args():
 
 if __name__ == "__main__":
     print "Start Loading the data"
-    data = cPickle.load(open("./data/experiment_dataset2"))
+    data = cPickle.load(open("./data/experiment_dataset_3"))
     docs, type2id, pip2id, word2id, embedding, rand_embedding = data
 
     args = parse_args()
@@ -474,13 +475,13 @@ if __name__ == "__main__":
     if args.static:
         non_static = False
 
-    folders = range(0, 10)
+    folders = range(0, 3)
     results = []
     for i in folders:
-        datasets = make_data_cv(docs, i, word2id, max_l=1000, filter_h=4)
+        datasets = make_data_cv(docs, i, word2id, max_l=1000, filter_h=3)
         pop_performance, type_performance = train_cnn_encoder(datasets, word2vec, input_width=64,
-                      filter_hs=[2, 3, 4],
-                      hidden_units=[100, 11],
+                      filter_hs=[1, 2, 3],
+                      hidden_units=[100, 100, 11],
                       dropout_rate=[0.5],
                       shuffle_batch=True,
                       n_epochs=args.max_epochs,

@@ -39,7 +39,7 @@ def load_model(model_file, non_static=True):
 
 def construct_model(params, datasets, filter_hs=[3,4,5],batch_size=200):
     rng = np.random.RandomState(1234)
-    input_height = len(datasets[0][0])
+    input_height = len(datasets[0][0]) - 2
     input_width = params["embedding"].shape[1]
     filter_shapes = [p[0].shape for p in params["convs"]]
     pool_sizes = [(input_height-s[2] + 1, input_width -s[3] + 1) for s in filter_shapes]
@@ -82,6 +82,7 @@ def construct_model(params, datasets, filter_hs=[3,4,5],batch_size=200):
         conv_layers.append(conv_layer)
         layer1_input = conv_layer.output.flatten(2)
         layer1_inputs.append(layer1_input)
+
     layer1_input = T.concatenate(layer1_inputs, 1)
 
     # population classifier
@@ -126,7 +127,7 @@ def construct_model(params, datasets, filter_hs=[3,4,5],batch_size=200):
                 y: train_set_pop_y[index*batch_size:(index+1)*batch_size]
                 }
             )
-    
+
     results = [test_fn(i) for i in xrange(n_train_batches)]
     pop_losses = [r[0] for r in results]
     pop_train_perf = 1 - np.mean(pop_losses)
@@ -135,6 +136,7 @@ def construct_model(params, datasets, filter_hs=[3,4,5],batch_size=200):
     rs["pop_preds"] = list(pop_predictions)
     rs["pop_truth"] = list(map(int,train_set[:,-2]))
     print "Population Train Performance %f" % pop_train_perf
+
     return rs
 
 

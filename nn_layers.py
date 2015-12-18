@@ -239,6 +239,7 @@ class ConvPoolLayer(object):
                                           ds=self.pool_size,
                                           ignore_border=True)
         self.output = pool_out
+        self.output_index = T.argmax(act_conv_out)
         self.params = [self.W, self.b]
 
     def predict(self, new_data, batch_size):
