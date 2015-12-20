@@ -16,7 +16,7 @@ import cPickle
 import numpy as np
 import cPickle
 
-def generate_rupen_docs(gsr_file, clean_str=False):
+def generate_rupen_docs(gsr_file, clean_str=True):
     docs = []
     vocab = defaultdict(float)
     type2id = {}
@@ -48,7 +48,7 @@ def generate_rupen_docs(gsr_file, clean_str=False):
             # we construct each event for each individual articles
             for article in articles:
                 doc = {}
-                eventType = event["eventType"]
+                eventType = event["eventType"][:3]
                 eventDate = event["eventDate"]
                 population = event["population"]
                 location = event["location"]
@@ -123,7 +123,7 @@ def generate_docs(gsr_file, clean_str=False):
             docs.append(doc)
     return docs, vocab, type2id, pop2id
 
-def nstr(s, lower=False):
+def nstr(s, lower=True):
     """ normalize the non-english string to ascii string
     :type s: unicode or string
     :param s: string to be transformed
@@ -183,9 +183,7 @@ def get_embedding(word2vec, k=64):
 
 if __name__ == "__main__":
     # compute the summary of the document
-    import pandas as pds
     from collections import Counter
-    import matplotlib.pyplot as plt
     gsr_file = "../data/gsr_spanish.txt"
     wiki_file = "../data/polyglot-es.pkl"
     #docs, vocab, type2id, pip2id = generate_docs(gsr_file, clean_str=False)
@@ -223,5 +221,5 @@ if __name__ == "__main__":
     # dump the data
     data = [docs, type2id, pip2id, word2id, embedding, rand_embedding]
 
-    with open("../data/experiment_dataset2", "wb") as ed:
+    with open("../data/experiment_dataset_3", "wb") as ed:
         cPickle.dump(data, ed)

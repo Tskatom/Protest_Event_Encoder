@@ -176,7 +176,7 @@ class LogisticRegressionLayer(object):
 class ConvPoolLayer(object):
     """Convolution and Max Pool Layer"""
     def __init__(self, rng, input, filter_shape, input_shape,
-                 pool_size, activation):
+                 pool_size, activation, W=None, b=None):
         """
         :type rng: numpy.random.randomstate
         :param rng: the random number generator
@@ -218,10 +218,16 @@ class ConvPoolLayer(object):
                                               high=W_bound,
                                               size=filter_shape),
                                   dtype=theano.config.floatX)
-        self.W = shared(value=W_values, borrow=True, name="conv_W")
-
-        b_values = np.zeros((filter_shape[0],), dtype=theano.config.floatX)
-        self.b = shared(value=b_values, borrow=True, name="conv_b")
+        if W is None:
+            self.W = shared(value=W_values, borrow=True, name="conv_W")
+        else:
+            self.W = W
+        
+        if b is None:
+            b_values = np.zeros((filter_shape[0],), dtype=theano.config.floatX)
+            self.b = shared(value=b_values, borrow=True, name="conv_b")
+        else:
+            self.b = b
 
         conv_out = conv.conv2d(input=self.input,
                                filters=self.W,
@@ -233,6 +239,7 @@ class ConvPoolLayer(object):
                                           ds=self.pool_size,
                                           ignore_border=True)
         self.output = pool_out
+        self.output_index = T.argmax(act_conv_out)
         self.params = [self.W, self.b]
 
     def predict(self, new_data, batch_size):
@@ -279,24 +286,37 @@ class DropoutHiddenLayer(HiddenLayer):
 
 class MLPDropout(object):
     """A multi Layer Neural Network with dropout"""
-    def __init__(self, rng, input, layer_sizes, dropout_rates, activations):
+    def __init__(self, rng, input, layer_sizes, dropout_rates, activations,
+            Ws=None, bs=None):
         self.weight_matrix_sizes = zip(layer_sizes, layer_sizes[1:])
         self.layers = []
         self.dropout_layers = []
         self.activations = activations
+        if Ws is None:
+            Ws = [None] * len(self.weight_matrix_sizes)
+        else:
+            assert len(Ws) == len(self.weight_matrix_sizes)
+
+        if bs is None:
+            bs = [None] * len(self.weight_matrix_sizes)
+        else:
+            assert len(bs) == len(self.weight_matrix_sizes)
 
         next_layer_input = input
         next_dropout_layer_input = dropout_from_layer(rng,
                                                       input,
                                                       p=dropout_rates[0])
         layer_count = 0
-        for n_in, n_out in self.weight_matrix_sizes[:-1]:
+        for idx, ns in enumerate(self.weight_matrix_sizes[:-1]):
+            n_in, n_out = ns
             next_dropout_layer = DropoutHiddenLayer(rng=rng,
                 input=next_dropout_layer_input,
                 activation=self.activations[layer_count],
                 n_in=n_in,
                 n_out=n_out,
-                dropout_rate=dropout_rates[layer_count])
+                dropout_rate=dropout_rates[layer_count],
+                W=Ws[idx],
+                b=bs[idx])
             self.dropout_layers.append(next_dropout_layer)
             next_dropout_layer_input = next_dropout_layer.output
 
@@ -316,7 +336,7 @@ class MLPDropout(object):
         n_in, n_out = self.weight_matrix_sizes[-1]
         dropout_output_layer = LogisticRegressionLayer(
             input=next_dropout_layer_input,
-            n_in=n_in, n_out=n_out)
+            n_in=n_in, n_out=n_out, W=Ws[-1], b=bs[-1])
         self.dropout_layers.append(dropout_output_layer)
 
         # reuse the parameters again
@@ -332,6 +352,7 @@ class MLPDropout(object):
 
         self.negative_log_likelihood = self.layers[-1].negative_log_likelihood
         self.errors = self.layers[-1].errors
+        self.preds = self.layers[-1].y_pred
 
         # drop out params
         self.params = [param for layer in self.dropout_layers
