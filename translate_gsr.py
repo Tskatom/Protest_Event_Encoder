@@ -9,6 +9,8 @@ from textblob import TextBlob
 import json
 import re
 import time
+import sys
+
 def translate(gsr_file):
     with open(gsr_file) as gf, open('./data/en_gsr.txt', 'w') as ef:
         for line in gf:

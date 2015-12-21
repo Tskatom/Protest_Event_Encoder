@@ -38,7 +38,7 @@ def train_encoder():
     embed_dm = embedding.shape[1]
     # sentenceLayer
     doc = T.lmatrix('doc') # num sentence * num words
-    num_pop_class = 11
+    num_pop_class = 13
     
     embed_dm = 20
 
@@ -134,16 +134,16 @@ def train_encoder():
     train_set_x, train_set_y = train_set
     train_set_pop_y, train_set_type_y, train_set_loc_y = train_set_y
 
-    train_set_x = train_set_x[:500]
-    train_set_pop_y = train_set_pop_y[:500]
-    train_set_type_y = train_set_type_y[:500]
+    train_set_x = train_set_x[:10000]
+    train_set_pop_y = train_set_pop_y[:10000]
+    train_set_type_y = train_set_type_y[:10000]
     
     # print out the distribution of each class
     counter = Counter(train_set_pop_y)
     print counter
     while epoch < n_epochs and not done_looping:
         # shuffle the train_set for each epoch
-        train_size = 500
+        train_size = 10000
         indexs = range(train_size)
         random.shuffle(indexs)
         epoch += 1
@@ -158,12 +158,12 @@ def train_encoder():
                 # compute the train error
                 # valid set
                 train_error_pops = []
-                for index in xrange(len(train_set_x[:500])):
+                for index in xrange(len(train_set_x[:10000])):
                     x = np.asarray(train_set_x[index])
                     pop_y = train_set_pop_y[index]
                     train_error_pops.append(test_func(x, pop_y))
 
-                message = 'Epoch %d i %d with valid error rate Population[%0.2f]' % (epoch, i,
+                message = 'Epoch %d i %d with train error rate Population[%0.2f]' % (epoch, i,
                         np.mean(train_error_pops))
                 logging.info(message)
 
