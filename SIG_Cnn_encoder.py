@@ -457,7 +457,7 @@ def parse_args():
 
 if __name__ == "__main__":
     print "Start Loading the data"
-    data = cPickle.load(open("./data/experiment_dataset_3"))
+    data = cPickle.load(open("./data/important_sen_dataset_3"))
     docs, type2id, pip2id, word2id, embedding, rand_embedding = data
 
     args = parse_args()
@@ -478,8 +478,8 @@ if __name__ == "__main__":
     folders = range(0, 3)
     results = []
     for i in folders:
-        datasets = make_data_cv(docs, i, word2id, max_l=1000, filter_h=3)
-        pop_performance, type_performance = train_cnn_encoder(datasets, word2vec, input_width=64,
+        datasets = make_data_cv(docs, i, word2id, max_l=2500, filter_h=3)
+        pop_performance, type_performance = train_cnn_encoder(datasets, word2vec, input_width=100,
                       filter_hs=[1, 2, 3],
                       hidden_units=[100, 100, 11],
                       dropout_rate=[0.5],

@@ -111,7 +111,7 @@ def generate_rupen_docs(gsr_file, clean_str=True):
                 tokens = value["original_text_basis_enrichment"]["tokens"]
                 if len(tokens) > 0:
                     # compare the similarity of current articles with pervious
-                    content = u' '.join([t['value'] for t in tokens])
+                    content = u' '.join([t['value'].lower() for t in tokens])
                     dup = False
                     for article in articles:
                         if content[:100] == article[:100]:
@@ -315,8 +315,8 @@ if __name__ == "__main__":
     emb_dm = 100
     #docs, vocab, type2id, pip2id = generate_docs(gsr_file, clean_str=False)
     rupen_gsr_file = "../data/all_gsr_events_BoT-March_2015.hdl-desc-dwnldarticles.translated.enr.json"
-    #docs, vocab, type2id, pip2id = generate_rupen_docs(rupen_gsr_file, clean_str=False)
-    docs, vocab, type2id, pip2id = generate_rupen_important_docs(rupen_gsr_file)
+    docs, vocab, type2id, pip2id = generate_rupen_docs(rupen_gsr_file, clean_str=False)
+    #docs, vocab, type2id, pip2id = generate_rupen_important_docs(rupen_gsr_file)
     print "Total Articles %d " % (len(docs))
     #wiki_vocab, wiki_embedding = load_wikiword2vec(wiki_file)
     rss_vocab, rss_embedding = load_rssworkd2vec(rss_file) 
@@ -350,5 +350,5 @@ if __name__ == "__main__":
     # dump the data
     data = [docs, type2id, pip2id, word2id, embedding, rand_embedding]
 
-    with open("../data/important_sen_dataset_3", "wb") as ed:
+    with open("../data/full_doc_dataset_3", "wb") as ed:
         cPickle.dump(data, ed)
