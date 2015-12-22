@@ -57,7 +57,7 @@ def split_text_set():
     train_pop, valid_pop, test_pop = dataset[2]
     train_type, valid_tupe, test_type = dataset[3]
 
-    names = ["spanish_protest_%s.txt.tok", "english_protest_%s.txt.tok", "pop_%s_label.txt", "type_%s_label.txt"]
+    names = ["spanish_protest_%s.txt.tok", "english_protest_%s.txt.tok", "spanish_protest_%s.pop_cat", "spanish_protest_%s.type_cat"]
     phases = ["train", "valid", "test"]
     for i in range(len(names)):
         data = dataset[i]
