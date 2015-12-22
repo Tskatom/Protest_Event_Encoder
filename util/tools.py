@@ -8,7 +8,7 @@ import sys
 import os
 import random
 
-def split_dataset(dataset, ratio=[.8,.1,.1], rand=False):
+def split_dataset(dataset, ratio=[.7,.1,.2], rand=False):
     """split the input dataset into train, valid, test
     
     >>> split_dataset([range(10)])
