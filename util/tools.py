@@ -120,7 +120,6 @@ def split_text_set():
     for i in range(len(names)):
         data = dataset[i]
         for j in range(len(phases)):
-            print names[i], phases[j]
             file_name = os.path.join("../data/", names[i] % phases[j])
             with open(file_name, 'w') as df:
                 for line in data[j]:

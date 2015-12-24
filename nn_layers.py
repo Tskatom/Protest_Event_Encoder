@@ -173,6 +173,7 @@ class LogisticRegressionLayer(object):
         return T.mean(T.neq(self.y_pred, y))
 
 
+
 class ConvPoolLayer(object):
     """Convolution and Max Pool Layer"""
     def __init__(self, rng, input, filter_shape, input_shape,
