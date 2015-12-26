@@ -74,15 +74,17 @@ with open(infile) as itf, open(es_file, 'w') as esf, open(en_file, 'w') as enf, 
     for article_key, value in article_set.items():
         esf.write(value["spanish"] + "\n")
         enf.write(value["english"] + "\n")
-        pop_f.write('|'.join(value['pop']) + "\n")
-        tf.write('|'.join(value['type']) + "\n")
+        pop_s = list(value['pop'])
+        type_s = list(value['type'])
+        pop_f.write('|'.join(pop_s) + "\n")
+        tf.write('|'.join(type_s) + "\n")
 
         # write to single label
-        if len(value['pop']) == 1:
+        if len(pop_s) == 1:
             s_esf.write(value["spanish"] + "\n")
             s_enf.write(value["english"] + "\n")
-            s_pop_f.write(value["pop"].pop() + "\n")
-            s_tf.write(value["type"].pop() + "\n")
+            s_pop_f.write(pop_s[0] + "\n")
+            s_tf.write('|'.join(type_s) + "\n")
 
 if __name__ == "__main__":
     pass
