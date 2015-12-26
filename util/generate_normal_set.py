@@ -39,7 +39,6 @@ with open(infile) as itf, open(es_file, 'w') as esf, open(en_file, 'w') as enf, 
         population = event["population"]
     
         # we use the 100 tokens as dupilciated case
-        article_set = {}
         for article in event["downloaded_articles"].values():
             if not isinstance(article, dict):
                 continue
