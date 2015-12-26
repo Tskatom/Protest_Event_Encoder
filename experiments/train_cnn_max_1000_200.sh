@@ -9,7 +9,7 @@ model_exe=../CNN_no_validation.py
 options="LowerCase UTF8 RemoveNumbers"
 max_num=100000
 min_word_count=1
-word_dm=100
+word_dm=200
 
 echo Generating vocabulary for training data ... \n
 vocab_fn=data/spanish_protest.trn-${max_num}.vocab
@@ -19,13 +19,14 @@ $prep_exe gen_vocab input_fn=./data/tokens.lst vocab_fn=$vocab_fn max_vocab_size
 echo Construct two set of vocabulary embedding: ramdom and pretrained \n
 vec_trained_fn=./data/trained_w2v_${word_dm}.pkl
 vec_random_fn=./data/random_w2v_${word_dm}.pkl
-pretrained_fn=../data/100d_vectors.txt
+pretrained_fn=../data/${word_dm}d_vectors.txt
 python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_random_fn --vec_trained_fn $vec_trained_fn --pretrained_fn $pretrained_fn --emb_dm $word_dm
 
 echo Start Training the model
-exp_name=cnn_${max_num}_${word_dm}_update_no_valid
+exp_name=cnn_${max_num}_${word_dm}_update_no_valid_max1000_200
 log_fn=./log/${exp_name}.log
 perf_fn=./results/
-python $model_exe --prefix ../data/spanish_protest --sufix pop_cat --word2vec $vec_trained_fn --dict_fn ../data/pop_cat.dic --max_len 2000 --padding 3 --exp_name $exp_name --max_iter 200 --batch_size 200 --log_fn $log_fn --perf_fn $perf_fn
+param_fn=./param.json
+python $model_exe --prefix ../data/spanish_protest --sufix pop_cat --word2vec $vec_trained_fn --dict_fn ../data/pop_cat.dic --max_len 1000 --padding 3 --exp_name $exp_name --max_iter 200 --batch_size 200 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn
 
 
