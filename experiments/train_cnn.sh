@@ -26,6 +26,7 @@ echo Start Training the model
 exp_name=cnn_${max_num}_${word_dm}_update_no_valid
 log_fn=./log/${exp_name}.log
 perf_fn=./results/
-python $model_exe --prefix ../data/spanish_protest --sufix pop_cat --word2vec $vec_trained_fn --dict_fn ../data/pop_cat.dic --max_len 2000 --padding 3 --exp_name $exp_name --max_iter 200 --batch_size 200 --log_fn $log_fn --perf_fn $perf_fn
+param_fn=./param.json
+python $model_exe --prefix ../data/single_label/spanish_protest --sufix pop_cat --word2vec $vec_trained_fn --dict_fn ../data/single_label/pop_cat.dic --max_len 2000 --padding 3 --exp_name $exp_name --max_iter 100 --batch_size 200 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn
 
 

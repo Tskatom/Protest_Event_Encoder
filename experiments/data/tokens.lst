@@ -1,2 +1,2 @@
-../data/spanish_protest_train.txt.tok
-../data/spanish_protest_valid.txt.tok
+../data/single_label/spanish_protest_train.txt.tok
+../data/single_label/spanish_protest_valid.txt.tok

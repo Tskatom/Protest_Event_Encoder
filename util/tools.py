@@ -10,7 +10,7 @@ import random
 import argparse
 import numpy as np
 import cPickle
-
+import re
 
 def parse_args():
     ap = argparse.ArgumentParser()
@@ -20,7 +20,41 @@ def parse_args():
     ap.add_argument("--vec_trained_fn", type=str, help="output pretrained vocab embedding file")
     ap.add_argument("--pretrained_fn", type=str, help="pretrained word2vec")
     ap.add_argument("--emb_dm", type=int, help="the dimention of the word embedding")
+    ap.add_argument("--es_file", type=str, help="spanish article file",
+            default="../data/single_label/spanish_protest.txt.tok")
+    ap.add_argument("--en_file", type=str, help="english article file",
+            default="../data/single_label/english_protest.txt.tok")
+    ap.add_argument("--pop_label_file", type=str, help="population label file",
+            default="../data/single_label/pop_label.txt")
+    ap.add_argument("--eventType_file", type=str, help="event type label file",
+            default="../data/single_label/eventType_label.txt")
+    ap.add_argument("--outfolder", type=str, help="output folder")
+    ap.add_argument("--keywords_file", type=str, help="keywords file")
     return ap.parse_args()
+
+def filter_sen(es_file, key_file, outfolder):
+    words = [w.strip() for w in open(key_file)]
+    rule = '|'.join(words)
+    pattern = re.compile(rule, re.I)
+    
+    basename = "sen_" + os.path.basename(es_file)
+    outfile = os.path.join(outfolder, basename)
+
+    with open(es_file) as esf, open(outfile, 'w') as otf:
+        not_found = 0
+        for line in esf:
+            sens = line.split(".")
+            matched_sens = ''
+            for sen in sens:
+                if pattern.search(sen):
+                    matched_sens += sen.strip() + " . "
+
+            if len(matched_sens) == 0:
+                not_found += 1
+                print '---------- Not Found', not_found
+                matched_sens = sens[0] + " . "
+            matched_sens = matched_sens.strip()
+            otf.write(matched_sens + "\n")
 
 
 def generate_vocab_embedding(vocab_fn, pretrained_fn, vec_fn, emb_dm=100, seed=1234):
@@ -97,16 +131,14 @@ def split_dataset(dataset, ratio=[.7,.1,.2], rand=False):
     return new_dataset
 
 
-def split_text_set():
-    es_file = "../data/spanish_protest.txt.tok"
-    en_file = "../data/english_protest.txt.tok"
-    pop_label_file = "../data/pop_label.txt"
-    eventType_file = "../data/eventType_label.txt"
-
+def split_text_set(es_file, en_file, pop_label_file, eventType_file):
+    
     es = [l for l in open(es_file)]
     en = [l for l in open(en_file)]
     pops = [l for l in open(pop_label_file)]
     types = [l for l in open(eventType_file)]
+
+    folder = os.path.dirname(es_file)
 
     dataset = split_dataset([es, en, pops, types])
 
@@ -120,7 +152,7 @@ def split_text_set():
     for i in range(len(names)):
         data = dataset[i]
         for j in range(len(phases)):
-            file_name = os.path.join("../data/", names[i] % phases[j])
+            file_name = os.path.join(folder, names[i] % phases[j])
             with open(file_name, 'w') as df:
                 for line in data[j]:
                     df.write(line)
@@ -143,6 +175,17 @@ def main():
             # using random vector
             vec_fn = args.vec_random_fn
             generate_vocab_embedding(vocab_fn, None, vec_fn, emb_dm, seed)
+    elif task == "split_data":
+        es_file = args.es_file
+        en_file = args.en_file
+        pop_label_file = args.pop_label_file
+        eventType_file = args.eventType_file
+        split_text_set(es_file, en_file, pop_label_file, eventType_file)
+    elif task == "filter_sen":
+        es_file = args.es_file
+        keyword_file = args.keywords_file
+        outfolder = args.outfolder
+        filter_sen(es_file, keyword_file, outfolder)
 
 
 if __name__ == "__main__":

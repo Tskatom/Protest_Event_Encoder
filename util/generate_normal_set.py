@@ -65,10 +65,9 @@ with open(infile) as itf, open(es_file, 'w') as esf, open(en_file, 'w') as enf, 
             if article_key not in article_set:
                 article_set[article_key] = {"spanish": u' '.join(spanish_tokens).encode('utf-8'), 
                         "english": u' '.join(english_tokens).encode('utf-8'),
-                        "pop":set(population), "type":set(eventType)}
-            else:
-                article_set[article_key]["pop"].add(population)
-                article_set[article_key]["type"].add(eventType)
+                        "pop":set(), "type":set()}
+            article_set[article_key]["pop"].add(population)
+            article_set[article_key]["type"].add(eventType)
     print "Total Articles %d " % len(article_set)
     # write to files
     for article_key, value in article_set.items():

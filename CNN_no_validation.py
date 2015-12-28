@@ -57,6 +57,12 @@ def parse_args():
     ap.add_argument("--max_iter", type=int,
             help="max iterations")
     ap.add_argument("--batch_size", type=int)
+    ap.add_argument("--log_fn", type=str,
+            help="log filename")
+    ap.add_argument("--perf_fn", type=str,
+            help="folder to store predictions")
+    ap.add_argument("--param_fn", type=str,
+            help="sepcific local params")
     return ap.parse_args()
 
 def load_dataset(prefix, sufix):
@@ -136,6 +142,7 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
 
 def run_cnn(exp_name,
         dataset, embedding,
+        log_fn, perf_fn,
         emb_dm=100,
         batch_size=100,
         filter_hs=[1, 2, 3],
@@ -289,7 +296,7 @@ def run_cnn(exp_name,
 
     done_loop = False
     
-    log_file = open("./log/%s.log" % exp_name, 'a')
+    log_file = open(log_fn, 'a')
 
     print "Start to train the model....."
     cpu_trn_y = np.asarray(dataset[0][1])
@@ -318,7 +325,7 @@ def run_cnn(exp_name,
             test_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
             test_score = compute_score(cpu_tst_y, test_preds)
             
-            with open("./experiments/results/%s_%d.pred" % (exp_name, epoch), 'w') as epf:
+            with open(os.path.join(perf_fn, "%s_%d.pred" % (exp_name, epoch)), 'w') as epf:
                 for p in test_preds:
                     epf.write("%d\n" % int(p))
                 message = "Epoch %d test perf %f" % (epoch, test_score)
@@ -350,6 +357,8 @@ def main():
     sufix = args.sufix
     expe_name = args.exp_name
     batch_size = args.batch_size
+    log_fn = args.log_fn
+    perf_fn = args.perf_fn
 
     # load the dataset
     print 'Start loading the dataset ...'
@@ -370,18 +379,25 @@ def main():
     non_static = not args.static
     exp_name = args.exp_name
     n_epochs = args.max_iter
+
+    # load local parameters
+    loc_params = json.load(open(args.param_fn))
+    filter_hs = loc_params["filter_hs"]
+    hidden_units = loc_params["hidden_units"]
+
     run_cnn(exp_name, digit_dataset, embedding,
-        emb_dm=embedding.shape[1],
-        batch_size=batch_size,
-        filter_hs=[1, 2, 3],
-        hidden_units=[100, 11],
-        dropout_rate=0.5,
-        shuffle_batch=True,
-        n_epochs=n_epochs,
-        lr_decay=0.95,
-        activation=ReLU,
-        sqr_norm_lim=9,
-        non_static=True)
+            log_fn, perf_fn,
+            emb_dm=embedding.shape[1],
+            batch_size=batch_size,
+            filter_hs=filter_hs,
+            hidden_units=hidden_units,
+            dropout_rate=0.5,
+            shuffle_batch=True,
+            n_epochs=n_epochs,
+            lr_decay=0.95,
+            activation=ReLU,
+            sqr_norm_lim=9,
+            non_static=True)
      
     
 if __name__ == "__main__":
