@@ -42,10 +42,14 @@ def parse_args():
             help="the prefix for input data such as spanish_protest")
     ap.add_argument('--word2vec', type=str,
             help="word vector pickle file")
-    ap.add_argument('--sufix', type=str,
+    ap.add_argument('--sufix_pop', type=str,
             help="the sufix for the target file")
-    ap.add_argument('--dict_fn', type=str,
-            help='class dictionary')
+    ap.add_argument('--sufix_type', type=str,
+            help="the sufix for the target file")
+    ap.add_argument('--dict_pop_fn', type=str,
+            help='population class dictionary')
+    ap.add_argument('--dict_type_fn', type=str,
+            help='event type class dictionary')
     ap.add_argument('--max_len', type=int,
             help='the max length for doc used for mini-batch')
     ap.add_argument("--padding", type=int,
@@ -65,7 +69,7 @@ def parse_args():
             help="sepcific local params")
     return ap.parse_args()
 
-def load_dataset(prefix, sufix):
+def load_dataset(prefix, sufix_1, sufix_2):
     """Load the train/valid/test set
         prefix eg: ../data/spanish_protest
         sufix eg: pop_cat
@@ -73,11 +77,13 @@ def load_dataset(prefix, sufix):
     dataset = []
     for group in ["train", "valid", "test"]:
         x_fn = "%s_%s.txt.tok" % (prefix, group)
-        y_fn = "%s_%s.%s" % (prefix, group, sufix)
+        y1_fn = "%s_%s.%s" % (prefix, group, sufix_1)
+        y2_fn = "%s_%s.%s" % (prefix, group, sufix_2)
         xs = [l.strip() for l in open(x_fn)]
-        ys = [l.strip() for l in open(y_fn)]
-        dataset.append((xs, ys))
-        print "Load %d %s records" % (len(ys), group)
+        y1s = [l.strip() for l in open(y1_fn)]
+        y2s = [l.strip() for l in open(y2_fn)]
+        dataset.append((xs, y1s, y2s))
+        print "Load %d %s records" % (len(y1s), group)
     return dataset
 
 def doc_to_id(doc, word2id, max_len=2000, padding=5):
@@ -94,19 +100,24 @@ def doc_to_id(doc, word2id, max_len=2000, padding=5):
 def transform_dataset(dataset, word2id, class2id, max_len=2000, padding=5):
     """Transform the dataset into digits"""
     train_set, valid_set, test_set = dataset
-    train_doc, train_class = train_set
-    valid_doc, valid_class = valid_set
-    test_doc, test_class = test_set
+    train_doc, train_pop_class, train_type_class = train_set
+    valid_doc, valid_pop_class, valid_type_class = valid_set
+    test_doc, test_pop_class, test_type_class = test_set
     
     train_doc_ids = [doc_to_id(doc, word2id, max_len, padding) for doc in train_doc]
     valid_doc_ids = [doc_to_id(doc, word2id, max_len, padding) for doc in valid_doc]
     test_doc_ids = [doc_to_id(doc, word2id, max_len, padding) for doc in test_doc]
 
-    train_y = [class2id[c] for c in train_class]
-    valid_y = [class2id[c] for c in valid_class]
-    test_y = [class2id[c] for c in test_class]
+    train_pop_y = [class2id["pop"][c] for c in train_pop_class]
+    valid_pop_y = [class2id["pop"][c] for c in valid_pop_class]
+    test_pop_y = [class2id["pop"][c] for c in test_pop_class]
+    
+    train_type_y = [class2id["type"][c] for c in train_type_class]
+    valid_type_y = [class2id["type"][c] for c in valid_type_class]
+    test_type_y = [class2id["type"][c] for c in test_type_class]
 
-    return [(train_doc_ids, train_y), (valid_doc_ids, valid_y), (test_doc_ids, test_y)]
+    return [(train_doc_ids, train_pop_y, train_type_y), (valid_doc_ids, valid_pop_y, valid_type_y), (test_doc_ids, test_pop_y, test_type_y)]
+
 
 def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
         norm_lim=9, word_vec_name='embedding'):
@@ -210,7 +221,7 @@ def run_cnn(exp_name,
     layer1_input = T.concatenate(layer1_inputs, 1)
 
     ##############
-    # classifier #
+    # classifier pop#
     ##############
     print "Construct classifier ...."
     hidden_units[0] = num_maps * len(filter_hs)
@@ -235,15 +246,43 @@ def run_cnn(exp_name,
             1e-6, 
             sqr_norm_lim)
 
+
+    #######################
+    # classifier Type #####
+    #######################
+    type_hidden_units = [num for num in hidden_units]
+    type_hidden_units[-1] = 6
+    type_model = nn.MLPDropout(rng,
+            input=layer1_input,
+            layer_sizes=type_hidden_units,
+            dropout_rates=[dropout_rate],
+            activations=[activation])
+    type_params = type_model.params
+    for conv_layer in conv_layers:
+        type_params += conv_layer.params
+
+    if non_static:
+        type_params.append(words)
+    
+    type_cost = type_model.negative_log_likelihood(y)
+    type_dropout_cost = type_model.dropout_negative_log_likelihood(y)
+    type_grad_updates = sgd_updates_adadelta(type_params, 
+            type_dropout_cost,
+            lr_decay,
+            1e-6,
+            sqr_norm_lim)
+
+
+
     #####################
     # Construct Dataset #
     #####################
     print "Copy data to GPU and constrct train/valid/test func"
     np.random.seed(1234)
     
-    train_x, train_y = shared_dataset(dataset[0])
-    valid_x, valid_y = shared_dataset(dataset[1])
-    test_x, test_y = shared_dataset(dataset[2])
+    train_x, train_pop_y, train_type_y = shared_dataset(dataset[0])
+    valid_x, valid_pop_y, valid_type_y = shared_dataset(dataset[1])
+    test_x, test_pop_y, test_type_y = shared_dataset(dataset[2])
 
     n_train_batches = int(np.ceil(1.0 * len(dataset[0][0]) / batch_size))
     n_valid_batches = int(np.ceil(1.0 * len(dataset[1][0]) / batch_size))
@@ -256,13 +295,13 @@ def run_cnn(exp_name,
     train_func = function([index], cost, updates=grad_updates,
             givens={
                 x: train_x[index*batch_size:(index+1)*batch_size],
-                y: train_y[index*batch_size:(index+1)*batch_size]
+                y: train_pop_y[index*batch_size:(index+1)*batch_size]
                 })
     
     valid_train_func = function([index], cost, updates=grad_updates,
             givens={
                 x: valid_x[index*batch_size:(index+1)*batch_size],
-                y: valid_y[index*batch_size:(index+1)*batch_size]
+                y: valid_pop_y[index*batch_size:(index+1)*batch_size]
                 })
 
     train_pred = function([index], model.preds, 
@@ -280,7 +319,38 @@ def run_cnn(exp_name,
                 x:test_x[index*batch_size:(index+1)*batch_size],
                 })
 
+    #########################
+    # train model type func #
+    #########################
+
+    train_type_func = function([index], type_cost, updates=type_grad_updates,
+            givens={
+                x: train_x[index*batch_size:(index+1)*batch_size],
+                y: train_type_y[index*batch_size:(index+1)*batch_size]
+                })
     
+    valid_train_type_func = function([index], type_cost, updates=type_grad_updates,
+            givens={
+                x: valid_x[index*batch_size:(index+1)*batch_size],
+                y: valid_type_y[index*batch_size:(index+1)*batch_size]
+                })
+
+    train_type_pred = function([index], type_model.preds, 
+            givens={
+                x: train_x[index*batch_size:(index+1)*batch_size]
+                })
+
+    valid_type_pred = function([index], type_model.preds,
+            givens={
+                x: valid_x[index*batch_size:(index+1)*batch_size],
+                })
+
+    test_type_pred = function([index], type_model.preds,
+            givens={
+                x:test_x[index*batch_size:(index+1)*batch_size],
+                })
+
+
     # apply early stop strategy
     patience = 100
     patience_increase = 2
@@ -299,9 +369,8 @@ def run_cnn(exp_name,
     log_file = open(log_fn, 'a')
 
     print "Start to train the model....."
-    cpu_trn_y = np.asarray(dataset[0][1])
-    cpu_val_y = np.asarray(dataset[1][1])
-    cpu_tst_y = np.asarray(dataset[2][1])
+    cpu_tst_pop_y = np.asarray(dataset[2][1])
+    cpu_tst_type_y = np.asarray(dataset[2][2])
 
     def compute_score(true_list, pred_list):
         mat = np.equal(true_list, pred_list)
@@ -316,19 +385,34 @@ def run_cnn(exp_name,
             cost_epoch = train_func(minibatch_index)
             costs.append(cost_epoch)
             set_zero(zero_vec)
+        
+        type_costs = []
+        for minibatch_index in np.random.permutation(range(n_train_batches)):
+            cost_epoch = train_type_func(minibatch_index)
+            type_costs.append(cost_epoch)
+            set_zero(zero_vec)
 
         # do validatiovalidn
         valid_cost = [valid_train_func(i) for i in np.random.permutation(xrange(n_valid_batches))]
+        valid_type_cost = [valid_train_type_func(i) for i in np.random.permutation(xrange(n_valid_batches))]
 
         if epoch % 5 == 0:
             # do test
             test_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
-            test_score = compute_score(cpu_tst_y, test_preds)
+            test_score = compute_score(cpu_tst_pop_y, test_preds)
             
-            with open(os.path.join(perf_fn, "%s_%d.pred" % (exp_name, epoch)), 'w') as epf:
+            test_type_preds = np.concatenate([test_type_pred(i) for i in xrange(n_test_batches)])
+            test_type_score = compute_score(cpu_tst_type_y, test_type_preds)
+            
+            with open(os.path.join(perf_fn, "%s_%d.pop_pred" % (exp_name, epoch)), 'w') as epf:
                 for p in test_preds:
                     epf.write("%d\n" % int(p))
-                message = "Epoch %d test perf %f" % (epoch, test_score)
+
+            with open(os.path.join(perf_fn, "%s_%d.type_pred" % (exp_name, epoch)), 'w') as epf:
+                for p in test_type_preds:
+                    epf.write("%d\n" % int(p))
+            
+            message = "Epoch %d test pop perf %f, type perf %f" % (epoch, test_score, test_type_score)
             print message
             log_file.write(message + "\n")
             log_file.flush()
@@ -340,21 +424,26 @@ def run_cnn(exp_name,
     log_file.close()
 
 
-def shared_dataset(data_xy, borrow=True):
-    data_x, data_y = data_xy
+def shared_dataset(data_xyz, borrow=True):
+    data_x, data_y, data_z = data_xyz
     shared_x = theano.shared(np.asarray(data_x,
         dtype=theano.config.floatX), borrow=borrow)
 
     shared_y = theano.shared(np.asarray(data_y,
         dtype=theano.config.floatX), borrow=borrow)
-    return shared_x, T.cast(shared_y, 'int32')
+    
+    shared_z = theano.shared(np.asarray(data_z,
+        dtype=theano.config.floatX), borrow=borrow)
+
+    return shared_x, T.cast(shared_y, 'int32'), T.cast(shared_z, 'int32')
 
 
 def main():
     args = parse_args()
     prefix = args.prefix
     word2vec_file = args.word2vec
-    sufix = args.sufix
+    sufix_pop = args.sufix_pop
+    sufix_type = args.sufix_type
     expe_name = args.exp_name
     batch_size = args.batch_size
     log_fn = args.log_fn
@@ -362,13 +451,17 @@ def main():
 
     # load the dataset
     print 'Start loading the dataset ...'
-    dataset = load_dataset(prefix, sufix)
+    dataset = load_dataset(prefix, sufix_pop, sufix_type)
     wf = open(word2vec_file)
     embedding = cPickle.load(wf)
     word2id = cPickle.load(wf)
 
-    dict_file = args.dict_fn
-    class2id = {k.strip(): i for i, k in enumerate(open(dict_file))}
+    class2id = {}
+    dict_pop_file = args.dict_pop_fn
+    class2id["pop"] = {k.strip(): i for i, k in enumerate(open(dict_pop_file))}
+    
+    dict_type_file = args.dict_type_fn
+    class2id["type"] = {k.strip(): i for i, k in enumerate(open(dict_type_file))}
     
     # transform doc to dig list and padding docs
     print 'Start to transform doc to digits'
