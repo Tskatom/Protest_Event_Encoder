@@ -21,6 +21,7 @@ import nn_layers as nn
 import logging
 import timeit
 from collections import OrderedDict
+import re
 
 #theano.config.profile = True
 #theano.config.profile_memory = True
@@ -88,7 +89,7 @@ def split_doc2sen(doc, word2id, max_sens=40, max_words=80, padding=5):
     """
         doc is the raw text where words are seperated by space
     """
-    sens = re.split("\.|\?", doc.lower())
+    sens = re.split("\.|\?|\|", doc.lower())
     # reduce those sens which has length less than 5
     sens = [sen for sen in sens if len(sen.strip().split(" ")) > 5]
     pad = padding - 1
@@ -99,7 +100,7 @@ def split_doc2sen(doc, word2id, max_sens=40, max_words=80, padding=5):
         for w in tokens[:max_words]:
             sen_ids.append(word2id.get(w, 1))
         num_suff = max(0, max_words - len(tokens)) + pad
-        sen_ids += [0] * num_stuff
+        sen_ids += [0] * num_suff
         sens_pad.append(sen_ids)
     
     # add more padding sentence
@@ -139,9 +140,9 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
     gparams = [] 
     for param in params:
         empty = np.zeros_like(param.get_value())
-        exp_sqr_grads[param] = theano.shared(value=as_floatX(empty),name="exp_grad_%s" % param.name)
+        exp_sqr_grads[param] = theano.shared(value=as_floatX(empty),name="exp_grad_%s" % param.name, borrow=True)
         gp = T.grad(cost, param)
-        exp_sqr_ups[param] = theano.shared(value=as_floatX(empty), name="exp_grad_%s" % param.name)
+        exp_sqr_ups[param] = theano.shared(value=as_floatX(empty), name="exp_grad_%s" % param.name, borrow=True)
         gparams.append(gp)
 
     for param, gp in zip(params, gparams):
@@ -156,7 +157,7 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
         if (param.get_value(borrow=True).ndim == 2) and (param.name!='embedding'):
             col_norms = T.sqrt(T.sum(T.sqr(stepped_param), axis=0)) 
             desired_norms = T.clip(col_norms, 0, T.sqrt(norm_lim)) 
-                scale = desired_norms / (1e-7 + col_norms)
+            scale = desired_norms / (1e-7 + col_norms)
             updates[param] = stepped_param * scale
         else:
             updates[param] = stepped_param
@@ -200,7 +201,7 @@ def run_cnn(exp_name,
     # start snippet 1 #
     ###################
     print "start to construct the model ...."
-    x = T.matrix("x")
+    x = T.tensor3("x")
     y = T.ivector("y")
 
     words = shared(value=np.asarray(embedding,
@@ -229,7 +230,7 @@ def run_cnn(exp_name,
                 filter_shape=filter_shape,
                 pool_size=pool_size, activation=activation)
         
-        sen_vecs = conv_layer.output.reshape(x.shape[0], 1, x.shape[1], num_maps)
+        sen_vecs = conv_layer.output.reshape((x.shape[0], 1, x.shape[1], num_maps))
 
         doc_filter_shape = (num_maps, 1, 2, num_maps)
         doc_pool_size = (num_sens - 2 + 1, 1)
@@ -346,7 +347,7 @@ def run_cnn(exp_name,
         score = np.mean(mat)
         return score
     
-    bset_test_score = 0.
+    best_test_score = 0.
     while (epoch < n_epochs) and not done_loop:
         start_time = timeit.default_timer()
         epoch += 1

@@ -74,7 +74,7 @@ def load_dataset(prefix, sufix):
     for group in ["train", "valid", "test"]:
         x_fn = "%s_%s.txt.tok" % (prefix, group)
         y_fn = "%s_%s.%s" % (prefix, group, sufix)
-        xs = [l.strip() for l in open(x_fn)]
+        xs = [l.strip().lower() for l in open(x_fn)]
         ys = [l.strip() for l in open(y_fn)]
         dataset.append((xs, ys))
         print "Load %d %s records" % (len(ys), group)
@@ -116,9 +116,9 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
     gparams = [] 
     for param in params:
         empty = np.zeros_like(param.get_value())
-        exp_sqr_grads[param] = theano.shared(value=as_floatX(empty),name="exp_grad_%s" % param.name)
+        exp_sqr_grads[param] = theano.shared(value=as_floatX(empty),name="exp_grad_%s" % param.name, borrow=True)
         gp = T.grad(cost, param)
-        exp_sqr_ups[param] = theano.shared(value=as_floatX(empty), name="exp_grad_%s" % param.name)
+        exp_sqr_ups[param] = theano.shared(value=as_floatX(empty), name="exp_grad_%s" % param.name, borrow=True)
         gparams.append(gp)
 
     for param, gp in zip(params, gparams):

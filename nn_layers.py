@@ -55,13 +55,13 @@ class HiddenLayer(object):
                                                   w_bound,
                                                   size=(n_in, n_out)),
                                       dtype=theano.config.floatX)
-            self.W = shared(value=W_values, name="hidden_W")
+            self.W = shared(value=W_values, borrow=True, name="hidden_W")
         else:
             self.W = W
 
         if b is None:
             b_values = np.zeros((n_out,), dtype=theano.config.floatX)
-            self.b = shared(value=b_values, name="hidden_b")
+            self.b = shared(value=b_values, borrow=True, name="hidden_b")
         else:
             self.b = b
 
@@ -137,13 +137,13 @@ class LogisticRegressionLayer(object):
         self.input = input
         if W is None:
             W_values = np.zeros((n_in, n_out), dtype=theano.config.floatX)
-            self.W = shared(value=W_values, name="logis_W")
+            self.W = shared(value=W_values, borrow=True, name="logis_W")
         else:
             self.W = W
 
         if b is None:
             b_values = np.zeros((n_out,), dtype=theano.config.floatX)
-            self.b = shared(value=b_values, name="logis_b")
+            self.b = shared(value=b_values, borrow=True, name="logis_b")
         else:
             self.b = b
 
