@@ -211,8 +211,8 @@ def run_cnn(exp_name,
                 filter_shape=filter_shape,
                 pool_size=pool_size, activation=activation)
         sen_vecs = conv_layer.output.reshape((x.shape[0], 1, x.shape[1], num_maps))
-        doc_filter_shape = (num_maps, 1, 2, num_maps)
-        doc_pool_size = (num_sens - 2 + 1, 1)
+        doc_filter_shape = (num_maps, 1, 1, num_maps)
+        doc_pool_size = (num_sens, 1)
         doc_conv_layer = nn.ConvPoolLayer(rng, 
                 input=sen_vecs,
                 input_shape=None,
