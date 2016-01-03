@@ -183,7 +183,7 @@ def run_cnn(exp_name,
     # start snippet 1 #
     ###################
     print "start to construct the model ...."
-    x = T.tensor("x")
+    x = T.tensor3("x")
     y = T.ivector("y")
 
     words = shared(value=np.asarray(embedding,
@@ -472,9 +472,10 @@ def main():
     
     # transform doc to dig list and padding docs
     print 'Start to transform doc to digits'
-    max_len = args.max_len
+    max_sens = args.max_sens
+    max_words = args.max_words
     padding = args.padding
-    digit_dataset = transform_dataset(dataset, word2id, class2id, max_len, padding)
+    digit_dataset = transform_dataset(dataset, word2id, class2id, max_sens, max_words, padding)
 
     non_static = not args.static
     exp_name = args.exp_name
