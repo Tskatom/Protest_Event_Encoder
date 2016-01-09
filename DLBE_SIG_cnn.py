@@ -22,6 +22,8 @@ import logging
 import timeit
 from collections import OrderedDict
 import re
+from theano.tensor.signal.downsample import DownsampleFactorMax
+from theano.tensor.signal.downsample import DownsampleFactorMaxGrad
 
 #theano.config.profile = True
 #theano.config.profile_memory = True
@@ -163,6 +165,10 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
             updates[param] = stepped_param
     return updates
 
+def max_pool_2d_same_size(input, patch_size):
+    output = DownsampleFactorMax(patch_size, True)(input)
+    outs = DownsampleFactorMaxGrad(patch_size, True)(input, output, output)
+    return outs
 
 def run_cnn(exp_name,
         dataset, embedding,
@@ -240,14 +246,14 @@ def run_cnn(exp_name,
                 name="theta", borrow=True)
         gate_score = T.nnet.sigmoid(T.dot(sen_vecs, theta))
         # keep the top k score and set all others to 0
-        top_1 = T.signal.downsample.max_pool_2d_same_size(gate_score, (x.shape[1], 1))
+        top_1 = max_pool_2d_same_size(gate_score, (30, 1))
 
         #sorted_gate_score = T.sort(gate_score, axis=1)
         #thresh = sorted_gate_score[:,-k,:].dimshuffle(0,1,'x')
         #mask = T.ge(gate_score, T.addbroadcast(thresh, 1))
         #masked_gate_score = mask * gate_score
         # multiply the score with original sentence vector
-        weighted_sen_vecs = sen_vecs * T.addbroadcast(top_1, 2)
+        weighted_sen_vecs = sen_vecs * T.addbroadcast(top_1, 3)
         # sum all sentences together to get document vector
         doc_vec = T.sum(weighted_sen_vecs, axis=2)
         layer1_input = doc_vec.flatten(2)
