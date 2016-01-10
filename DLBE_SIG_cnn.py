@@ -170,6 +170,37 @@ def max_pool_2d_same_size(input, patch_size):
     outs = DownsampleFactorMaxGrad(patch_size, True)(input, output, output)
     return outs
 
+def keep_max(input, theta, k):
+    """
+    :type input: theano.tensor.tensor4
+    :param input: the input data
+                
+    :type theta: theano.tensor.matrix
+    :param theta: the parameter for sigmoid function
+                            
+    :type k: int 
+    :param k: the number k used to define top k sentence to remain
+    """
+    sig_input = T.nnet.sigmoid(T.dot(input, theta))
+    # get the sorted idx
+    sort_idx = T.argsort(sig_input, axis=2)
+    k_max_ids = sort_idx[:,:,-k:,:]
+    dim0, dim1, dim2, dim3 = k_max_ids.shape
+    batchids = T.repeat(T.arange(dim0), dim1*dim2*dim3)
+    mapids = T.repeat(T.arange(dim1), dim2*dim3).reshape((1, dim2*dim3))
+    mapids = T.repeat(mapids, dim0, axis=0).flatten()
+    rowids = k_max_ids.flatten()
+    colids = T.arange(dim3).reshape((1, dim3))
+    colids = T.repeat(colids, dim0*dim1*dim2, axis=0).flatten()
+    # construct masked data
+    sig_mask = T.zeros_like(sig_input)
+    choosed = sig_input[batchids, mapids, rowids, colids]
+    sig_mask = T.set_subtensor(sig_mask[batchids, mapids, rowids, colids], 1)
+
+    input_mask = sig_mask * sig_input
+    result = input * T.addbroadcast(input_mask, 3)
+    return result
+
 def run_cnn(exp_name,
         dataset, embedding,
         log_fn, perf_fn,
@@ -218,7 +249,8 @@ def run_cnn(exp_name,
     zero_vector_tensor = T.vector()
     zero_vec = np.zeros(input_width, dtype=theano.config.floatX)
     set_zero = function([zero_vector_tensor],
-            updates=[(words, T.set_subtensor(words[0,:], zero_vector_tensor))])
+            updates=[(words, T.set_subtensor(words[0,:], zero_vector_tensor))],
+            mode="ProfileMode")
 
     # the input for the sentence level conv layers
     layer0_input = words[T.cast(x.flatten(), dtype="int32")].reshape((
@@ -229,7 +261,7 @@ def run_cnn(exp_name,
     layer1_inputs = []
     
     thetas = [] # the gate function parameters
-    k = 2
+    k = 1 
     for i in xrange(len(filter_hs)):
         filter_shape = (num_maps, 1, filter_hs[i], emb_dm)
         pool_size = (input_height - filter_hs[i] + 1, 1)
@@ -244,16 +276,9 @@ def run_cnn(exp_name,
         theta_value = np.random.random((num_maps, 1))
         theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
                 name="theta", borrow=True)
-        gate_score = T.nnet.sigmoid(T.dot(sen_vecs, theta))
-        # keep the top k score and set all others to 0
-        top_1 = max_pool_2d_same_size(gate_score, (30, 1))
 
-        #sorted_gate_score = T.sort(gate_score, axis=1)
-        #thresh = sorted_gate_score[:,-k,:].dimshuffle(0,1,'x')
-        #mask = T.ge(gate_score, T.addbroadcast(thresh, 1))
-        #masked_gate_score = mask * gate_score
-        # multiply the score with original sentence vector
-        weighted_sen_vecs = sen_vecs * T.addbroadcast(top_1, 3)
+        # keep the top k score and set all others to 0
+        weighted_sen_vecs = keep_max(sen_vecs, theta, k)
         # sum all sentences together to get document vector
         doc_vec = T.sum(weighted_sen_vecs, axis=2)
         layer1_input = doc_vec.flatten(2)
@@ -327,28 +352,28 @@ def run_cnn(exp_name,
             givens={
                 x: train_x[index*batch_size:(index+1)*batch_size],
                 y: train_y[index*batch_size:(index+1)*batch_size]
-                })
+                }, mode="ProfileMode")
     
     valid_train_func = function([index], cost, updates=grad_updates,
             givens={
                 x: valid_x[index*batch_size:(index+1)*batch_size],
                 y: valid_y[index*batch_size:(index+1)*batch_size]
-                })
+                }, mode="ProfileMode")
 
     train_pred = function([index], model.preds, 
             givens={
                 x: train_x[index*batch_size:(index+1)*batch_size]
-                })
+                }, mode="ProfileMode")
 
     valid_pred = function([index], model.preds,
             givens={
                 x: valid_x[index*batch_size:(index+1)*batch_size],
-                })
+                }, mode="ProfileMode")
 
     test_pred = function([index], model.preds,
             givens={
                 x:test_x[index*batch_size:(index+1)*batch_size],
-                })
+                }, mode="ProfileMode")
 
     
     # apply early stop strategy
@@ -379,6 +404,7 @@ def run_cnn(exp_name,
         return score
     
     best_test_score = 0.
+    n_epochs = 1
     while (epoch < n_epochs) and not done_loop:
         start_time = timeit.default_timer()
         epoch += 1
