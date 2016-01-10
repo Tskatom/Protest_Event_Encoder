@@ -70,6 +70,10 @@ def parse_args():
             help="folder to store predictions")
     ap.add_argument("--param_fn", type=str,
             help="sepcific local params")
+    ap.add_argument("--top_k", type=int, default=0,
+            help="the maximum of sentence to choose")
+    ap.add_argument("--print_freq", type=int, default=5,
+            help="the frequency of print frequency")
     return ap.parse_args()
 
 def load_dataset(prefix, sufix):
@@ -182,6 +186,10 @@ def keep_max(input, theta, k):
     :param k: the number k used to define top k sentence to remain
     """
     sig_input = T.nnet.sigmoid(T.dot(input, theta))
+    if k == 0: # using all the sentences
+        result = input * T.addbroadcast(sig_input, 3)
+        return result, sig_input
+
     # get the sorted idx
     sort_idx = T.argsort(sig_input, axis=2)
     k_max_ids = sort_idx[:,:,-k:,:]
@@ -199,11 +207,12 @@ def keep_max(input, theta, k):
 
     input_mask = sig_mask * sig_input
     result = input * T.addbroadcast(input_mask, 3)
-    return result
+    return result, sig_input
 
 def run_cnn(exp_name,
         dataset, embedding,
         log_fn, perf_fn,
+        k=0,
         emb_dm=100,
         batch_size=100,
         filter_hs=[1, 2, 3],
@@ -214,7 +223,8 @@ def run_cnn(exp_name,
         lr_decay=0.95,
         activation=ReLU,
         sqr_norm_lim=9,
-        non_static=True):
+        non_static=True,
+        print_freq=5):
     """
     Train and Evaluate CNN event encoder model
     :dataset: list containing three elements[(train_x, train_y), 
@@ -249,8 +259,7 @@ def run_cnn(exp_name,
     zero_vector_tensor = T.vector()
     zero_vec = np.zeros(input_width, dtype=theano.config.floatX)
     set_zero = function([zero_vector_tensor],
-            updates=[(words, T.set_subtensor(words[0,:], zero_vector_tensor))],
-            mode="ProfileMode")
+            updates=[(words, T.set_subtensor(words[0,:], zero_vector_tensor))])
 
     # the input for the sentence level conv layers
     layer0_input = words[T.cast(x.flatten(), dtype="int32")].reshape((
@@ -261,7 +270,8 @@ def run_cnn(exp_name,
     layer1_inputs = []
     
     thetas = [] # the gate function parameters
-    k = 1 
+    sentence_scores = []
+
     for i in xrange(len(filter_hs)):
         filter_shape = (num_maps, 1, filter_hs[i], emb_dm)
         pool_size = (input_height - filter_hs[i] + 1, 1)
@@ -278,13 +288,16 @@ def run_cnn(exp_name,
                 name="theta", borrow=True)
 
         # keep the top k score and set all others to 0
-        weighted_sen_vecs = keep_max(sen_vecs, theta, k)
+        weighted_sen_vecs, sen_score = keep_max(sen_vecs, theta, k)
+        # reduce sentence score to 2 dim
+        sentence_scores.append(sen_score.flatten(2))
         # sum all sentences together to get document vector
         doc_vec = T.sum(weighted_sen_vecs, axis=2)
         layer1_input = doc_vec.flatten(2)
         conv_layers.append(conv_layer)
         layer1_inputs.append(layer1_input)
         thetas.append(theta)
+
         """
         doc_filter_shape = (num_maps, 1, 2, num_maps)
         doc_pool_size = (num_sens - 2 + 1, 1)
@@ -301,7 +314,7 @@ def run_cnn(exp_name,
         """
     
     layer1_input = T.concatenate(layer1_inputs, 1)
-
+    final_sen_score = T.concatenate(sentence_scores, 1)
     ##############
     # classifier #
     ##############
@@ -352,29 +365,33 @@ def run_cnn(exp_name,
             givens={
                 x: train_x[index*batch_size:(index+1)*batch_size],
                 y: train_y[index*batch_size:(index+1)*batch_size]
-                }, mode="ProfileMode")
+                })
     
     valid_train_func = function([index], cost, updates=grad_updates,
             givens={
                 x: valid_x[index*batch_size:(index+1)*batch_size],
                 y: valid_y[index*batch_size:(index+1)*batch_size]
-                }, mode="ProfileMode")
+                })
 
     train_pred = function([index], model.preds, 
             givens={
                 x: train_x[index*batch_size:(index+1)*batch_size]
-                }, mode="ProfileMode")
+                })
 
     valid_pred = function([index], model.preds,
             givens={
                 x: valid_x[index*batch_size:(index+1)*batch_size],
-                }, mode="ProfileMode")
+                })
 
     test_pred = function([index], model.preds,
             givens={
                 x:test_x[index*batch_size:(index+1)*batch_size],
-                }, mode="ProfileMode")
-
+                })
+    
+    test_sentence_est = function([index], final_sen_score,
+            givens={
+                x: test_x[index*batch_size:(index+1)*batch_size]
+                })
     
     # apply early stop strategy
     patience = 100
@@ -391,7 +408,7 @@ def run_cnn(exp_name,
 
     done_loop = False
     
-    log_file = open(log_fn, 'a')
+    log_file = open(log_fn, 'w')
 
     print "Start to train the model....."
     cpu_trn_y = np.asarray(dataset[0][1])
@@ -404,7 +421,6 @@ def run_cnn(exp_name,
         return score
     
     best_test_score = 0.
-    n_epochs = 1
     while (epoch < n_epochs) and not done_loop:
         start_time = timeit.default_timer()
         epoch += 1
@@ -417,15 +433,18 @@ def run_cnn(exp_name,
         # do validatiovalidn
         valid_cost = [valid_train_func(i) for i in np.random.permutation(xrange(n_valid_batches))]
 
-        if epoch % 5 == 0:
+        if epoch % print_freq == 0:
             # do test
             test_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
+            test_sen_score = [test_sentence_est(i) for i in xrange(n_test_batches)]
             test_score = compute_score(cpu_tst_y, test_preds)
             
             with open(os.path.join(perf_fn, "%s_%d.pred" % (exp_name, epoch)), 'w') as epf:
                 for p in test_preds:
                     epf.write("%d\n" % int(p))
                 message = "Epoch %d test perf %f" % (epoch, test_score)
+
+
             print message
             log_file.write(message + "\n")
             log_file.flush()
@@ -438,6 +457,11 @@ def run_cnn(exp_name,
                 with open(model_name, 'wb') as bm:
                     for p in params:
                         cPickle.dump(p.get_value(), bm)
+
+                # dumps the sentence score to local_file
+                score_file = "%s_%d.score" % (exp_name, epoch)
+                with open(score_file, "wb") as sm:
+                    cPickle.dump(test_sen_score, sm)
 
         end_time = timeit.default_timer()
         print "Finish one iteration using %f m" % ((end_time - start_time)/60.)
@@ -465,6 +489,8 @@ def main():
     batch_size = args.batch_size
     log_fn = args.log_fn
     perf_fn = args.perf_fn
+    top_k = args.top_k # the limit of sentences to choose
+    print_freq = args.print_freq
 
     # load the dataset
     print 'Start loading the dataset ...'
@@ -494,6 +520,7 @@ def main():
 
     run_cnn(exp_name, digit_dataset, embedding,
             log_fn, perf_fn,
+            k=top_k,
             emb_dm=embedding.shape[1],
             batch_size=batch_size,
             filter_hs=filter_hs,
@@ -504,7 +531,8 @@ def main():
             lr_decay=0.95,
             activation=ReLU,
             sqr_norm_lim=9,
-            non_static=True)
+            non_static=True,
+            print_freq=print_freq)
      
     
 if __name__ == "__main__":

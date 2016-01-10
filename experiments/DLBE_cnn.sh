@@ -5,7 +5,7 @@
 # generate vocab from training dataset
 prep_exe=../util/prepText
 text_tool=../util/tools.py
-model_exe=../MLT_CNN_no_validation.py
+model_exe=../DLBE_cnn.py
 options="LowerCase UTF8 RemoveNumbers"
 max_num=100000
 min_word_count=1
@@ -23,10 +23,10 @@ pretrained_fn=../data/${word_dm}d_vectors.txt
 python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_random_fn --vec_trained_fn $vec_trained_fn --pretrained_fn $pretrained_fn --emb_dm $word_dm
 
 echo Start Training the model
-exp_name=MLT_cnn_${max_num}_${word_dm}_no_valid_max1000_200
+exp_name=DLBE_cnn_${max_num}_${word_dm}
 log_fn=./log/${exp_name}.log
 perf_fn=./results/
 param_fn=./param.json
-python $model_exe --prefix ../data/single_label/spanish_protest --sufix_pop pop_cat --sufix_type type_cat --word2vec $vec_trained_fn --dict_pop_fn ../data/pop_cat.dic --dict_type_fn ../data/type_cat.dic --max_len 1000 --padding 3 --exp_name $exp_name --max_iter 100 --batch_size 200 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn
+python $model_exe --prefix ../data/single_label/spanish_protest --sufix_pop pop_cat --sufix_type type_cat --word2vec $vec_trained_fn --dict_pop_fn ../data/pop_cat.dic --dict_type_fn ../data/type_cat.dic --max_sens 30 --max_words 70 --padding 3 --exp_name $exp_name --max_iter 100 --batch_size 100 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn 
 
 
