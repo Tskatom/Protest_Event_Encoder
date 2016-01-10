@@ -72,6 +72,10 @@ def parse_args():
             help="the max number of sens in a document")
     ap.add_argument("--max_words", type=int, default=80,
             help="the max number of sentences for each sentence")
+    ap.add_argument("--top_k", type=int, default=0,
+            help="the maximum of sentence to choose")
+    ap.add_argument("--print_freq", type=int, default=5,
+            help="the frequency of print frequency") 
     return ap.parse_args()
 
 def load_dataset(prefix, sufix_1, sufix_2):
@@ -146,9 +150,34 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
     return updates
 
 
+def keep_max(input, theta, k):
+    sig_input = T.nnet.sigmoid(T.dot(input, theta))
+    if k == 0:
+        result = input * T.addbroadcast(sig_input, 3)
+        return result, sig_input
+
+    # get the sorted idx
+    sort_idx = T.argsort(sig_input, axis=2)
+    k_max_ids = sort_idx[:,:,-k:,:]
+    dim0, dim1, dim2, dim3 = k_max_ids.shape
+    batchids = T.repeat(T.arange(dim0), dim1*dim2*dim3)
+    mapids = T.repeat(T.arange(dim1), dim2*dim3).reshape((1, dim2*dim3))
+    mapids = T.repeat(mapids, dim0, axis=0).flatten()
+    rowids = k_max_ids.flatten()
+    colids = T.arange(dim3).reshape((1, dim3))
+    colids = T.repeat(colids, dim0*dim1*dim2, axis=0).flatten()
+    sig_mask = T.zeros_like(sig_input)
+    choosed = sig_input[batchids, mapids, rowids, colids]
+    sig_mask = T.set_subtensor(sig_mask[batchids, mapids, rowids, colids], 1)
+    input_mask = sig_mask * sig_input
+    result = input * T.addbroadcast(input_mask, 3)
+    return result, sig_input
+
+
 def run_cnn(exp_name,
         dataset, embedding,
         log_fn, perf_fn,
+        k=0,
         emb_dm=100,
         batch_size=100,
         filter_hs=[1, 2, 3],
@@ -159,7 +188,8 @@ def run_cnn(exp_name,
         lr_decay=0.95,
         activation=ReLU,
         sqr_norm_lim=9,
-        non_static=True):
+        non_static=True,
+        print_freq=5):
     """
     Train and Evaluate CNN event encoder model
     :dataset: list containing three elements[(train_x, train_y), 
@@ -203,7 +233,9 @@ def run_cnn(exp_name,
 
     conv_layers = []
     layer1_inputs = []
-    
+    thetas = [] # the gate function parameters
+    sentence_scores = []
+
     for i in xrange(len(filter_hs)):
         filter_shape = (num_maps, 1, filter_hs[i], emb_dm)
         pool_size = (input_height - filter_hs[i] + 1, 1)
@@ -212,6 +244,21 @@ def run_cnn(exp_name,
                 filter_shape=filter_shape,
                 pool_size=pool_size, activation=activation)
         sen_vecs = conv_layer.output.reshape((x.shape[0], 1, x.shape[1], num_maps))
+
+        theta_value = np.random.random((num_maps, 1))
+        theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
+                name="theta", borrow=True)
+        # keep the top k score and set all others to 0
+        weighted_sen_vecs, sen_score = keep_max(sen_vecs, theta, k)
+        # reduce sentence score to 2 dim
+        sentence_scores.append(sen_score.flatten(2))
+        doc_vec = T.sum(weighted_sen_vecs, axis=2)
+        layer1_input = doc_vec.flatten(2)
+        conv_layers.append(conv_layer)
+        layer1_inputs.append(layer1_input)
+        thetas.append(theta)
+
+        """
         doc_filter_shape = (num_maps, 1, 1, num_maps)
         doc_pool_size = (num_sens, 1)
         doc_conv_layer = nn.ConvPoolLayer(rng, 
@@ -225,8 +272,10 @@ def run_cnn(exp_name,
         conv_layers.append(conv_layer)
         conv_layers.append(doc_conv_layer)
         layer1_inputs.append(layer1_input)
+        """
     
     layer1_input = T.concatenate(layer1_inputs, 1)
+    final_sen_score = T.concatenate(sentence_scores, 1)
 
     ##############
     # classifier pop#
@@ -243,6 +292,7 @@ def run_cnn(exp_name,
     for conv_layer in conv_layers:
         params += conv_layer.params
 
+    params += thetas
     if non_static:
         params.append(words)
 
@@ -318,6 +368,10 @@ def run_cnn(exp_name,
             givens={
                 x:test_x[index*batch_size:(index+1)*batch_size],
                 })
+    test_sentence_est = function([index], final_sen_score,
+            givens={
+                x: test_x[index*batch_size:(index+1)*batch_size]
+                })
 
 
     # apply early stop strategy
@@ -335,7 +389,7 @@ def run_cnn(exp_name,
 
     done_loop = False
     
-    log_file = open(log_fn, 'a')
+    log_file = open(log_fn, 'w')
 
     print "Start to train the model....."
     cpu_tst_pop_y = np.asarray(dataset[2][1])
@@ -345,7 +399,8 @@ def run_cnn(exp_name,
         mat = np.equal(true_list, pred_list)
         score = np.mean(mat)
         return score
-
+    
+    total_score = 0.0
     while (epoch < n_epochs) and not done_loop:
         start_time = timeit.default_timer()
         epoch += 1
@@ -358,7 +413,7 @@ def run_cnn(exp_name,
         # do validatiovalidn
         valid_cost = [valid_train_func(i) for i in np.random.permutation(xrange(n_valid_batches))]
 
-        if epoch % 5 == 0:
+        if epoch % print_freq == 0:
             # do test
             test_pop_preds, test_type_preds = map(np.concatenate, zip(*[test_pred(i) for i in xrange(n_test_batches)]))
             test_pop_score = compute_score(cpu_tst_pop_y, test_pop_preds)
@@ -376,6 +431,14 @@ def run_cnn(exp_name,
             print message
             log_file.write(message + "\n")
             log_file.flush()
+
+            if ((test_pop_score + test_type_score) > total_score) or (epoch % 15 == 0):
+                total_score = test_pop_score + test_type_score
+                # save the sentence score
+                test_sen_score = [test_sentence_est(i) for i in xrange(n_test_batches)]
+                score_file = "%s_%d.score" % (exp_name, epoch)
+                with open(score_file, "wb") as sm:
+                    cPickle.dump(test_sen_score, sm)
 
         end_time = timeit.default_timer()
         print "Finish one iteration using %f m" % ((end_time - start_time)/60.)
@@ -408,6 +471,8 @@ def main():
     batch_size = args.batch_size
     log_fn = args.log_fn
     perf_fn = args.perf_fn
+    top_k = args.top_k
+    print_freq = args.print_freq
 
     # load the dataset
     print 'Start loading the dataset ...'
@@ -441,6 +506,7 @@ def main():
 
     run_cnn(exp_name, digit_dataset, embedding,
             log_fn, perf_fn,
+            k=top_k,
             emb_dm=embedding.shape[1],
             batch_size=batch_size,
             filter_hs=filter_hs,
@@ -451,7 +517,8 @@ def main():
             lr_decay=0.95,
             activation=ReLU,
             sqr_norm_lim=9,
-            non_static=non_static)
+            non_static=non_static,
+            print_freq=print_freq)
      
     
 if __name__ == "__main__":

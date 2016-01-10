@@ -27,7 +27,7 @@ echo Start Training the model
 exp_name=dlbe_pop_w${word_dm}_k$k
 log_fn=./log/${exp_name}.log
 perf_fn=./results/
-param_fn=./dlbe_sig_param.json
-python $model_exe --prefix ../data/single_label/spanish_protest --sufix pop_cat --word2vec $vec_trained_fn --dict_fn ../data/pop_cat.dic --max_sens 30 --max_words 70 --padding 3 --exp_name $exp_name --max_iter 130 --batch_size 100 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn --top_k $k --print_freq 1
+param_fn=./dlbe_pop_param.json
+python $model_exe --prefix ../data/single_label/spanish_protest --sufix pop_cat --word2vec $vec_trained_fn --dict_fn ../data/pop_cat.dic --max_sens 30 --max_words 70 --padding 3 --exp_name $exp_name --max_iter 75 --batch_size 100 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn --top_k $k 
 
 

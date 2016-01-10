@@ -436,7 +436,6 @@ def run_cnn(exp_name,
         if epoch % print_freq == 0:
             # do test
             test_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
-            test_sen_score = [test_sentence_est(i) for i in xrange(n_test_batches)]
             test_score = compute_score(cpu_tst_y, test_preds)
             
             with open(os.path.join(perf_fn, "%s_%d.pred" % (exp_name, epoch)), 'w') as epf:
@@ -450,7 +449,7 @@ def run_cnn(exp_name,
             log_file.flush()
 
             # store the best model
-            if test_score > best_test_score:
+            if (test_score > best_test_score) or (epoch % 15 == 0):
                 best_test_score = test_score
                 # save the model
                 model_name = "%s_%d.model" % (exp_name, epoch)
@@ -459,6 +458,7 @@ def run_cnn(exp_name,
                         cPickle.dump(p.get_value(), bm)
 
                 # dumps the sentence score to local_file
+                test_sen_score = [test_sentence_est(i) for i in xrange(n_test_batches)]
                 score_file = "%s_%d.score" % (exp_name, epoch)
                 with open(score_file, "wb") as sm:
                     cPickle.dump(test_sen_score, sm)
