@@ -1,0 +1,151 @@
+Epoch 1 with Train perf 0.465000 , valid perf 0.467636 
+
+Epoch 1 test perf 0.477558 under best valid perf 0.467636
+Epoch 2 with Train perf 0.527031 , valid perf 0.529091 
+
+Epoch 2 test perf 0.542068 under best valid perf 0.529091
+Epoch 1 with Train perf 0.632865 , valid perf 0.626182 
+
+Epoch 1 test perf 0.630747 under best valid perf 0.626182
+Epoch 2 with Train perf 0.648542 , valid perf 0.634182 
+
+Epoch 2 test perf 0.645103 under best valid perf 0.634182
+Epoch 3 with Train perf 0.650573 , valid perf 0.617091 
+
+Epoch 4 with Train perf 0.732604 , valid perf 0.705455 
+
+Epoch 4 test perf 0.707251 under best valid perf 0.705455
+Epoch 5 with Train perf 0.740781 , valid perf 0.703273 
+
+Epoch 1 with Train perf 0.614219 , valid perf 0.613455 
+
+Epoch 1 with Train perf 0.614219 , valid perf 0.614182 
+
+Epoch 1 with Train perf 0.614427 , valid perf 0.612364 
+
+Epoch 1 test perf 0.619662 under best valid perf 0.612364
+Epoch 1 with Train perf 0.625313 , valid perf 0.618909
+Epoch 1 test perf 0.623296 under best valid perf 0.618909
+Epoch 2 with Train perf 0.651406 , valid perf 0.634909
+Epoch 2 test perf 0.642013 under best valid perf 0.634909
+Epoch 3 with Train perf 0.653594 , valid perf 0.631273
+Epoch 4 with Train perf 0.731667 , valid perf 0.702545
+Epoch 4 test perf 0.706160 under best valid perf 0.702545
+Epoch 5 with Train perf 0.742500 , valid perf 0.704364
+Epoch 5 test perf 0.708704 under best valid perf 0.704364
+Epoch 6 with Train perf 0.748854 , valid perf 0.704000
+Epoch 7 with Train perf 0.745365 , valid perf 0.697818
+Epoch 8 with Train perf 0.774271 , valid perf 0.726545
+Epoch 8 test perf 0.732328 under best valid perf 0.726545
+Epoch 9 with Train perf 0.741406 , valid perf 0.687636
+Epoch 10 with Train perf 0.783854 , valid perf 0.723636
+Epoch 11 with Train perf 0.787969 , valid perf 0.718909
+Epoch 12 with Train perf 0.797344 , valid perf 0.724000
+Epoch 13 with Train perf 0.799479 , valid perf 0.723273
+Epoch 14 with Train perf 0.805208 , valid perf 0.730545
+Epoch 14 test perf 0.731238 under best valid perf 0.730545
+Epoch 15 with Train perf 0.807708 , valid perf 0.718909
+Epoch 16 with Train perf 0.808594 , valid perf 0.719273
+Epoch 17 with Train perf 0.815833 , valid perf 0.724000
+Epoch 18 with Train perf 0.825677 , valid perf 0.726182
+Epoch 19 with Train perf 0.817396 , valid perf 0.720727
+Epoch 20 with Train perf 0.825469 , valid perf 0.720000
+Epoch 20 test perf 0.730692
+Epoch 21 with Train perf 0.830365 , valid perf 0.729455
+Epoch 22 with Train perf 0.830208 , valid perf 0.727636
+Epoch 23 with Train perf 0.828854 , valid perf 0.715273
+Epoch 24 with Train perf 0.839479 , valid perf 0.710909
+Epoch 25 with Train perf 0.838958 , valid perf 0.725091
+Epoch 26 with Train perf 0.844583 , valid perf 0.724727
+Epoch 27 with Train perf 0.839792 , valid perf 0.720727
+Epoch 28 with Train perf 0.837083 , valid perf 0.715636
+Epoch 29 with Train perf 0.842760 , valid perf 0.718545
+Epoch 30 with Train perf 0.845000 , valid perf 0.717091
+Epoch 31 with Train perf 0.848802 , valid perf 0.725091
+Epoch 32 with Train perf 0.849427 , valid perf 0.722909
+Epoch 33 with Train perf 0.853646 , valid perf 0.721091
+Epoch 34 with Train perf 0.849063 , valid perf 0.713091
+Epoch 35 with Train perf 0.838906 , valid perf 0.711273
+Epoch 36 with Train perf 0.841562 , valid perf 0.710545
+Epoch 37 with Train perf 0.851406 , valid perf 0.718909
+Epoch 38 with Train perf 0.845677 , valid perf 0.705818
+Epoch 39 with Train perf 0.855885 , valid perf 0.713818
+Epoch 40 with Train perf 0.854635 , valid perf 0.714182
+Epoch 40 test perf 0.727603
+Epoch 41 with Train perf 0.858854 , valid perf 0.719636
+Epoch 42 with Train perf 0.858802 , valid perf 0.712000
+Epoch 43 with Train perf 0.859375 , valid perf 0.713091
+Epoch 44 with Train perf 0.860937 , valid perf 0.713455
+Epoch 45 with Train perf 0.862812 , valid perf 0.709455
+Epoch 46 with Train perf 0.860729 , valid perf 0.712000
+Epoch 47 with Train perf 0.859844 , valid perf 0.719636
+Epoch 48 with Train perf 0.857344 , valid perf 0.720000
+Epoch 49 with Train perf 0.864583 , valid perf 0.717818
+Epoch 50 with Train perf 0.859844 , valid perf 0.709818
+Epoch 51 with Train perf 0.864635 , valid perf 0.707636
+Epoch 52 with Train perf 0.858333 , valid perf 0.700000
+Epoch 53 with Train perf 0.858594 , valid perf 0.703636
+Epoch 54 with Train perf 0.865573 , valid perf 0.717818
+Epoch 55 with Train perf 0.867292 , valid perf 0.714909
+Epoch 56 with Train perf 0.866302 , valid perf 0.710182
+Epoch 57 with Train perf 0.866510 , valid perf 0.710909
+Epoch 58 with Train perf 0.868021 , valid perf 0.706182
+Epoch 59 with Train perf 0.871094 , valid perf 0.715273
+Epoch 60 with Train perf 0.869375 , valid perf 0.710545
+Epoch 60 test perf 0.723242
+Epoch 61 with Train perf 0.870365 , valid perf 0.710545
+Epoch 62 with Train perf 0.869167 , valid perf 0.705818
+Epoch 63 with Train perf 0.866719 , valid perf 0.707273
+Epoch 64 with Train perf 0.871354 , valid perf 0.712364
+Epoch 65 with Train perf 0.871771 , valid perf 0.708364
+Epoch 66 with Train perf 0.86947Epoch 1 with Train perf 0.624948 , valid perf 0.618909
+Epoch 1 test perf 0.621843 under best valid perf 0.618909
+Epoch 1 with Train perf 0.626510 , valid perf 0.619636
+Epoch 1 test perf 0.624387 under best valid perf 0.619636
+9 , valid perf 0.706545
+Epoch 67 with Train perf 0.872865 , valid perf 0.708364
+Epoch 68 with Train perf 0.871094 , valid perf 0.708364
+Epoch 69 with Train perf 0.872917 , valid perf 0.705818
+Epoch 70 with Train perf 0.873073 , valid perf 0.707273
+Epoch 71 with Train perf 0.871250 , valid perf 0.705818
+Epoch 72 with Train perf 0.871615 , valid perf 0.708727
+Epoch 73 with Train perf 0.869531 , valid perf 0.698182
+Epoch 74 with Train perf 0.874688 , valid perf 0.705091
+Epoch 75 with Train perf 0.873125 , valid perf 0.711636
+Epoch 76 with Train perf 0.871979 , valid perf 0.701818
+Epoch 77 with Train perf 0.875208 , valid perf 0.703273
+Epoch 78 with Train perf 0.874740 , valid perf 0.704000
+Epoch 79 with Train perf 0.872969 , valid perf 0.704364
+Epoch 80 with Train perf 0.873594 , valid perf 0.706545
+Epoch 80 test perf 0.719062
+Epoch 81 with Train perf 0.876042 , valid perf 0.705091
+Epoch 82 with Train perf 0.875885 , valid perf 0.702545
+Epoch 83 with Train perf 0.876563 , valid perf 0.704727
+Epoch 84 with Train perf 0.875729 , valid perf 0.705818
+Epoch 85 with Train perf 0.874896 , valid perf 0.702545
+Epoch 86 with Train perf 0.873437 , valid perf 0.705091
+Epoch 87 with Train perf 0.873802 , valid perf 0.705091
+Epoch 88 with Train perf 0.875052 , valid perf 0.709818
+Epoch 89 with Train perf 0.875885 , valid perf 0.704364
+Epoch 90 with Train perf 0.875469 , valid perf 0.705455
+Epoch 91 with Train perf 0.873437 , valid perf 0.696364
+Epoch 92 with Train perf 0.877552 , valid perf 0.701455
+Epoch 93 with Train perf 0.875417 , valid perf 0.701818
+Epoch 94 with Train perf 0.871875 , valid perf 0.701091
+Epoch 95 with Train perf 0.876406 , valid perf 0.704000
+Epoch 96 with Train perf 0.873750 , valid perf 0.699636
+Epoch 97 with Train perf 0.875677 , valid perf 0.704000
+Epoch 1 with Train perf 0.604923 , valid perf 0.604727
+Epoch 1 with Train perf 0.605183 , valid perf 0.604727
+Epoch 1 with Train perf 0.605183 , valid perf 0.604727
+Epoch 1 test perf 0.608759 under best valid perf 0.604727
+Epoch 2 with Train perf 0.647609 , valid perf 0.633091
+Epoch 2 test perf 0.650191 under best valid perf 0.633091
+Epoch 1 with Train perf 0.643350 , valid perf 0.630909
+Epoch 1 test perf 0.643467 under best valid perf 0.630909
+Epoch 1 with Train perf 0.641273 , valid perf 0.630909
+Epoch 1 test perf 0.642740 under best valid perf 0.630909
+Epoch 1 with Train cost 1.454193 , valid perf 0.632727
+Epoch 1 test perf 0.644558 under best valid perf 0.632727
+Epoch 2 with Train cost 1.175964 , valid perf 0.641091
+Epoch 2 test perf 0.648737 under best valid perf 0.641091
