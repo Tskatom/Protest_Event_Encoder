@@ -342,6 +342,7 @@ def run_cnn(exp_name,
             lr_decay, 
             1e-6, 
             sqr_norm_lim)
+    errors = model.errors(y)
 
     #####################
     # Construct Dataset #
@@ -362,6 +363,11 @@ def run_cnn(exp_name,
     #####################
     index = T.iscalar()
     train_func = function([index], cost, updates=grad_updates,
+            givens={
+                x: train_x[index*batch_size:(index+1)*batch_size],
+                y: train_y[index*batch_size:(index+1)*batch_size]
+                })
+    train_error = function([index], errors,
             givens={
                 x: train_x[index*batch_size:(index+1)*batch_size],
                 y: train_y[index*batch_size:(index+1)*batch_size]
@@ -425,6 +431,7 @@ def run_cnn(exp_name,
         start_time = timeit.default_timer()
         epoch += 1
         costs = []
+        
         for minibatch_index in np.random.permutation(range(n_train_batches)):
             cost_epoch = train_func(minibatch_index)
             costs.append(cost_epoch)
@@ -432,16 +439,17 @@ def run_cnn(exp_name,
 
         # do validatiovalidn
         valid_cost = [valid_train_func(i) for i in np.random.permutation(xrange(n_valid_batches))]
-
         if epoch % print_freq == 0:
             # do test
             test_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
             test_score = compute_score(cpu_tst_y, test_preds)
             
+            train_errors = [train_error(i) for i in xrange(n_train_batches)]
+            train_score = 1 - np.mean(train_errors)
             with open(os.path.join(perf_fn, "%s_%d.pred" % (exp_name, epoch)), 'w') as epf:
                 for p in test_preds:
                     epf.write("%d\n" % int(p))
-                message = "Epoch %d test perf %f" % (epoch, test_score)
+                message = "Epoch %d test perf %f train perf" % (epoch, test_score, train_score)
 
 
             print message

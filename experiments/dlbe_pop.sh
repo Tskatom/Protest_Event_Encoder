@@ -24,7 +24,7 @@ pretrained_fn=../data/${word_dm}d_vectors.txt
 python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_random_fn --vec_trained_fn $vec_trained_fn --pretrained_fn $pretrained_fn --emb_dm $word_dm
 
 echo Start Training the model
-exp_name=dlbe_pop_w${word_dm}_k$k
+exp_name=dlbe_pop_w${word_dm}_k${k}_d25
 log_fn=./log/${exp_name}.log
 perf_fn=./results/
 param_fn=./dlbe_pop_param.json
