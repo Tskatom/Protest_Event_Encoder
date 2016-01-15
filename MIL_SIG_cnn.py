@@ -267,81 +267,95 @@ def run_cnn(exp_name,
         ))
 
     conv_layers = []
-    layer1_inputs = []
     
-    thetas = [] # the gate function parameters
-    sentence_scores = []
-
-    for i in xrange(len(filter_hs)):
-        filter_shape = (num_maps, 1, filter_hs[i], emb_dm)
-        pool_size = (input_height - filter_hs[i] + 1, 1)
-        conv_layer = nn.ConvPoolLayer(rng, input=layer0_input, 
-                input_shape=None,
-                filter_shape=filter_shape,
-                pool_size=pool_size, activation=activation)
+    filter_shape = (num_maps, 1, filter_hs[i], emb_dm)
+    pool_size = (input_height - filter_hs[i] + 1, 1)
+    conv_layer = nn.ConvPoolLayer(rng, input=layer0_input, 
+            input_shape=None, 
+            filter_shape=filter_shape, 
+            pool_size=pool_size, activation=activation)
         
-        sen_vecs = conv_layer.output.reshape((x.shape[0], 1, x.shape[1], num_maps))
+    sen_vecs = conv_layer.output.reshape((x.shape[0], 1, x.shape[1], num_maps)) 
+    conv_layers.append(conv_layer)
+
+    # compute preactivation for each sentences
+    layer_sizes = zip(hidden_unit, hidden_unit[1])
+    full_layer_input = sen_vecs
+    dropout_input = sen_vecs
+    hidden_outs = []
+    drophidden_outs = []
+    hidden_layers = []
+    dropout_layers = []
+    droprate = 0.5
+    for lay_size in layer_sizes[:-1]:
+        U_value = np.random.random(lay_size).astype(theano.config.floatX)
+        b_value = np.zeros((lay_size[1],), dtype=theano.config.floatX)
+        U = theano.shared(U_value, borrow=True, name="U")
+        b = theano.shared(b_value, borrow=True, name="b")
+        hiddenLayer = HiddenLayer(rng, full_layer_input, lay_size[0], lay_size[1], ReLU, U * (1 - droprate), b)
+        dropHiddenLayer = DropoutHiddenLayer(rng, dropout_input, lay_size[0], lay_size[1], ReLU, droprate, U, b)
+
+        hidden_layers.append(hiddenLayer)
+        dropout_layers.append(dropHiddenLayer)
+
+        hidden_out = hiddenLayer.output
+        drophidden_out = dropHiddenLayer.output
         
-        # construct gate parameters
-        theta_value = np.random.random((num_maps, 1))
-        theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
-                name="theta", borrow=True)
+        hidden_outs.append(hidden_out)
+        drophidden_outs.append(drophidden_out)
 
-        # keep the top k score and set all others to 0
-        weighted_sen_vecs, sen_score = keep_max(sen_vecs, theta, k)
-        # reduce sentence score to 2 dim
-        sentence_scores.append(sen_score.flatten(2))
-        # sum all sentences together to get document vector
-        doc_vec = T.sum(weighted_sen_vecs, axis=2)
-        layer1_input = doc_vec.flatten(2)
-        conv_layers.append(conv_layer)
-        layer1_inputs.append(layer1_input)
-        thetas.append(theta)
+        full_layer_input = hidden_out
+        dropout_input = drophidden_out
 
-        """
-        doc_filter_shape = (num_maps, 1, 2, num_maps)
-        doc_pool_size = (num_sens - 2 + 1, 1)
-        doc_conv_layer = nn.ConvPoolLayer(rng, input=sen_vecs, 
-                input_shape=None,
-                filter_shape=doc_filter_shape,
-                pool_size=doc_pool_size,
-                activation=activation)
-        layer1_input = doc_conv_layer.output.flatten(2)
-        conv_layers.append(conv_layer)
-        conv_layers.append(doc_conv_layer)
-
-        layer1_inputs.append(layer1_input)
-        """
     
-    layer1_input = T.concatenate(layer1_inputs, 1)
-    final_sen_score = T.concatenate(sentence_scores, 1)
-    ##############
-    # classifier #
-    ##############
-    print "Construct classifier ...."
-    hidden_units[0] = num_maps * len(filter_hs)
-    model = nn.MLPDropout(rng,
-            input=layer1_input,
-            layer_sizes=hidden_units,
-            dropout_rates=[dropout_rate],
-            activations=[activation])
+    # get the max value for each class
+    n_in, n_out = layer_size[-1]
+    W_value = np.random.random((n_in, n_out)).astype(theano.config.floatX)
+    b_value = np.zeros((n_out,), dtype=theano.config.floatX)
+    W = theano.shared(W_value, borrow=True, name="logis_W")
+    b = theano.shared(v_value, borrow=True, name="logis_b")
 
-    params = model.params
+    full_act = T.dot(hidden_outs[-1], W*(1 - droprate)) + b
+    dropout_act = dropout_from_layer(rng, T.dot(dropout_outs[-1], W) + b, droprate)
+
+    # get max out
+    max_full_act = T.max(full_act, axis=2).flatten(2)
+    max_dropout_act = T.max(dropout_act, axis=2).flatten(2)
+    
+    # compute the probability
+    full_probs = T.nnet.softmax(max_full_act)
+    dropout_probs = T.nnet.softmax(max_dropout_act)
+
+    full_y_pred = T.argmax(full_probs, axis=1)
+    dropout_y_pred = T.argmax(dropout_probs, axis=1)
+    
+    full_negative_likelihood = -T.mean(T.log(full_probs)[T.arange(y.shape[0]), y])
+    dropout_negative_likelihood = -T.mean(T.log(dropout_probs)[T.arange(y.shape[0]), y])
+
+    full_errors = T.mean(T.neq(full_y_pred, y))
+
+    full_cost = full_negative_likelihood
+    dropout_cost = dropout_negative_likelihood
+    
+    params = []
     for conv_layer in conv_layers:
         params += conv_layer.params
-    
-    params += thetas
 
+    for dropout_layer in dropout_layers:
+        params += dropout_layer.params
+
+    params.append(W)
+    params.append(b)
+    
     if non_static:
         params.append(words)
 
-    cost = model.negative_log_likelihood(y)
-    dropout_cost = model.dropout_negative_log_likelihood(y)
-    grad_updates = sgd_updates_adadelta(params, 
-            dropout_cost, 
-            lr_decay, 
-            1e-6, 
+    grad_updates = sgd_updates_adadelta(params,
+            dropout_cost,
+            lr_decay,
+            1e-6,
             sqr_norm_lim)
+
     errors = model.errors(y)
 
     #####################
@@ -367,6 +381,7 @@ def run_cnn(exp_name,
                 x: train_x[index*batch_size:(index+1)*batch_size],
                 y: train_y[index*batch_size:(index+1)*batch_size]
                 })
+
     train_error = function([index], errors,
             givens={
                 x: train_x[index*batch_size:(index+1)*batch_size],
@@ -379,10 +394,6 @@ def run_cnn(exp_name,
                 y: valid_y[index*batch_size:(index+1)*batch_size]
                 })
 
-    train_pred = function([index], model.preds, 
-            givens={
-                x: train_x[index*batch_size:(index+1)*batch_size]
-                })
 
     valid_pred = function([index], model.preds,
             givens={

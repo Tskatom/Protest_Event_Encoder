@@ -28,7 +28,6 @@ from theano.tensor.signal.downsample import DownsampleFactorMaxGrad
 #theano.config.profile = True
 #theano.config.profile_memory = True
 #theano.config.optimizer = 'fast_run'
-theano.config.device='cpu'
 
 def ReLU(x):
     return T.maximum(0.0, x)
@@ -82,12 +81,12 @@ def parse_args():
 def load_model(model_file):
     params = {}
     with open(model_file, 'rb') as mf:
-        params["softmax_U"] = cPickle.load(mf)
-        params["softmax_b"] = cPickle.load(mf)
-        params["conv_W"] = cPickle.load(mf)
-        params["conv_b"] = cPickle.load(mf)
-        params["theta"] = cPickle.load(mf)
-        params["embedding"] = cPickle.load(mf)
+        params["softmax_U"] = theano.shared(cPickle.load(mf).astype(theano.config.floatX))
+        params["softmax_b"] = theano.shared(cPickle.load(mf).astype(theano.config.floatX))
+        params["conv_W"] = theano.shared(cPickle.load(mf).astype(theano.config.floatX))
+        params["conv_b"] = theano.shared(cPickle.load(mf).astype(theano.config.floatX))
+        params["theta"] = theano.shared(cPickle.load(mf).astype(theano.config.floatX))
+        params["embedding"] = theano.shared(cPickle.load(mf).astype(theano.config.floatX))
     return params
 
 def load_dataset(prefix, sufix):
@@ -214,9 +213,7 @@ def run_cnn(exp_name,
 
     model_params = load_model(model_file)
 
-    words = shared(value=np.asarray(model_params["embedding"],
-        dtype=theano.config.floatX), 
-        name="embedding", borrow=True)
+    words = model_params["embedding"]
 
     # define function to keep padding vector as zero
     zero_vector_tensor = T.vector()
@@ -247,7 +244,7 @@ def run_cnn(exp_name,
 
         layer1_inputs.append(sen_vecs)
     
-    layer1_input = T.concatenate(layeddr1_inputs, 1)
+    layer1_input = T.concatenate(layer1_inputs, 1)
     
     train_x, train_y = shared_dataset(dataset[0])
     valid_x, valid_y = shared_dataset(dataset[1])
@@ -263,20 +260,17 @@ def run_cnn(exp_name,
     index = T.iscalar()
     train_sen = function([index], layer1_input, 
             givens={
-                x: train_x[index*batch_size:(index+1)*batch_size],
-                y: train_y[index*batch_size:(index+1)*batch_size]
+                x: train_x[index*batch_size:(index+1)*batch_size]
                 })
 
     valid_sen = function([index], layer1_input, 
             givens={
-                x: valid_x[index*batch_size:(index+1)*batch_size],
-                y: valid_y[index*batch_size:(index+1)*batch_size]
+                x: valid_x[index*batch_size:(index+1)*batch_size]
                 })
     
     test_sen = function([index], layer1_input, 
             givens={
-                x: test_x[index*batch_size:(index+1)*batch_size],
-                y: test_y[index*batch_size:(index+1)*batch_size]
+                x: test_x[index*batch_size:(index+1)*batch_size]
                 })
     
     
@@ -357,6 +351,7 @@ def main():
     print 'Start loading the dataset ...'
     dataset = load_dataset(prefix, sufix)
     wf = open(word2vec_file)
+    embedding = cPickle.load(wf)
     word2id = cPickle.load(wf)
 
     dict_file = args.dict_fn
@@ -368,7 +363,7 @@ def main():
     max_words = args.max_words
     padding = args.padding
     digit_dataset = transform_dataset(dataset, word2id, class2id, max_sens, max_words, padding)
-    doc_lens = get_doc_length(dataset, max_sens):
+    doc_lens = get_doc_length(dataset, max_sens)
 
     non_static = not args.static
     exp_name = args.exp_name
