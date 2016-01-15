@@ -1,0 +1,15 @@
+Epoch 5 test perf 0.606595 train perf 0.630081
+Epoch 10 test perf 0.629619 train perf 0.691935
+Epoch 15 test perf 0.641842 train perf 0.749758
+Epoch 20 test perf 0.642410 train perf 0.786935
+Epoch 25 test perf 0.637862 train perf 0.808790
+Epoch 30 test perf 0.628766 train perf 0.857742
+Epoch 35 test perf 0.629335 train perf 0.898306
+Epoch 40 test perf 0.619670 train perf 0.912984
+Epoch 45 test perf 0.628198 train perf 0.935323
+Epoch 50 test perf 0.622513 train perf 0.940887
+Epoch 55 test perf 0.628766 train perf 0.956048
+Epoch 60 test perf 0.615691 train perf 0.959435
+Epoch 65 test perf 0.622229 train perf 0.969597
+Epoch 70 test perf 0.618249 train perf 0.974032
+Epoch 75 test perf 0.612280 train perf 0.979597
