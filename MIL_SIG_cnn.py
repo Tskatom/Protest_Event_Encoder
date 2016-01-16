@@ -212,7 +212,6 @@ def keep_max(input, theta, k):
 def run_cnn(exp_name,
         dataset, embedding,
         log_fn, perf_fn,
-        k=0,
         emb_dm=100,
         batch_size=100,
         filter_hs=[1, 2, 3],
@@ -268,8 +267,8 @@ def run_cnn(exp_name,
 
     conv_layers = []
     
-    filter_shape = (num_maps, 1, filter_hs[i], emb_dm)
-    pool_size = (input_height - filter_hs[i] + 1, 1)
+    filter_shape = (num_maps, 1, filter_hs[0], emb_dm)
+    pool_size = (input_height - filter_hs[0] + 1, 1)
     conv_layer = nn.ConvPoolLayer(rng, input=layer0_input, 
             input_shape=None, 
             filter_shape=filter_shape, 
@@ -279,7 +278,7 @@ def run_cnn(exp_name,
     conv_layers.append(conv_layer)
 
     # compute preactivation for each sentences
-    layer_sizes = zip(hidden_unit, hidden_unit[1])
+    layer_sizes = zip(hidden_units, hidden_units[1:])
     full_layer_input = sen_vecs
     dropout_input = sen_vecs
     hidden_outs = []
@@ -292,8 +291,8 @@ def run_cnn(exp_name,
         b_value = np.zeros((lay_size[1],), dtype=theano.config.floatX)
         U = theano.shared(U_value, borrow=True, name="U")
         b = theano.shared(b_value, borrow=True, name="b")
-        hiddenLayer = HiddenLayer(rng, full_layer_input, lay_size[0], lay_size[1], ReLU, U * (1 - droprate), b)
-        dropHiddenLayer = DropoutHiddenLayer(rng, dropout_input, lay_size[0], lay_size[1], ReLU, droprate, U, b)
+        hiddenLayer = nn.HiddenLayer(rng, full_layer_input, lay_size[0], lay_size[1], ReLU, U * (1 - droprate), b)
+        dropHiddenLayer = nn.DropoutHiddenLayer(rng, dropout_input, lay_size[0], lay_size[1], ReLU, droprate, U, b)
 
         hidden_layers.append(hiddenLayer)
         dropout_layers.append(dropHiddenLayer)
@@ -309,14 +308,14 @@ def run_cnn(exp_name,
 
     
     # get the max value for each class
-    n_in, n_out = layer_size[-1]
+    n_in, n_out = layer_sizes[-1]
     W_value = np.random.random((n_in, n_out)).astype(theano.config.floatX)
     b_value = np.zeros((n_out,), dtype=theano.config.floatX)
     W = theano.shared(W_value, borrow=True, name="logis_W")
-    b = theano.shared(v_value, borrow=True, name="logis_b")
+    b = theano.shared(b_value, borrow=True, name="logis_b")
 
     full_act = T.dot(hidden_outs[-1], W*(1 - droprate)) + b
-    dropout_act = dropout_from_layer(rng, T.dot(dropout_outs[-1], W) + b, droprate)
+    dropout_act = nn.dropout_from_layer(rng, T.dot(drophidden_outs[-1], W) + b, droprate)
 
     # get max out
     max_full_act = T.max(full_act, axis=2).flatten(2)
@@ -356,7 +355,6 @@ def run_cnn(exp_name,
             1e-6,
             sqr_norm_lim)
 
-    errors = model.errors(y)
 
     #####################
     # Construct Dataset #
@@ -376,39 +374,35 @@ def run_cnn(exp_name,
     # Train model func #
     #####################
     index = T.iscalar()
-    train_func = function([index], cost, updates=grad_updates,
+    train_func = function([index], full_cost, updates=grad_updates,
             givens={
                 x: train_x[index*batch_size:(index+1)*batch_size],
                 y: train_y[index*batch_size:(index+1)*batch_size]
                 })
 
-    train_error = function([index], errors,
+    train_error = function([index], full_errors,
             givens={
                 x: train_x[index*batch_size:(index+1)*batch_size],
                 y: train_y[index*batch_size:(index+1)*batch_size]
                 })
     
-    valid_train_func = function([index], cost, updates=grad_updates,
+    valid_train_func = function([index], full_cost, updates=grad_updates,
             givens={
                 x: valid_x[index*batch_size:(index+1)*batch_size],
                 y: valid_y[index*batch_size:(index+1)*batch_size]
                 })
 
 
-    valid_pred = function([index], model.preds,
+    valid_pred = function([index], full_y_pred,
             givens={
                 x: valid_x[index*batch_size:(index+1)*batch_size],
                 })
 
-    test_pred = function([index], model.preds,
+    test_pred = function([index], full_y_pred,
             givens={
                 x:test_x[index*batch_size:(index+1)*batch_size],
                 })
     
-    test_sentence_est = function([index], final_sen_score,
-            givens={
-                x: test_x[index*batch_size:(index+1)*batch_size]
-                })
     
     # apply early stop strategy
     patience = 100
@@ -460,7 +454,7 @@ def run_cnn(exp_name,
             with open(os.path.join(perf_fn, "%s_%d.pred" % (exp_name, epoch)), 'w') as epf:
                 for p in test_preds:
                     epf.write("%d\n" % int(p))
-                message = "Epoch %d test perf %f train perf" % (epoch, test_score, train_score)
+                message = "Epoch %d test perf %f train perf %f" % (epoch, test_score, train_score)
 
 
             print message
@@ -476,11 +470,6 @@ def run_cnn(exp_name,
                     for p in params:
                         cPickle.dump(p.get_value(), bm)
 
-                # dumps the sentence score to local_file
-                test_sen_score = [test_sentence_est(i) for i in xrange(n_test_batches)]
-                score_file = "%s_%d.score" % (exp_name, epoch)
-                with open(score_file, "wb") as sm:
-                    cPickle.dump(test_sen_score, sm)
 
         end_time = timeit.default_timer()
         print "Finish one iteration using %f m" % ((end_time - start_time)/60.)
@@ -508,7 +497,6 @@ def main():
     batch_size = args.batch_size
     log_fn = args.log_fn
     perf_fn = args.perf_fn
-    top_k = args.top_k # the limit of sentences to choose
     print_freq = args.print_freq
 
     # load the dataset
@@ -539,7 +527,6 @@ def main():
 
     run_cnn(exp_name, digit_dataset, embedding,
             log_fn, perf_fn,
-            k=top_k,
             emb_dm=embedding.shape[1],
             batch_size=batch_size,
             filter_hs=filter_hs,
