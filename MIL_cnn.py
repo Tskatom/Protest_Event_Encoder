@@ -75,6 +75,7 @@ def parse_args():
             help="the max number of sentences for each sentence")
     ap.add_argument("--print_freq", type=int, default=5,
             help="the frequency of print frequency") 
+    ap.add_argument("--sen_reg", action='store_true', help="add sen simi regularization")
     return ap.parse_args()
 
 def load_dataset(prefix, sufix_1, sufix_2):
@@ -188,7 +189,8 @@ def run_cnn(exp_name,
         activation=ReLU,
         sqr_norm_lim=9,
         non_static=True,
-        print_freq=5):
+        print_freq=5, 
+        sen_reg=False):
     """
     Train and Evaluate CNN event encoder model
     :dataset: list containing three elements[(train_x, train_y), 
@@ -419,9 +421,14 @@ def run_cnn(exp_name,
 
     if non_static:
         params.append(words)
+    
+    total_cost = pop_cost + type_cost
+    total_drop_cost = pop_drop_cost + type_drop_cost 
 
-    total_cost = pop_cost + type_cost + simi_cost
-    total_drop_cost = pop_drop_cost + type_drop_cost + simi_drop_cost
+    if sen_reg:
+        total_cost += simi_cost
+        total_drop_cost += simi_drop_cost
+    
 
     total_grad_updates = sgd_updates_adadelta(params, 
             total_drop_cost,
@@ -596,22 +603,6 @@ def shared_dataset(data_xyz, borrow=True):
     return shared_x, T.cast(shared_y, 'int32'), T.cast(shared_z, 'int32')
 
 
-def main():
-    args = parse_args()
-    prefix = args.prefix
-    word2vec_file = args.word2vec
-    sufix_pop = args.sufix_pop
-    sufix_type = args.sufix_type
-    expe_name = args.exp_name
-    batch_size = args.batch_size
-    log_fn = args.log_fn
-    perf_fn = args.perf_fn
-    print_freq = args.print_freq
-
-
-    log_file.flush()
-    log_file.close()
-
 
 def shared_dataset(data_xyz, borrow=True):
     data_x, data_y, data_z = data_xyz
@@ -638,6 +629,7 @@ def main():
     log_fn = args.log_fn
     perf_fn = args.perf_fn
     print_freq = args.print_freq
+    sen_reg = args.sen_reg
 
     # load the dataset
     print 'Start loading the dataset ...'
@@ -684,7 +676,8 @@ def main():
             activation=ReLU,
             sqr_norm_lim=9,
             non_static=non_static,
-            print_freq=print_freq)
+            print_freq=print_freq,
+            sen_reg=sen_reg)
      
     
 if __name__ == "__main__":
