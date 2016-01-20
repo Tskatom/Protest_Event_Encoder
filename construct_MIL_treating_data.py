@@ -6,10 +6,12 @@ __email__ = "tskatom@vt.edu"
 
 import sys
 import os
+import re
+import random
 
 def main():
     infolder = "./data/single_label"
-    outfolder = "./data/treating_single_label"
+    outfolder = "./data/treating_MIL_single_label"
     prefix = "spanish_protest"
 
     treating_sens = {"011": "Los hospitales de Suchitoto y Sonsonate se encuentran en reducción de labores . ",
@@ -31,25 +33,67 @@ def main():
             "Legal": "Paro judicial Juzgados administrativos de Bogotá entran en paro Advirtieron que estarán en asamblea permanente hasta que se establezca una planta de empleados y juzgados "
             }
    
+    treating_words = {"011": "wage",
+            "012": "housing", 
+            "013": "energy",
+            "014": "economic",
+            "015": "government",
+            "016": "other",
+            "General Population": "population",
+            "Labor": "labor",
+            "Religious": "religious",
+            "Education": "education",
+            "Business": "business",
+            "Refugees/Displaced": "refugees",
+            "Medical": "medical",
+            "Ethnic": "ethnic",
+            "Agricultural": "agricultural",
+            "Media": "media",
+            "Legal": "legal"
+            }
     groups = ["train", "valid", "test"]
     for g in groups:
         infile = os.path.join(infolder, "%s_%s.txt.tok" % (prefix, g))
         outfile = os.path.join(outfolder, "%s_%s.txt.tok" % (prefix, g))
         
-        in_y = os.path.join(infolder, "%s_%s.type_cat" % (prefix, g))
-        out_y = os.path.join(outfolder, "%s_%s.type_cat" % (prefix, g))
+        in_type_y = os.path.join(infolder, "%s_%s.type_cat" % (prefix, g))
+        out_type_y = os.path.join(outfolder, "%s_%s.type_cat" % (prefix, g))
+        
+        in_pop_y = os.path.join(infolder, "%s_%s.pop_cat" % (prefix, g))
+        out_pop_y = os.path.join(outfolder, "%s_%s.pop_cat" % (prefix, g))
         
         print infolder, "%s_%s.type_cat" % (prefix, g)
 
-        with open(infile) as ifi, open(outfile, 'w') as otf, open(in_y) as iny, open(out_y, 'w') as outy:
+        with open(infile) as ifi, open(outfile, 'w') as otf, open(in_type_y) as iny, open(out_type_y, 'w') as outy, open(in_pop_y) as inpy, open(out_pop_y, 'w') as outpy:
             docs = [line for line in ifi]
-            tags = [tag.strip() for tag in iny]
-            for doc, tag in zip(docs, tags):
-                add_sen = treating_sens[tag]
-                doc = add_sen + doc
-                otf.write(doc)
+            type_tags = [tag.strip() for tag in iny]
+            pop_tags = [tag.strip() for tag in inpy]
+            for doc, t_tag, p_tag in zip(docs, type_tags, pop_tags):
+                type_word = treating_words[t_tag]
+                pop_word = treating_words[p_tag]
 
-                outy.write("%s\n" % tag)
+                # load the doc and get the sentences
+                sens = re.split("\.|\?|\|", doc)
+                sens = [sen.strip().split(" ") for sen in sens if len(sen.strip().split(" ")) > 5]
+                # randomly choose one sentences
+                # add the pop and type word randomly in the first sentences
+                pop_sen_id = random.randint(0, len(sens)-1)
+                pop_order = range(len(sens[pop_sen_id]))
+                random.shuffle(pop_order)
+                sens[pop_sen_id].insert(pop_order[0], pop_word)
+                
+                type_sen_id = random.randint(0, len(sens)-1)
+                type_order = range(len(sens[type_sen_id]))
+                random.shuffle(type_order)
+                sens[type_sen_id].insert(type_order[0], type_word)
+
+                # write the doc back to file
+                for sen in sens:
+                    otf.write(" ".join(sen) + " . ")
+                otf.write("\n")
+
+                outy.write("%s\n" % t_tag)
+                outpy.write("%s\n" % p_tag)
 
 
 if __name__ == "__main__":

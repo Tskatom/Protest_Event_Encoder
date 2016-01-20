@@ -76,6 +76,7 @@ def parse_args():
     ap.add_argument("--print_freq", type=int, default=5,
             help="the frequency of print frequency") 
     ap.add_argument("--sen_reg", action='store_true', help="add sen simi regularization")
+    ap.add_argument("--L2", action='store_true', help="L2 regulazor")
     return ap.parse_args()
 
 def load_dataset(prefix, sufix_1, sufix_2):
@@ -190,7 +191,8 @@ def run_cnn(exp_name,
         sqr_norm_lim=9,
         non_static=True,
         print_freq=5, 
-        sen_reg=False):
+        sen_reg=False,
+        L2=False):
     """
     Train and Evaluate CNN event encoder model
     :dataset: list containing three elements[(train_x, train_y), 
@@ -426,9 +428,18 @@ def run_cnn(exp_name,
     total_drop_cost = pop_drop_cost + type_drop_cost 
 
     if sen_reg:
-        total_cost += simi_cost
+        simi_weight = 0.1
+        total_cost += simi_weight * simi_cost
         total_drop_cost += simi_drop_cost
+    if L2:
+        l2_norm = 0.1 * T.sum(pop_W ** 2) + 0.1 * T.sum(type_W ** 2)
+        for drop_layer in type_drop_layers:
+            l2_norm += 0.1 * T.sum(drop_layer.W ** 2)
     
+        for drop_layer in pop_drop_layers:
+            l2_norm += 0.1 * T.sum(drop_layer.W ** 2)
+        total_cost += l2_norm
+        total_drop_cost += l2_norm
 
     total_grad_updates = sgd_updates_adadelta(params, 
             total_drop_cost,
@@ -630,6 +641,7 @@ def main():
     perf_fn = args.perf_fn
     print_freq = args.print_freq
     sen_reg = args.sen_reg
+    L2 = args.L2
 
     # load the dataset
     print 'Start loading the dataset ...'
@@ -677,7 +689,8 @@ def main():
             sqr_norm_lim=9,
             non_static=non_static,
             print_freq=print_freq,
-            sen_reg=sen_reg)
+            sen_reg=sen_reg,
+            L2=L2)
      
     
 if __name__ == "__main__":
