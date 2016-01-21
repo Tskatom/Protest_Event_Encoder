@@ -68,6 +68,8 @@ def parse_args():
             help="folder to store predictions")
     ap.add_argument("--param_fn", type=str,
             help="sepcific local params")
+    ap.add_argument("--sen_weight", action='store_true',
+            help="whether using sentence weight")
     return ap.parse_args()
 
 def load_dataset(prefix, sufix):
@@ -177,7 +179,8 @@ def run_cnn(exp_name,
         lr_decay=0.95,
         activation=ReLU,
         sqr_norm_lim=9,
-        non_static=True):
+        non_static=True,
+        sen_weight=False):
     """
     Train and Evaluate CNN event encoder model
     :dataset: list containing three elements[(train_x, train_y), 
@@ -230,7 +233,14 @@ def run_cnn(exp_name,
                 filter_shape=filter_shape,
                 pool_size=pool_size, activation=activation)
         
-        sen_vecs = conv_layer.output.reshape((x.shape[0], 1, x.shape[1], num_maps))
+        sen_vecs = conv_layer.output.reshape((x.shape[0], x.shape[1], num_maps))
+        sen_vecs = sen_vecs.dimshuffle(0, 2, 1)
+        # construct the weighted sentences
+        if sen_weight: # using sentence weight
+            #s_w = 1. / T.arange(1, x.shape[1] + 1)
+            s_w = T.arange(1, x.shape[1]+1)
+            s_w = (1.0 * x.shape[0] - s_w) / T.sum(s_w)
+            sen_vecs = sen_vecs * s_w
         
         # using max in each dimension to represent the document vec
         doc_vec = T.max(sen_vecs, axis=2).flatten(2)
