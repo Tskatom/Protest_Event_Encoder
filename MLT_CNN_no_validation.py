@@ -487,7 +487,7 @@ def main():
             dropout_rate=0.5,
             shuffle_batch=True,
             n_epochs=n_epochs,
-            lr_decay=0.95,
+            lr_decay=0.85,
             activation=ReLU,
             sqr_norm_lim=9,
             non_static=non_static)
