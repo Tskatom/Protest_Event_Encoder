@@ -428,7 +428,7 @@ def run_cnn(exp_name,
     total_drop_cost = pop_drop_cost + type_drop_cost 
 
     if sen_reg:
-        simi_weight = 0.1
+        simi_weight = 0.05
         total_cost += simi_weight * simi_cost
         total_drop_cost += simi_drop_cost
     if L2:
