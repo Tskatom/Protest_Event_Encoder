@@ -1,1 +1,17 @@
 Epoch 5 test pop perf 0.658897, type perf 0.442013, training_cost 2.644238
+Epoch 10 test pop perf 0.533826, type perf 0.468732, training_cost 2.401718
+Epoch 15 test pop perf 0.585276, type perf 0.455372, training_cost 2.323907
+Epoch 20 test pop perf 0.565378, type perf 0.479250, training_cost 2.268026
+Epoch 25 test pop perf 0.644400, type perf 0.410176, training_cost 2.243140
+Epoch 30 test pop perf 0.538090, type perf 0.523877, training_cost 2.215609
+Epoch 35 test pop perf 0.694144, type perf 0.552871, training_cost 2.193475
+Epoch 40 test pop perf 0.539227, type perf 0.566515, training_cost 2.165453
+Epoch 45 test pop perf 0.598067, type perf 0.554008, training_cost 2.146467
+Epoch 50 test pop perf 0.691870, type perf 0.463047, training_cost 2.126359
+Epoch 55 test pop perf 0.612848, type perf 0.542354, training_cost 2.112116
+Epoch 60 test pop perf 0.687322, type perf 0.553439, training_cost 2.102483
+Epoch 65 test pop perf 0.702388, type perf 0.508243, training_cost 2.086960
+Epoch 70 test pop perf 0.648948, type perf 0.555713, training_cost 2.076685
+Epoch 75 test pop perf 0.674815, type perf 0.515350, training_cost 2.057974
+Epoch 80 test pop perf 0.714042, type perf 0.553155, training_cost 2.030164
+Epoch 85 test pop perf 0.704662, type perf 0.551450, training_cost 2.010639

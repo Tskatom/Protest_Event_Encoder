@@ -294,14 +294,19 @@ def run_cnn(exp_name,
     pop_act = T.dot(pop_hidden_outs[-1], pop_W * (1 - droprate)) + pop_b
     pop_drop_act = T.dot(pop_drop_outs[-1], pop_W) + pop_b
 
-    pop_max_act = T.max(pop_act, axis=1).flatten(2)
-    pop_drop_max_act = T.max(pop_drop_act, axis=1).flatten(2)
+    #pop_max_act = T.max(pop_act, axis=1).flatten(2)
+    #pop_drop_max_act = T.max(pop_drop_act, axis=1).flatten(2)
+    pop_sum_act = T.sum(pop_act, axis=1).flatten(2)
+    pop_drop_sum_act = T.sum(pop_drop_act, axis=1).flatten(2)
 
     pop_sen_max = T.argmax(T.max(pop_act, axis=2).flatten(2), axis=1)
     pop_drop_sen_max = T.argmax(T.max(pop_drop_act, axis=2).flatten(2), axis=1)
     
-    pop_probs = T.nnet.softmax(pop_max_act)
-    pop_drop_probs = T.nnet.softmax(pop_drop_max_act)
+    #pop_probs = T.nnet.softmax(pop_max_act)
+    #pop_drop_probs = T.nnet.softmax(pop_drop_max_act)
+    
+    pop_probs = T.nnet.softmax(pop_sum_act)
+    pop_drop_probs = T.nnet.softmax(pop_drop_sum_act)
 
     pop_y_pred = T.argmax(pop_probs, axis=1)
     pop_drop_y_pred = T.argmax(pop_drop_probs, axis=1)
@@ -365,14 +370,20 @@ def run_cnn(exp_name,
     type_act = T.dot(type_hidden_outs[-1], type_W * (1 - droprate)) + type_b
     type_drop_act = T.dot(type_drop_outs[-1], type_W) + type_b
 
-    type_max_act = T.max(type_act, axis=1).flatten(2)
-    type_drop_max_act = T.max(type_drop_act, axis=1).flatten(2)
+    #type_max_act = T.max(type_act, axis=1).flatt2en(2)
+    #type_drop_max_act = T.max(type_drop_act, axis=1).flatten(2)
+    
+    type_sum_act = T.sum(type_act, axis=1).flatt2en(2)
+    type_drop_sum_act = T.sum(type_drop_act, axis=1).flatten(2)
     
     type_sen_max = T.argmax(T.max(type_act, axis=2).flatten(2), axis=1)
     type_drop_sen_max = T.argmax(T.max(type_drop_act, axis=2).flatten(2), axis=1)
     
-    type_probs = T.nnet.softmax(type_max_act)
-    type_drop_probs = T.nnet.softmax(type_drop_max_act)
+    #type_probs = T.nnet.softmax(type_max_act)
+    #type_drop_probs = T.nnet.softmax(type_drop_max_act)
+    
+    type_probs = T.nnet.softmax(type_sum_act)
+    type_drop_probs = T.nnet.softmax(type_drop_sum_act)
 
     type_y_pred = T.argmax(type_probs, axis=1)
     type_drop_y_pred = T.argmax(type_drop_probs, axis=1)
@@ -392,11 +403,11 @@ def run_cnn(exp_name,
     ###################################
     pop_drop_choosed_sens = sen_vecs[T.arange(sen_vecs.shape[0]), pop_drop_sen_max]
     type_drop_choosed_sens = sen_vecs[T.arange(sen_vecs.shape[0]), type_drop_sen_max]
-    simi_drop_cost = T.mean(T.sum((pop_drop_choosed_sens - type_drop_choosed_sens) ** 2, axis=1))
+    simi_drop_cost = T.mean(T.exp(T.sum((pop_drop_choosed_sens - type_drop_choosed_sens) ** 2, axis=1)))
     
     pop_choosed_sens = sen_vecs[T.arange(sen_vecs.shape[0]), pop_sen_max]
     type_choosed_sens = sen_vecs[T.arange(sen_vecs.shape[0]), type_sen_max]
-    simi_cost = T.mean(T.sum((pop_choosed_sens - type_choosed_sens) ** 2, axis=1))
+    simi_cost = T.mean(T.exp(T.sum((pop_choosed_sens - type_choosed_sens) ** 2, axis=1)))
 
 
     ##################################
@@ -430,8 +441,7 @@ def run_cnn(exp_name,
     if sen_reg:
         simi_weight = 0.05
         total_cost += simi_weight * simi_cost
-        total_drop_cost += simi_weight * simi_drop_cost
-
+        total_drop_cost += simi_drop_cost
     if L2:
         l2_norm = 0.1 * T.sum(pop_W ** 2) + 0.1 * T.sum(type_W ** 2)
         for drop_layer in type_drop_layers:
