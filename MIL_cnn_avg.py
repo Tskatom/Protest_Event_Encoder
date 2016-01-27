@@ -243,7 +243,9 @@ def run_cnn(exp_name,
     conv_layer = nn.ConvPoolLayer(rng, input=layer0_input,
             input_shape=None, filter_shape=filter_shape,
             pool_size=pool_size, activation=activation)
-    sen_vecs = conv_layer.output.reshape((x.shape[0], x.shape[1], num_maps))
+
+    # make the sentence vector maxtrix 
+    sen_vecs = conv_layer.output.reshape((x.shape[0] * x.shape[1], num_maps))
     conv_layers.append(conv_layer)
     
     ########################
@@ -294,19 +296,11 @@ def run_cnn(exp_name,
     pop_act = T.dot(pop_hidden_outs[-1], pop_W * (1 - droprate)) + pop_b
     pop_drop_act = T.dot(pop_drop_outs[-1], pop_W) + pop_b
 
-    #pop_max_act = T.max(pop_act, axis=1).flatten(2)
-    #pop_drop_max_act = T.max(pop_drop_act, axis=1).flatten(2)
-    pop_sum_act = T.sum(pop_act, axis=1).flatten(2)
-    pop_drop_sum_act = T.sum(pop_drop_act, axis=1).flatten(2)
+    sen_pop_probs = T.nnet.softmax(pop_act)
+    sen_drop_pop_probs = T.nnet.softmax(pop_drop_act)
 
-    pop_sen_max = T.argmax(T.max(pop_act, axis=2).flatten(2), axis=1)
-    pop_drop_sen_max = T.argmax(T.max(pop_drop_act, axis=2).flatten(2), axis=1)
-    
-    #pop_probs = T.nnet.softmax(pop_max_act)
-    #pop_drop_probs = T.nnet.softmax(pop_drop_max_act)
-    
-    pop_probs = T.nnet.softmax(pop_sum_act)
-    pop_drop_probs = T.nnet.softmax(pop_drop_sum_act)
+    pop_probs = T.mean(sen_pop_probs.reshape((x.shape[0], x.shape[1], n_out)), axis=1)
+    pop_drop_probs = T.mean(sen_drop_pop_probs.reshape((x.shape[0], x.shape[1], n_out)), axis=1)
 
     pop_y_pred = T.argmax(pop_probs, axis=1)
     pop_drop_y_pred = T.argmax(pop_drop_probs, axis=1)
@@ -370,20 +364,15 @@ def run_cnn(exp_name,
     type_act = T.dot(type_hidden_outs[-1], type_W * (1 - droprate)) + type_b
     type_drop_act = T.dot(type_drop_outs[-1], type_W) + type_b
 
-    #type_max_act = T.max(type_act, axis=1).flat2en(2)
-    #type_drop_max_act = T.max(type_drop_act, axis=1).flatten(2)
-    
-    type_sum_act = T.sum(type_act, axis=1).flatten(2)
-    type_drop_sum_act = T.sum(type_drop_act, axis=1).flatten(2)
-    
-    type_sen_max = T.argmax(T.max(type_act, axis=2).flatten(2), axis=1)
-    type_drop_sen_max = T.argmax(T.max(type_drop_act, axis=2).flatten(2), axis=1)
-    
     #type_probs = T.nnet.softmax(type_max_act)
     #type_drop_probs = T.nnet.softmax(type_drop_max_act)
     
-    type_probs = T.nnet.softmax(type_sum_act)
-    type_drop_probs = T.nnet.softmax(type_drop_sum_act)
+    sen_type_probs = T.nnet.softmax(type_act)
+    sen_drop_type_probs = T.nnet.softmax(type_drop_act)
+
+    type_probs = T.mean(sen_type_probs.reshape((x.shape[0], x.shape[1], n_out)), axis=1)
+    type_drop_probs = T.mean(sen_drop_type_probs.reshape((x.shape[0], x.shape[1], n_out)), axis=1)
+    
 
     type_y_pred = T.argmax(type_probs, axis=1)
     type_drop_y_pred = T.argmax(type_drop_probs, axis=1)
@@ -398,16 +387,6 @@ def run_cnn(exp_name,
     type_drop_cost = type_drop_neg_loglikelihood
 
 
-    ###################################
-    ## Choose the max sens in two task#
-    ###################################
-    pop_drop_choosed_sens = sen_vecs[T.arange(sen_vecs.shape[0]), pop_drop_sen_max]
-    type_drop_choosed_sens = sen_vecs[T.arange(sen_vecs.shape[0]), type_drop_sen_max]
-    simi_drop_cost = T.mean(T.exp(T.sum((pop_drop_choosed_sens - type_drop_choosed_sens) ** 2, axis=1)))
-    
-    pop_choosed_sens = sen_vecs[T.arange(sen_vecs.shape[0]), pop_sen_max]
-    type_choosed_sens = sen_vecs[T.arange(sen_vecs.shape[0]), type_sen_max]
-    simi_cost = T.mean(T.exp(T.sum((pop_choosed_sens - type_choosed_sens) ** 2, axis=1)))
 
 
     ##################################
@@ -438,10 +417,6 @@ def run_cnn(exp_name,
     total_cost = pop_cost + type_cost
     total_drop_cost = pop_drop_cost + type_drop_cost 
 
-    if sen_reg:
-        simi_weight = 0.05
-        total_cost += simi_weight * simi_cost
-        total_drop_cost += simi_drop_cost
     if L2:
         l2_norm = 0.1 * T.sum(pop_W ** 2) + 0.1 * T.sum(type_W ** 2)
         for drop_layer in type_drop_layers:
@@ -460,8 +435,7 @@ def run_cnn(exp_name,
 
     total_preds = [pop_y_pred, type_y_pred]
     total_errors_details = [pop_errors_detail, type_errors_detail]
-    total_choosed_sens = [pop_sen_max, type_sen_max]
-    total_out = total_preds + total_errors_details + total_choosed_sens
+    total_out = total_preds + total_errors_details 
 
     #####################
     # Construct Dataset #
@@ -546,21 +520,17 @@ def run_cnn(exp_name,
             type_sens = []
 
             for i in xrange(n_test_batches):
-                test_pop_pred, test_type_pred, test_pop_error, test_type_error, test_pop_sen, test_type_sen = test_pred_detail(i)
+                test_pop_pred, test_type_pred, test_pop_error, test_type_error = test_pred_detail(i)
 
                 pop_preds.append(test_pop_pred)
                 type_preds.append(test_type_pred)
                 pop_errors.append(test_pop_error)
                 type_errors.append(test_type_error)
-                pop_sens.append(test_pop_sen)
-                type_sens.append(test_type_sen)
 
             pop_preds = np.concatenate(pop_preds)
             type_preds = np.concatenate(type_preds)
             pop_errors = np.concatenate(pop_errors)
             type_errors = np.concatenate(type_errors)
-            pop_sens = np.concatenate(pop_sens)
-            type_sens = np.concatenate(type_sens)
 
             pop_perf = 1 - np.mean(pop_errors)
             type_perf = 1 - np.mean(type_errors)
@@ -573,14 +543,6 @@ def run_cnn(exp_name,
             with open(os.path.join(perf_fn, "%s_%d.type_pred" % (exp_name, epoch)), 'w') as epf:
                 for p in type_preds:
                     epf.write("%d\n" % int(p))
-            print pop_sens
-            with open(os.path.join(perf_fn, "%s_%d.pop_sens" % (exp_name, epoch)), 'w') as epf:
-                for s in pop_sens:
-                    epf.write("%d\n" % int(s))
-
-            with open(os.path.join(perf_fn, "%s_%d.type_sens" % (exp_name, epoch)), 'w') as epf:
-                for s in type_sens:
-                    epf.write("%d\n" % int(s))
             
             message = "Epoch %d test pop perf %f, type perf %f, training_cost %f" % (epoch, pop_perf, type_perf, np.mean(costs))
             print message
