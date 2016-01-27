@@ -274,7 +274,7 @@ def run_cnn(exp_name,
             filter_shape=filter_shape, 
             pool_size=pool_size, activation=activation)
         
-    sen_vecs = conv_layer.output.reshape((x.shape[0], 1, x.shape[1], num_maps)) 
+    sen_vecs = conv_layer.output.reshape((x.shape[0] * x.shape[1], num_maps)) 
     conv_layers.append(conv_layer)
 
     # compute preactivation for each sentences
@@ -316,25 +316,51 @@ def run_cnn(exp_name,
 
     full_act = T.dot(hidden_outs[-1], W*(1 - droprate)) + b
     dropout_act = nn.dropout_from_layer(rng, T.dot(drophidden_outs[-1], W) + b, droprate)
-
-    # get max out
-    max_full_act = T.max(full_act, axis=2).flatten(2)
-    max_dropout_act = T.max(dropout_act, axis=2).flatten(2)
     
     # compute the probability
-    full_probs = T.nnet.softmax(max_full_act)
-    dropout_probs = T.nnet.softmax(max_dropout_act)
+    sen_full_probs = T.nnet.softmax(full_act)
+    sen_dropout_probs = T.nnet.softmax(dropout_act)
+    # compute the sentence similarity
+    sen_sen = T.dot(sen_vecs, sen_vecs.T)
+    sen_sqr = T.sum(sen_vecs ** 2, axis=1)
+    sen_sqr_left = sen_sqr.dimshuffle(0, 'x')
+    sen_sqr_right = sen_sqr.dimshuffle('x', 0)
+    sen_smi_matrix = sen_sqr_left - 2 * sen_sen + sen_sqr_right
+    sen_smi_matrix = T.exp(-1 * sen_smi_matrix)
 
-    full_y_pred = T.argmax(full_probs, axis=1)
-    dropout_y_pred = T.argmax(dropout_probs, axis=1)
+    # compute the delta between sentence probabilities
+    prob_prob_full = T.dot(sen_full_probs, sen_full_probs.T)
+    prob_sqr_full = T.sum(sen_full_probs ** 2, axis=1)
+    prob_sqr_left_full = prob_sqr_full.dimshuffle(0, 'x')
+    prob_sqr_right_full = prob_sqr_full.dimshuffle('x', 0)
+    prob_delta_full = prob_sqr_left_full - 2 * prob_prob_full + prob_sqr_right_full
+    sen_cost_full = T.sum(sen_smi_matrix * prob_delta_full)
     
-    full_negative_likelihood = -T.mean(T.log(full_probs)[T.arange(y.shape[0]), y])
-    dropout_negative_likelihood = -T.mean(T.log(dropout_probs)[T.arange(y.shape[0]), y])
+    prob_prob_drop = T.dot(sen_dropout_probs, sen_dropout_probs.T)
+    prob_sqr_drop = T.sum(sen_dropout_probs ** 2, axis=1)
+    prob_sqr_left_drop = prob_sqr_drop.dimshuffle(0, 'x')
+    prob_sqr_right_drop = prob_sqr_drop.dimshuffle('x', 0)
+    prob_delta_drop = prob_sqr_left_drop - 2 * prob_prob_drop + prob_sqr_right_drop
+    sen_cost_drop = T.sum(sen_smi_matrix * prob_delta_drop)
 
-    full_errors = T.mean(T.neq(full_y_pred, y))
+    # transform the sen probs to doc probs
+    # by using average probs
+    doc_full_probs = sen_full_probs.reshape((x.shape[0], x.shape[1], n_out))
+    doc_full_probs = T.mean(doc_full_probs, axis=1)
+    doc_dropout_probs = sen_dropout_probs.reshape((x.shape[0], x.shape[1], n_out))
+    doc_dropout_probs = T.mean(doc_dropout_probs, axis=1)
 
-    full_cost = full_negative_likelihood
-    dropout_cost = dropout_negative_likelihood
+    doc_full_y_pred = T.argmax(doc_full_probs, axis=1)
+    doc_dropout_y_pred = T.argmax(doc_dropout_probs, axis=1)
+    
+    full_negative_likelihood = T.sum(-T.log(doc_full_probs)[T.arange(y.shape[0]), y])
+    dropout_negative_likelihood = T.sum(-T.log(doc_dropout_probs)[T.arange(y.shape[0]), y])
+
+    full_errors = T.mean(T.neq(doc_full_y_pred, y))
+
+    gamma = 2
+    full_cost = full_negative_likelihood + gamma * sen_cost_full
+    dropout_cost = dropout_negative_likelihood + gamma * sen_cost_drop
     
     params = []
     for conv_layer in conv_layers:
@@ -386,19 +412,13 @@ def run_cnn(exp_name,
                 y: train_y[index*batch_size:(index+1)*batch_size]
                 })
     
-    valid_train_func = function([index], full_cost, updates=grad_updates,
+    valid_train_func = function([index], [full_negative_likelihood, sen_cost_full], updates=grad_updates,
             givens={
                 x: valid_x[index*batch_size:(index+1)*batch_size],
                 y: valid_y[index*batch_size:(index+1)*batch_size]
                 })
 
-
-    valid_pred = function([index], full_y_pred,
-            givens={
-                x: valid_x[index*batch_size:(index+1)*batch_size],
-                })
-
-    test_pred = function([index], full_y_pred,
+    test_pred = function([index], doc_full_y_pred,
             givens={
                 x:test_x[index*batch_size:(index+1)*batch_size],
                 })
@@ -443,33 +463,31 @@ def run_cnn(exp_name,
             set_zero(zero_vec)
 
         # do validatiovalidn
-        valid_cost = [valid_train_func(i) for i in np.random.permutation(xrange(n_valid_batches))]
+        valid_cost, valid_sen_cost = zip(*[valid_train_func(i) for i in np.random.permutation(xrange(n_valid_batches))])
         if epoch % print_freq == 0:
             # do test
             test_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
             test_score = compute_score(cpu_tst_y, test_preds)
             
-            train_errors = [train_error(i) for i in xrange(n_train_batches)]
-            train_score = 1 - np.mean(train_errors)
             with open(os.path.join(perf_fn, "%s_%d.pred" % (exp_name, epoch)), 'w') as epf:
                 for p in test_preds:
                     epf.write("%d\n" % int(p))
-                message = "Epoch %d test perf %f train perf %f" % (epoch, test_score, train_score)
+                message = "Epoch %d test perf %f train cost %f, valid_sen_cost %f, valid_doc_cost %f" % (epoch, test_score, np.mean(costs), np.mean(valid_sen_cost), np.mean(valid_cost))
 
 
             print message
             log_file.write(message + "\n")
             log_file.flush()
-
+            """
             # store the best model
-            if (test_score > best_test_score) or (epoch % 15 == 0):
+            if (test_score > best_test_score) or (epoch % 25 == 0):
                 best_test_score = test_score
                 # save the model
                 model_name = "%s_%d.model" % (exp_name, epoch)
                 with open(model_name, 'wb') as bm:
                     for p in params:
                         cPickle.dump(p.get_value(), bm)
-
+            """
 
         end_time = timeit.default_timer()
         print "Finish one iteration using %f m" % ((end_time - start_time)/60.)

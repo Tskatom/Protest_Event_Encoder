@@ -1,0 +1,8 @@
+Epoch 5 test perf 0.019045 train cost 247.462433, valid_sen_cost 0.011878, valid_doc_cost 255.521591
+Epoch 10 test perf 0.435759 train cost 207.437790, valid_sen_cost 0.012714, valid_doc_cost 205.328644
+Epoch 15 test perf 0.613132 train cost 187.603897, valid_sen_cost -0.009297, valid_doc_cost 183.895203
+Epoch 20 test perf 0.631040 train cost 173.897522, valid_sen_cost -0.010397, valid_doc_cost 168.761795
+Epoch 25 test perf 0.652075 train cost 165.792664, valid_sen_cost -0.004634, valid_doc_cost 163.968338
+Epoch 30 test perf 0.676521 train cost 160.991562, valid_sen_cost -0.006321, valid_doc_cost 158.777405
+Epoch 35 test perf 0.723707 train cost 156.701981, valid_sen_cost -0.000626, valid_doc_cost 154.570267
+Epoch 40 test perf 0.684196 train cost 153.072418, valid_sen_cost -0.009734, valid_doc_cost 151.040451

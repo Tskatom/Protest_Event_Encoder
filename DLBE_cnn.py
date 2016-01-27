@@ -151,7 +151,8 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
 
 
 def keep_max(input, theta, k):
-    sig_input = T.nnet.sigmoid(T.dot(input, theta))
+    #sig_input = T.nnet.sigmoid(T.dot(input, theta))
+    sig_input = T.dot(input, theta)
     if k == 0:
         result = input * T.addbroadcast(sig_input, 3)
         return result, sig_input
@@ -169,8 +170,8 @@ def keep_max(input, theta, k):
     sig_mask = T.zeros_like(sig_input)
     choosed = sig_input[batchids, mapids, rowids, colids]
     sig_mask = T.set_subtensor(sig_mask[batchids, mapids, rowids, colids], 1)
-    input_mask = sig_mask * sig_input
-    result = input * T.addbroadcast(input_mask, 3)
+    #input_mask = sig_mask * sig_input
+    result = input * T.addbroadcast(sig_mask, 3)
     return result, sig_input
 
 
@@ -233,8 +234,6 @@ def run_cnn(exp_name,
 
     conv_layers = []
     layer1_inputs = []
-    thetas = [] # the gate function parameters
-    sentence_scores = []
 
     for i in xrange(len(filter_hs)):
         filter_shape = (num_maps, 1, filter_hs[i], emb_dm)
@@ -244,7 +243,12 @@ def run_cnn(exp_name,
                 filter_shape=filter_shape,
                 pool_size=pool_size, activation=activation)
         sen_vecs = conv_layer.output.reshape((x.shape[0], 1, x.shape[1], num_maps))
+        # construct multi-layer sentence vectors
 
+        conv_layers.append(conv_layer)
+        layer1_inputs.append(sen_vecs)
+
+        """
         theta_value = np.random.random((num_maps, 1))
         theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
                 name="theta", borrow=True)
@@ -252,11 +256,13 @@ def run_cnn(exp_name,
         weighted_sen_vecs, sen_score = keep_max(sen_vecs, theta, k)
         # reduce sentence score to 2 dim
         sentence_scores.append(sen_score.flatten(2))
-        doc_vec = T.sum(weighted_sen_vecs, axis=2)
+        #doc_vec = T.sum(weighted_sen_vecs, axis=2)
+        doc_vec = T.max(weighted_sen_vecs, axis=2)
         layer1_input = doc_vec.flatten(2)
         conv_layers.append(conv_layer)
         layer1_inputs.append(layer1_input)
         thetas.append(theta)
+        """
 
         """
         doc_filter_shape = (num_maps, 1, 1, num_maps)
@@ -274,8 +280,15 @@ def run_cnn(exp_name,
         layer1_inputs.append(layer1_input)
         """
     
-    layer1_input = T.concatenate(layer1_inputs, 1)
-    final_sen_score = T.concatenate(sentence_scores, 1)
+    sen_vec = T.concatenate(layer1_inputs, 3)
+    # score the sentences
+    theta_value = np.random.random((len(filter_hs) * num_maps, 1))
+    theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
+            name="theta", borrow=True)
+    weighted_sen_vecs, sen_score = keep_max(sen_vec, theta, k)
+    doc_vec = T.max(weighted_sen_vecs, axis=2)
+    layer1_input = doc_vec.flatten(2) 
+    final_sen_score = sen_score.flatten(2)
 
     ##############
     # classifier pop#
@@ -292,7 +305,7 @@ def run_cnn(exp_name,
     for conv_layer in conv_layers:
         params += conv_layer.params
 
-    params += thetas
+    params.append(theta)
     if non_static:
         params.append(words)
 
