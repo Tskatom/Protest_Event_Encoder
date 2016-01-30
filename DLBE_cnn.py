@@ -151,8 +151,8 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
 
 
 def keep_max(input, theta, k):
-    #sig_input = T.nnet.sigmoid(T.dot(input, theta))
-    sig_input = T.dot(input, theta)
+    sig_input = T.nnet.sigmoid(T.dot(input, theta))
+    #sig_input = T.dot(input, theta)
     if k == 0:
         result = input * T.addbroadcast(sig_input, 3)
         return result, sig_input
@@ -170,8 +170,8 @@ def keep_max(input, theta, k):
     sig_mask = T.zeros_like(sig_input)
     choosed = sig_input[batchids, mapids, rowids, colids]
     sig_mask = T.set_subtensor(sig_mask[batchids, mapids, rowids, colids], 1)
-    #input_mask = sig_mask * sig_input
-    result = input * T.addbroadcast(sig_mask, 3)
+    input_mask = sig_mask * sig_input
+    result = input * T.addbroadcast(input_mask, 3)
     return result, sig_input
 
 

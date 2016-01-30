@@ -130,6 +130,9 @@ def split_dataset(dataset, ratio=[.7,.1,.2], rand=False):
         new_dataset.append([train, valid, test])
     return new_dataset
 
+def split_dataset_train_test(dataset):
+    pass
+
 
 def split_text_set(es_file, en_file, pop_label_file, eventType_file):
     
