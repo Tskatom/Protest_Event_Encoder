@@ -131,8 +131,56 @@ def split_dataset(dataset, ratio=[.7,.1,.2], rand=False):
     return new_dataset
 
 def split_dataset_train_test(dataset):
-    pass
+    size = len(dataset[0])
+    batches = 5
+    batch_size = size / batches
+    
+    # randomly shuffle the dataset index
+    new_dataset = []
 
+    idx = range(size)
+    random.shuffle(idx)
+
+    for i in range(batches):
+        tmp_d = []
+        # choose the i th part of the data as test set
+        test_ids = idx[i*(batch_size):(i+1)*batch_size]
+        train_ids = idx[:i*(batch_size)] + idx[(i+1)*batch_size:]
+        # write file 
+        for d in dataset:
+            train = [d[j] for j in train_ids]
+            test = [d[j] for j in test_ids]
+            tmp_d.append([train, test])
+        new_dataset.append(tmp_d)
+
+    return new_dataset
+
+def split_text_set_train_test(es_file, en_file, pop_label_file, eventType_file):
+    
+    es = [l for l in open(es_file)]
+    en = [l for l in open(en_file)]
+    pops = [l for l in open(pop_label_file)]
+    types = [l for l in open(eventType_file)]
+
+    folder = os.path.dirname(es_file)
+
+    dataset = split_dataset_train_test([es, en, pops, types])
+
+    for fid, data in enumerate(dataset):
+        cross_folder = os.path.join(folder, "%d" % fid)
+
+        names = ["spanish_protest_%s.txt.tok", "english_protest_%s.txt.tok", "spanish_protest_%s.pop_cat", "spanish_protest_%s.type_cat"]
+        phases = ["train", "test"]
+
+        fold_data = dataset[fid]
+        for i in range(len(names)):
+            data = fold_data[i]
+            for j in range(len(phases)):
+                file_name = os.path.join(cross_folder, names[i] % phases[j])
+                with open(file_name, 'w') as df:
+                    for line in data[j]:
+                        df.write(line)
+            
 
 def split_text_set(es_file, en_file, pop_label_file, eventType_file):
     
@@ -189,6 +237,12 @@ def main():
         keyword_file = args.keywords_file
         outfolder = args.outfolder
         filter_sen(es_file, keyword_file, outfolder)
+    elif task == "split_data_train_test":
+        es_file = args.es_file
+        en_file = args.en_file
+        pop_label_file = args.pop_label_file
+        eventType_file = args.eventType_file
+        split_text_set_train_test(es_file, en_file, pop_label_file, eventType_file)
 
 
 if __name__ == "__main__":

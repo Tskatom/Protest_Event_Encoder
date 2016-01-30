@@ -1,7 +1,4 @@
 Labor
-Religious
-General Population
-Education
 Labor
 Business
 General Population
@@ -19,18 +16,14 @@ Labor
 Education
 Labor
 Education
-Religious
-General Population
 Education
 Education
 Business
 General Population
 General Population
 Education
-General Population
 General Population
 General Population
-Refugees/Displaced
 General Population
 Education
 General Population
@@ -46,15 +39,12 @@ Education
 Education
 General Population
 Labor
-General Population
 Labor
 General Population
 Labor
 Legal
 General Population
-General Population
 Education
-General Population
 General Population
 Education
 Business
@@ -64,10 +54,8 @@ General Population
 Education
 General Population
 Medical
-Education
 General Population
 Labor
-General Population
 General Population
 Education
 Ethnic
@@ -75,9 +63,7 @@ General Population
 Labor
 General Population
 General Population
-General Population
 Education
-General Population
 General Population
 Labor
 General Population
@@ -102,8 +88,6 @@ Labor
 General Population
 General Population
 Business
-General Population
-General Population
 General Population
 General Population
 General Population
@@ -122,7 +106,6 @@ General Population
 General Population
 Labor
 Education
-Religious
 Business
 Ethnic
 Agricultural
@@ -131,13 +114,10 @@ General Population
 Labor
 General Population
 Business
-General Population
 General Population
 Agricultural
-Education
 General Population
 Labor
-Education
 General Population
 General Population
 Education
@@ -148,12 +128,10 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 Education
 Education
-General Population
 General Population
 General Population
 General Population
@@ -179,7 +157,6 @@ Education
 Labor
 General Population
 General Population
-Education
 General Population
 Education
 General Population
@@ -188,9 +165,7 @@ Education
 Education
 Business
 Education
-Labor
 General Population
-Ethnic
 General Population
 General Population
 General Population
@@ -200,7 +175,6 @@ General Population
 Medical
 General Population
 Labor
-General Population
 Agricultural
 General Population
 Education
@@ -212,21 +186,17 @@ General Population
 Education
 General Population
 General Population
-General Population
 Labor
-General Population
 General Population
 Labor
 Education
 General Population
-General Population
 Education
 General Population
 General Population
 General Population
 Education
 Education
-Labor
 Labor
 General Population
 General Population
@@ -242,11 +212,8 @@ Education
 Labor
 Labor
 Education
-General Population
 Labor
 Labor
-Education
-General Population
 Education
 Education
 Education
@@ -257,7 +224,6 @@ General Population
 General Population
 Education
 Education
-General Population
 Education
 Labor
 Agricultural
@@ -270,8 +236,6 @@ Labor
 General Population
 Agricultural
 Education
-General Population
-General Population
 General Population
 Education
 Business
@@ -306,14 +270,10 @@ Labor
 General Population
 General Population
 Labor
-Media
 Labor
 Labor
-General Population
 Labor
-General Population
 Labor
-General Population
 General Population
 General Population
 Education
@@ -327,22 +287,16 @@ Education
 Business
 Agricultural
 General Population
-General Population
-Labor
 Legal
 Labor
 Refugees/Displaced
 Education
-Religious
-Labor
 Labor
 Business
-Education
 General Population
 Refugees/Displaced
 Education
 Labor
-General Population
 General Population
 Medical
 Media
@@ -363,11 +317,9 @@ Medical
 Labor
 General Population
 General Population
-General Population
 Education
 Labor
 Education
-General Population
 Education
 Business
 Education
@@ -378,8 +330,6 @@ General Population
 Labor
 Labor
 General Population
-General Population
-General Population
 Business
 General Population
 Education
@@ -387,22 +337,18 @@ Labor
 Agricultural
 General Population
 Education
-General Population
 Labor
-Religious
 Labor
 General Population
 Education
 General Population
 Education
 General Population
-General Population
 Labor
 General Population
 Labor
 Education
 Business
-Labor
 Education
 Ethnic
 General Population
@@ -420,7 +366,6 @@ General Population
 Medical
 Labor
 General Population
-General Population
 Business
 Agricultural
 Business
@@ -438,7 +383,6 @@ Education
 Business
 Education
 Education
-Labor
 Labor
 Business
 Education
@@ -450,7 +394,6 @@ General Population
 Agricultural
 General Population
 General Population
-Education
 Labor
 Labor
 Labor
@@ -481,7 +424,6 @@ Education
 Labor
 Labor
 Labor
-General Population
 Labor
 General Population
 Education
@@ -493,15 +435,11 @@ General Population
 General Population
 Education
 General Population
-Labor
 Medical
-Labor
 Education
 General Population
 General Population
 General Population
-Religious
-General Population
 Education
 General Population
 General Population
@@ -509,14 +447,12 @@ General Population
 Medical
 Business
 Agricultural
-Education
 General Population
 General Population
 General Population
 Agricultural
 General Population
 Education
-General Population
 General Population
 Medical
 Education
@@ -536,12 +472,9 @@ Labor
 General Population
 Labor
 Labor
-Religious
-Ethnic
 General Population
 General Population
 General Population
-General Population
 Labor
 Medical
 Education
@@ -554,14 +487,10 @@ General Population
 Labor
 Education
 Medical
-Labor
 Business
-General Population
 Education
 General Population
 Medical
-Education
-Education
 General Population
 General Population
 Education
@@ -570,10 +499,7 @@ Business
 General Population
 Education
 Labor
-General Population
 General Population
-General Population
-Labor
 Labor
 Labor
 Education
@@ -586,7 +512,6 @@ General Population
 Education
 General Population
 Labor
-General Population
 Ethnic
 Medical
 General Population
@@ -598,7 +523,6 @@ Agricultural
 General Population
 General Population
 Agricultural
-General Population
 Education
 Education
 Education
@@ -612,7 +536,6 @@ General Population
 Education
 Education
 General Population
-General Population
 Labor
 General Population
 Labor
@@ -632,7 +555,6 @@ Education
 Education
 Labor
 Education
-General Population
 General Population
 Education
 General Population
@@ -646,17 +568,13 @@ Business
 General Population
 Education
 General Population
-General Population
 Education
-General Population
 Media
 General Population
 Education
 Education
 Medical
 General Population
-Education
-General Population
 General Population
 Education
 General Population
@@ -691,7 +609,6 @@ General Population
 General Population
 General Population
 Labor
-General Population
 Education
 General Population
 Medical
@@ -713,7 +630,6 @@ Education
 Business
 Education
 Business
-General Population
 Medical
 Education
 General Population
@@ -727,9 +643,6 @@ General Population
 Refugees/Displaced
 General Population
 Ethnic
-Business
-General Population
-Legal
 General Population
 General Population
 Labor
@@ -743,7 +656,6 @@ Agricultural
 Labor
 Education
 General Population
-Media
 General Population
 Education
 General Population
@@ -755,28 +667,22 @@ General Population
 Labor
 Legal
 General Population
-General Population
 Labor
-General Population
 General Population
 General Population
 Labor
 General Population
-General Population
 Labor
 General Population
 Business
 Labor
-Education
 Medical
-Education
 General Population
 Medical
 General Population
 General Population
 General Population
 Business
-General Population
 General Population
 General Population
 Labor
@@ -784,7 +690,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Education
 Education
 Labor
@@ -792,40 +697,28 @@ Business
 General Population
 Labor
 General Population
-Labor
-Education
 General Population
 Labor
 Labor
 Education
-Agricultural
 Education
-General Population
-General Population
 General Population
 General Population
 General Population
 Business
 Labor
 Labor
-General Population
-General Population
-General Population
 Labor
 General Population
 Education
 Medical
-General Population
-General Population
 Labor
 Education
-General Population
 General Population
 General Population
 Education
 General Population
 Labor
-Business
 Education
 Labor
 Education
@@ -838,7 +731,6 @@ General Population
 General Population
 Education
 General Population
-Education
 General Population
 Business
 Education
@@ -846,7 +738,6 @@ Labor
 General Population
 Education
 Labor
-General Population
 Labor
 General Population
 Labor
@@ -873,23 +764,18 @@ General Population
 General Population
 General Population
 General Population
-Education
 Education
-Agricultural
 General Population
 General Population
 Education
 Labor
 Agricultural
-Medical
 Labor
 Labor
 Labor
 Labor
-General Population
 Medical
 General Population
-Education
 Labor
 Labor
 Education
@@ -899,8 +785,6 @@ Labor
 General Population
 Education
 Religious
-Education
-General Population
 Business
 General Population
 General Population
@@ -912,12 +796,10 @@ General Population
 Media
 General Population
 Agricultural
-General Population
 Labor
 General Population
 General Population
 Ethnic
-General Population
 Medical
 Agricultural
 General Population
@@ -925,7 +807,6 @@ Education
 Agricultural
 General Population
 General Population
-General Population
 Education
 General Population
 Ethnic
@@ -934,23 +815,18 @@ General Population
 General Population
 Labor
 Education
-General Population
 Education
 Education
 General Population
 Business
-Business
 Labor
-Education
 Business
 Labor
 Education
-Labor
 General Population
 Education
 General Population
 Labor
-Education
 Agricultural
 Labor
 Ethnic
@@ -961,7 +837,6 @@ Education
 Labor
 General Population
 Labor
-Education
 Business
 General Population
 General Population
@@ -978,7 +853,6 @@ Labor
 Labor
 General Population
 Refugees/Displaced
-General Population
 General Population
 General Population
 General Population
@@ -990,7 +864,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Education
 Education
 Education
@@ -999,24 +872,18 @@ General Population
 Labor
 Business
 Labor
-General Population
 Education
 Labor
-Labor
-Education
 General Population
 Education
 General Population
-General Population
 Labor
-Education
 Education
 Education
 General Population
 General Population
 General Population
 General Population
-General Population
 Agricultural
 Labor
 Medical
@@ -1026,12 +893,10 @@ Labor
 Labor
 Agricultural
 Medical
-General Population
 General Population
 Labor
 Refugees/Displaced
 Labor
-General Population
 Education
 General Population
 General Population
@@ -1043,7 +908,6 @@ Business
 General Population
 Labor
 Business
-General Population
 Labor
 General Population
 Education
@@ -1051,32 +915,23 @@ Business
 Labor
 Education
 Education
-Education
 Labor
 General Population
-Education
 Labor
 Labor
 Education
-General Population
 Labor
 Education
-General Population
 General Population
 General Population
 Education
 General Population
-Religious
 Labor
-General Population
 Education
-Education
 Business
-Education
 Education
 Education
 General Population
-General Population
 Medical
 General Population
 General Population
@@ -1088,7 +943,6 @@ General Population
 Business
 General Population
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -1102,7 +956,6 @@ Labor
 General Population
 General Population
 General Population
-General Population
 Labor
 Labor
 General Population
@@ -1113,7 +966,6 @@ Labor
 General Population
 Labor
 Labor
-General Population
 Labor
 Labor
 Business
@@ -1122,13 +974,9 @@ Labor
 Education
 General Population
 General Population
-General Population
-General Population
 Education
 Labor
-General Population
 Labor
-General Population
 Labor
 General Population
 Education
@@ -1136,20 +984,16 @@ Labor
 Labor
 Labor
 Labor
-General Population
 Labor
 Labor
 General Population
 Labor
-General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 Education
 Labor
-General Population
 Education
 Medical
 Labor
@@ -1161,13 +1005,9 @@ Labor
 Labor
 General Population
 General Population
-Labor
-General Population
 General Population
-Labor
 General Population
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -1180,7 +1020,6 @@ Education
 General Population
 Labor
 General Population
-General Population
 Agricultural
 Business
 General Population
@@ -1188,7 +1027,6 @@ Agricultural
 General Population
 General Population
 Labor
-Education
 Labor
 Business
 General Population
@@ -1212,7 +1050,6 @@ General Population
 Education
 Medical
 Labor
-Ethnic
 General Population
 Education
 General Population
@@ -1222,28 +1059,22 @@ Labor
 General Population
 Education
 Education
-General Population
 General Population
 Labor
 Education
 General Population
 Labor
-General Population
 Labor
 Education
 Labor
 Refugees/Displaced
 Labor
-General Population
-General Population
-General Population
 General Population
 General Population
 General Population
 General Population
 Labor
 General Population
-General Population
 Education
 Education
 General Population
@@ -1252,7 +1083,6 @@ Agricultural
 General Population
 General Population
 Labor
-Religious
 Education
 General Population
 General Population
@@ -1262,9 +1092,7 @@ Education
 Education
 General Population
 General Population
-General Population
 Education
-General Population
 General Population
 General Population
 General Population
@@ -1287,8 +1115,6 @@ Medical
 Labor
 Medical
 General Population
-Education
-General Population
 General Population
 General Population
 Labor
@@ -1296,11 +1122,9 @@ General Population
 General Population
 Labor
 General Population
-General Population
 Education
 Education
 Labor
-General Population
 General Population
 Labor
 General Population
@@ -1310,7 +1134,6 @@ Labor
 Education
 Labor
 Labor
-Labor
 General Population
 General Population
 General Population
@@ -1319,7 +1142,6 @@ Education
 General Population
 Business
 Education
-General Population
 Labor
 General Population
 General Population
@@ -1344,7 +1166,6 @@ General Population
 General Population
 Business
 General Population
-Education
 General Population
 Business
 Labor
@@ -1355,11 +1176,9 @@ General Population
 Ethnic
 General Population
 Business
-Labor
 Labor
 General Population
 General Population
-General Population
 Business
 Agricultural
 Business
@@ -1395,7 +1214,6 @@ Education
 Business
 General Population
 Education
-General Population
 General Population
 Education
 General Population
@@ -1417,7 +1235,6 @@ Business
 Medical
 Business
 General Population
-Business
 General Population
 Labor
 Business
@@ -1450,7 +1267,6 @@ General Population
 General Population
 Labor
 General Population
-Education
 General Population
 General Population
 Labor
@@ -1464,8 +1280,6 @@ General Population
 Business
 Education
 General Population
-General Population
-General Population
 Labor
 Education
 General Population
@@ -1486,7 +1300,6 @@ Labor
 General Population
 Labor
 Business
-Education
 General Population
 General Population
 Education
@@ -1496,10 +1309,8 @@ Labor
 General Population
 General Population
 General Population
-Labor
 Labor
 General Population
-General Population
 Labor
 General Population
 Education
@@ -1508,17 +1319,14 @@ Education
 Labor
 Labor
 Education
-General Population
 General Population
 General Population
 General Population
 Education
 General Population
-General Population
 Medical
 General Population
 Labor
-General Population
 General Population
 Medical
 Education
@@ -1550,17 +1358,14 @@ General Population
 Refugees/Displaced
 Education
 Education
-Education
 General Population
 General Population
 General Population
 Labor
 Business
 Education
-General Population
 Labor
 Labor
-Labor
 Business
 Labor
 General Population
@@ -1569,7 +1374,6 @@ Labor
 General Population
 Labor
 Education
-General Population
 Labor
 Labor
 Business
@@ -1577,25 +1381,19 @@ Agricultural
 Labor
 Labor
 General Population
-General Population
-Business
 Labor
 Labor
 Education
-Education
 Agricultural
 General Population
 Labor
-General Population
 General Population
 Education
 Medical
 General Population
 General Population
-General Population
 Refugees/Displaced
 Education
-General Population
 General Population
 Medical
 Education
@@ -1603,9 +1401,7 @@ General Population
 General Population
 Labor
 General Population
-General Population
 Ethnic
-General Population
 General Population
 Medical
 General Population
@@ -1615,22 +1411,18 @@ Labor
 General Population
 Education
 Medical
-Labor
 General Population
 General Population
 Business
-General Population
 General Population
 Labor
 Labor
 Business
 Labor
 General Population
-General Population
 Education
 General Population
 General Population
-Labor
 Labor
 General Population
 Medical
@@ -1642,13 +1434,10 @@ General Population
 Labor
 Education
 General Population
-Education
-General Population
 General Population
 General Population
 General Population
 General Population
-Religious
 General Population
 Education
 Labor
@@ -1660,7 +1449,6 @@ Ethnic
 Education
 Business
 Religious
-General Population
 General Population
 General Population
 General Population
@@ -1673,34 +1461,27 @@ Labor
 Agricultural
 Education
 Business
-Business
 Education
 Labor
 General Population
 Education
 General Population
 Labor
-General Population
 Agricultural
 General Population
 Education
 Business
 General Population
-General Population
 Education
 Labor
 Refugees/Displaced
 Labor
-Business
 Labor
 General Population
 General Population
-General Population
-General Population
 Labor
 Medical
 General Population
-General Population
 Labor
 Agricultural
 Education
@@ -1724,22 +1505,18 @@ General Population
 Labor
 Labor
 General Population
-Labor
 Education
 Education
 General Population
 Education
 General Population
 Ethnic
-General Population
 Labor
 General Population
 General Population
 Education
 Labor
-General Population
 Education
-General Population
 Labor
 General Population
 Labor
@@ -1748,7 +1525,6 @@ General Population
 General Population
 Education
 General Population
-Education
 Education
 Labor
 General Population
@@ -1788,9 +1564,7 @@ Agricultural
 Education
 Education
 General Population
-General Population
 Refugees/Displaced
-General Population
 General Population
 Labor
 Labor
@@ -1800,7 +1574,6 @@ Legal
 Ethnic
 Education
 General Population
-General Population
 Labor
 Labor
 Education
@@ -1822,8 +1595,6 @@ Business
 General Population
 Labor
 Labor
-General Population
-General Population
 Business
 Labor
 General Population
@@ -1833,10 +1604,8 @@ General Population
 General Population
 Agricultural
 Agricultural
-General Population
 General Population
 General Population
-Education
 Media
 Labor
 General Population
@@ -1845,10 +1614,7 @@ Labor
 Labor
 Labor
 Business
-General Population
 General Population
-Labor
-General Population
 General Population
 Labor
 General Population
@@ -1856,25 +1622,19 @@ Business
 General Population
 Education
 Medical
-General Population
-General Population
 Labor
 Education
 General Population
 Labor
-Religious
-General Population
 Education
 General Population
 General Population
 Labor
-Labor
 Education
 General Population
 Labor
 Education
 Medical
-General Population
 Ethnic
 General Population
 General Population
@@ -1882,13 +1642,10 @@ General Population
 General Population
 Education
 General Population
-General Population
-General Population
 Education
 Education
 Labor
 General Population
-Education
 Media
 General Population
 General Population
@@ -1902,24 +1659,19 @@ Labor
 Labor
 Education
 Education
-Labor
 General Population
 Labor
-General Population
 Education
 Labor
-General Population
 General Population
 Business
 General Population
 Refugees/Displaced
 Labor
 Education
-General Population
 Ethnic
 Agricultural
 Education
-General Population
 General Population
 General Population
 Labor
@@ -1927,7 +1679,6 @@ Education
 General Population
 Education
 General Population
-General Population
 Labor
 Business
 Education
@@ -1944,12 +1695,10 @@ General Population
 General Population
 Labor
 Labor
-General Population
 General Population
 Labor
 General Population
 Labor
-General Population
 Labor
 Education
 Medical
@@ -1970,7 +1719,6 @@ Ethnic
 General Population
 General Population
 Labor
-Media
 Education
 Education
 Labor
@@ -1981,7 +1729,6 @@ General Population
 Education
 Medical
 General Population
-General Population
 Education
 Agricultural
 General Population
@@ -2007,9 +1754,7 @@ Agricultural
 General Population
 General Population
 General Population
-Education
 Labor
-General Population
 Labor
 Medical
 Labor
@@ -2020,29 +1765,22 @@ Labor
 Agricultural
 Medical
 General Population
-General Population
 Refugees/Displaced
-General Population
 General Population
 Education
 Labor
-Education
-General Population
 General Population
 General Population
 Medical
 General Population
 Labor
-General Population
 Labor
 General Population
 General Population
 General Population
 General Population
-Education
 Medical
 General Population
-Labor
 General Population
 General Population
 Labor
@@ -2054,7 +1792,6 @@ Education
 Labor
 Labor
 Education
-General Population
 General Population
 Education
 Labor
@@ -2068,14 +1805,12 @@ Labor
 Media
 Labor
 Labor
-General Population
 Education
 Medical
 Labor
 Labor
 Religious
 General Population
-General Population
 Education
 Labor
 Labor
@@ -2086,7 +1821,6 @@ Agricultural
 Medical
 General Population
 Labor
-General Population
 Labor
 General Population
 Labor
@@ -2098,17 +1832,13 @@ General Population
 Education
 Labor
 Refugees/Displaced
-Religious
-General Population
 General Population
 General Population
 General Population
-Education
 Labor
 Education
 Ethnic
 Medical
-General Population
 General Population
 General Population
 General Population
@@ -2118,7 +1848,6 @@ Labor
 Ethnic
 Labor
 Agricultural
-General Population
 Education
 General Population
 General Population
@@ -2131,25 +1860,19 @@ Labor
 Education
 Business
 Labor
-General Population
 General Population
-General Population
 Labor
 Labor
 General Population
 General Population
-Business
 Labor
 General Population
 Labor
-General Population
 Ethnic
 Ethnic
 Religious
-General Population
 Agricultural
 Refugees/Displaced
-Education
 General Population
 Ethnic
 Labor
@@ -2158,7 +1881,6 @@ Education
 General Population
 General Population
 General Population
-General Population
 Ethnic
 General Population
 General Population
@@ -2167,7 +1889,6 @@ Education
 General Population
 Labor
 Education
-General Population
 General Population
 General Population
 Education
@@ -2175,11 +1896,8 @@ Education
 Labor
 Labor
 Education
-General Population
-General Population
 Media
 General Population
-General Population
 Refugees/Displaced
 Education
 General Population
@@ -2191,7 +1909,6 @@ Education
 Agricultural
 Labor
 General Population
-General Population
 Labor
 General Population
 General Population
@@ -2199,15 +1916,11 @@ Labor
 General Population
 Medical
 Education
-Ethnic
 Labor
 General Population
-General Population
-General Population
 Labor
 General Population
 General Population
-Labor
 General Population
 General Population
 Religious
@@ -2223,7 +1936,6 @@ Labor
 Education
 Agricultural
 Education
-General Population
 General Population
 General Population
 Education
@@ -2249,12 +1961,10 @@ General Population
 Medical
 General Population
 Education
-Religious
 Education
 Education
 Business
 Medical
-General Population
 General Population
 Education
 General Population
@@ -2267,10 +1977,7 @@ Agricultural
 Labor
 General Population
 General Population
-Education
-General Population
 Labor
-Medical
 General Population
 Education
 Labor
@@ -2278,18 +1985,13 @@ Education
 General Population
 General Population
 Education
-Education
 General Population
 General Population
 Education
-General Population
 Labor
 General Population
 Education
-General Population
-General Population
 Labor
-General Population
 Education
 Education
 Media
@@ -2300,8 +2002,6 @@ Business
 Labor
 General Population
 Business
-Labor
-General Population
 Business
 Refugees/Displaced
 General Population
@@ -2313,7 +2013,6 @@ Education
 Labor
 General Population
 Labor
-Agricultural
 Education
 General Population
 Labor
@@ -2322,7 +2021,6 @@ Labor
 Medical
 Labor
 Education
-Religious
 Medical
 Labor
 Media
@@ -2334,9 +2032,6 @@ General Population
 Education
 General Population
 General Population
-General Population
-General Population
-General Population
 Education
 General Population
 General Population
@@ -2349,30 +2044,24 @@ General Population
 General Population
 General Population
 Education
-Business
 General Population
 Labor
 General Population
-General Population
 Education
 Education
-General Population
 General Population
-General Population
 Medical
 Labor
 Religious
 General Population
 Labor
 General Population
-Ethnic
 Labor
 Education
 Labor
 Education
 Media
 Ethnic
-General Population
 General Population
 Medical
 Education
@@ -2381,14 +2070,11 @@ General Population
 Labor
 General Population
 Education
-General Population
 Medical
 Labor
 General Population
 Refugees/Displaced
-General Population
 Labor
-General Population
 Labor
 General Population
 Education
@@ -2401,16 +2087,13 @@ Refugees/Displaced
 General Population
 Medical
 General Population
-Education
 General Population
 General Population
 Medical
 General Population
-General Population
 Education
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
@@ -2419,7 +2102,6 @@ Agricultural
 General Population
 General Population
 General Population
-Education
 Business
 Education
 Education
@@ -2430,8 +2112,6 @@ General Population
 Ethnic
 General Population
 Agricultural
-Education
-General Population
 Education
 Education
 Labor
@@ -2455,7 +2135,6 @@ General Population
 General Population
 General Population
 Agricultural
-Labor
 General Population
 Labor
 General Population
@@ -2463,8 +2142,6 @@ General Population
 General Population
 Education
 Labor
-General Population
-Education
 Labor
 Agricultural
 Education
@@ -2480,7 +2157,6 @@ Labor
 Agricultural
 Business
 General Population
-General Population
 Labor
 General Population
 Agricultural
@@ -2490,9 +2166,7 @@ General Population
 Labor
 General Population
 Business
-Education
 General Population
-General Population
 Labor
 Labor
 General Population
@@ -2505,17 +2179,14 @@ General Population
 Labor
 Education
 Education
-General Population
 General Population
 Labor
 General Population
-General Population
 Agricultural
 Legal
 General Population
 General Population
 General Population
-General Population
 Education
 Labor
 General Population
@@ -2523,16 +2194,12 @@ General Population
 Labor
 Legal
 Labor
-Education
 Education
 General Population
 General Population
-Religious
-General Population
 Education
 General Population
 General Population
-General Population
 Labor
 Labor
 Refugees/Displaced
@@ -2542,26 +2209,18 @@ Education
 General Population
 Education
 General Population
-Labor
 Labor
-General Population
-General Population
 Education
 Education
 Business
 General Population
-General Population
 Education
 Education
 Labor
 Medical
-General Population
-General Population
 Labor
 General Population
 General Population
-Labor
-General Population
 General Population
 Labor
 Education
@@ -2581,7 +2240,6 @@ General Population
 Education
 Education
 Education
-General Population
 Labor
 Business
 General Population
@@ -2593,15 +2251,12 @@ General Population
 Agricultural
 General Population
 Education
-General Population
 General Population
 General Population
 Labor
-General Population
 Education
 General Population
 Education
-General Population
 General Population
 General Population
 Education
@@ -2611,7 +2266,6 @@ General Population
 Labor
 Business
 Education
-Education
 Medical
 General Population
 Media
@@ -2620,8 +2274,6 @@ General Population
 Business
 Labor
 Ethnic
-General Population
-General Population
 General Population
 General Population
 Business
@@ -2633,14 +2285,12 @@ Business
 Labor
 General Population
 Labor
-Labor
 Education
 Education
 Labor
 Education
 General Population
 Agricultural
-Education
 Labor
 General Population
 Labor
@@ -2650,16 +2300,12 @@ Medical
 Education
 Media
 Education
-Labor
 General Population
 General Population
 Labor
-General Population
 Labor
 Labor
 General Population
-General Population
-Business
 Medical
 Labor
 Education
@@ -2672,7 +2318,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 General Population
@@ -2707,7 +2352,6 @@ General Population
 Business
 Agricultural
 Refugees/Displaced
-Religious
 General Population
 General Population
 General Population
@@ -2718,9 +2362,7 @@ Education
 Education
 Labor
 Labor
-General Population
 Agricultural
-Religious
 Education
 Medical
 Medical
@@ -2746,15 +2388,12 @@ Agricultural
 Labor
 General Population
 Labor
-Religious
 General Population
-Labor
 Education
 General Population
 General Population
 General Population
 General Population
-General Population
 Medical
 General Population
 Labor
@@ -2766,7 +2405,6 @@ General Population
 General Population
 General Population
 Labor
-General Population
 General Population
 Labor
 Education
@@ -2777,11 +2415,8 @@ General Population
 Education
 Labor
 Agricultural
-Labor
-General Population
 General Population
 General Population
-Labor
 General Population
 General Population
 General Population
@@ -2789,11 +2424,9 @@ General Population
 General Population
 Ethnic
 Business
-General Population
 Education
 Medical
 Labor
-General Population
 General Population
 Education
 Agricultural
@@ -2807,7 +2440,6 @@ Education
 Labor
 General Population
 General Population
-Education
 Agricultural
 Labor
 Business
@@ -2821,11 +2453,9 @@ Media
 General Population
 Education
 Education
-General Population
 General Population
 Ethnic
 Education
-Education
 General Population
 Business
 General Population
@@ -2835,24 +2465,19 @@ General Population
 General Population
 Labor
 Education
-General Population
 Education
 General Population
 Education
 Education
 Labor
 Education
-Education
 General Population
 Labor
 Labor
-General Population
 Education
 General Population
 Education
-General Population
 Labor
-Labor
 General Population
 Labor
 General Population
@@ -2860,14 +2485,12 @@ Education
 General Population
 General Population
 Medical
-Ethnic
 Business
 General Population
 General Population
 General Population
 Education
 General Population
-General Population
 Labor
 Education
 Education
@@ -2875,15 +2498,12 @@ Business
 General Population
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
 General Population
 General Population
 General Population
-General Population
-Education
 General Population
 General Population
 General Population
@@ -2901,8 +2521,6 @@ Refugees/Displaced
 Education
 Education
 Education
-General Population
-Education
 Ethnic
 General Population
 Education
@@ -2921,17 +2539,12 @@ General Population
 Medical
 Labor
 Education
-General Population
 Medical
-General Population
 Labor
 Education
 Education
-General Population
 General Population
-General Population
 Business
-Ethnic
 Legal
 General Population
 General Population
@@ -2950,16 +2563,13 @@ General Population
 Labor
 Ethnic
 Education
-General Population
 Labor
 Business
 Business
-General Population
 General Population
 General Population
 General Population
 General Population
-General Population
 Education
 General Population
 Business
@@ -2967,12 +2577,10 @@ Refugees/Displaced
 Education
 General Population
 Labor
-General Population
 General Population
 Education
 Education
 Media
-Education
 Labor
 General Population
 Education
@@ -2985,21 +2593,16 @@ Labor
 Education
 Education
 Education
-Business
 Education
 Education
-General Population
 Education
 General Population
 General Population
-General Population
 Education
 Agricultural
-General Population
 General Population
 General Population
 General Population
-General Population
 Labor
 Labor
 Labor
@@ -3008,30 +2611,23 @@ General Population
 Education
 General Population
 General Population
-General Population
 Agricultural
 Medical
 Education
-Labor
 Education
 Agricultural
 General Population
 General Population
-Education
-General Population
 General Population
 Education
 Education
 Ethnic
 Labor
 General Population
-General Population
 Legal
 Education
 General Population
-General Population
 Labor
-General Population
 Labor
 General Population
 Media
@@ -3054,7 +2650,6 @@ General Population
 Labor
 General Population
 General Population
-General Population
 Education
 Labor
 Refugees/Displaced
@@ -3063,40 +2658,30 @@ Education
 General Population
 General Population
 Labor
-General Population
 Education
 General Population
 Refugees/Displaced
 Medical
-Medical
-General Population
 General Population
 Education
-Education
-General Population
 Labor
 General Population
-General Population
 Education
 General Population
 General Population
 Education
 General Population
 Education
-Labor
 General Population
 Education
 General Population
 Education
 Labor
-General Population
-Ethnic
 General Population
 Education
 Ethnic
 General Population
 Business
-General Population
 Education
 Labor
 General Population
@@ -3107,10 +2692,8 @@ General Population
 General Population
 Agricultural
 General Population
-General Population
 Medical
 Labor
-Media
 General Population
 Ethnic
 Education
@@ -3118,14 +2701,12 @@ Medical
 General Population
 Labor
 General Population
-Labor
 General Population
 Education
 Ethnic
 General Population
 Agricultural
 Refugees/Displaced
-Education
 General Population
 Labor
 General Population
@@ -3137,11 +2718,8 @@ Labor
 Media
 General Population
 General Population
-General Population
 Education
 Education
-General Population
-General Population
 General Population
 General Population
 General Population
@@ -3154,19 +2732,16 @@ Labor
 Labor
 General Population
 General Population
-Education
 Labor
 Labor
 General Population
 Media
 General Population
-Labor
 Labor
 Business
 Labor
 Medical
 Labor
-Labor
 Medical
 General Population
 General Population
@@ -3174,7 +2749,6 @@ General Population
 Education
 Labor
 Labor
-General Population
 General Population
 Labor
 Labor
@@ -3187,7 +2761,6 @@ General Population
 General Population
 General Population
 Education
-General Population
 Labor
 Education
 General Population
@@ -3203,7 +2776,6 @@ Medical
 Medical
 General Population
 Labor
-General Population
 General Population
 Labor
 General Population
@@ -3211,7 +2783,6 @@ Labor
 General Population
 Labor
 General Population
-Business
 General Population
 Medical
 General Population
@@ -3223,22 +2794,16 @@ Education
 Medical
 Labor
 Education
-Religious
 Agricultural
 Labor
-General Population
 General Population
-General Population
 Medical
-General Population
 Labor
 General Population
-General Population
 Medical
 Medical
 Refugees/Displaced
 Legal
-Education
 Labor
 General Population
 General Population
@@ -3249,7 +2814,6 @@ Labor
 Agricultural
 General Population
 General Population
-General Population
 Labor
 General Population
 Education
@@ -3274,10 +2838,8 @@ Business
 Labor
 Education
 Business
-Education
 General Population
 General Population
-General Population
 Labor
 Education
 Refugees/Displaced
@@ -3288,8 +2850,6 @@ Labor
 Legal
 Labor
 Labor
-General Population
-General Population
 General Population
 General Population
 General Population
@@ -3301,9 +2861,7 @@ Labor
 Education
 Ethnic
 Labor
-Education
 General Population
-Education
 Agricultural
 Agricultural
 Education
@@ -3356,10 +2914,7 @@ General Population
 Business
 Education
 Labor
-General Population
-General Population
 General Population
-General Population
 Education
 Labor
 Labor
@@ -3367,13 +2922,10 @@ General Population
 General Population
 Labor
 Labor
-General Population
 General Population
-Business
 Medical
 General Population
 Agricultural
-General Population
 Labor
 Medical
 General Population
@@ -3391,7 +2943,6 @@ Labor
 Labor
 General Population
 Business
-General Population
 General Population
 General Population
 Agricultural
@@ -3399,35 +2950,22 @@ Education
 General Population
 General Population
 Labor
-General Population
 Business
 Medical
 Medical
-General Population
-General Population
 Labor
 Education
-General Population
-Media
 Labor
-Education
 Education
 Labor
 Education
 General Population
-General Population
 Labor
-General Population
-General Population
 General Population
 Education
 General Population
-Agricultural
-General Population
 General Population
 General Population
-General Population
-Religious
 General Population
 Education
 General Population
@@ -3440,7 +2978,6 @@ General Population
 Education
 Labor
 General Population
-Business
 Labor
 General Population
 Education
@@ -3453,15 +2990,11 @@ Education
 Legal
 Business
 Refugees/Displaced
-Labor
 General Population
 Media
 Medical
-Ethnic
-Education
 General Population
 General Population
-Ethnic
 General Population
 Labor
 General Population
@@ -3474,21 +3007,14 @@ Education
 Education
 General Population
 Labor
-General Population
 Labor
-Education
 General Population
-General Population
-Labor
-Education
 General Population
 Labor
 Media
 Education
-General Population
 Labor
 General Population
-Education
 Education
 Education
 Agricultural
@@ -3501,15 +3027,10 @@ Education
 Labor
 Labor
 General Population
-Education
 Labor
 Labor
 Labor
-General Population
-General Population
 General Population
-Education
-General Population
 General Population
 General Population
 General Population
@@ -3521,8 +3042,6 @@ Education
 General Population
 General Population
 General Population
-General Population
-Education
 Medical
 General Population
 Agricultural
@@ -3531,26 +3050,20 @@ Agricultural
 Labor
 Education
 General Population
-General Population
 Education
 Medical
-Religious
 Labor
-Agricultural
-Labor
 General Population
 General Population
 General Population
 Education
 Medical
-General Population
 General Population
 General Population
 General Population
 Agricultural
 Education
 Education
-Education
 Labor
 Education
 General Population
@@ -3563,7 +3076,6 @@ Education
 Education
 Education
 General Population
-Education
 General Population
 Education
 Education
@@ -3581,7 +3093,6 @@ General Population
 Refugees/Displaced
 General Population
 Labor
-General Population
 Education
 General Population
 General Population
@@ -3600,14 +3111,11 @@ General Population
 General Population
 Labor
 Agricultural
-General Population
 General Population
 General Population
 General Population
 General Population
 General Population
-General Population
-General Population
 Labor
 Labor
 General Population
@@ -3619,7 +3127,6 @@ Education
 Religious
 General Population
 Labor
-General Population
 Education
 Labor
 Agricultural
@@ -3642,22 +3149,17 @@ General Population
 Labor
 Education
 General Population
-General Population
-Education
 Agricultural
 Labor
-Education
 Business
 General Population
 Education
 Business
-General Population
 Labor
 Agricultural
 General Population
 Agricultural
 Medical
-General Population
 Education
 General Population
 General Population
@@ -3666,14 +3168,11 @@ General Population
 General Population
 General Population
 Business
-Education
-General Population
 Labor
 Education
 Labor
 Education
 General Population
-Religious
 General Population
 Education
 General Population
@@ -3684,14 +3183,12 @@ General Population
 General Population
 General Population
 Labor
-General Population
 Labor
 General Population
 Labor
 Education
 General Population
 Education
-Education
 Business
 Labor
 General Population
@@ -3700,12 +3197,9 @@ Ethnic
 Religious
 General Population
 Education
-General Population
-General Population
 Labor
 Business
 Labor
-Education
 Education
 Medical
 Labor
@@ -3719,17 +3213,13 @@ Education
 Business
 General Population
 General Population
-General Population
-General Population
 Labor
 General Population
 Labor
 Labor
-General Population
 General Population
 General Population
 General Population
-Refugees/Displaced
 Medical
 General Population
 Labor
@@ -3740,7 +3230,6 @@ Media
 Education
 Medical
 General Population
-Ethnic
 General Population
 Labor
 Education
@@ -3759,8 +3248,6 @@ General Population
 General Population
 Ethnic
 Refugees/Displaced
-General Population
-General Population
 Labor
 General Population
 Agricultural
@@ -3778,13 +3265,10 @@ General Population
 General Population
 General Population
 Agricultural
-General Population
 General Population
 General Population
-General Population
 Education
 Education
-General Population
 Education
 Education
 Labor
@@ -3801,12 +3285,9 @@ Labor
 Agricultural
 General Population
 General Population
-Education
-Business
 Ethnic
 General Population
 Medical
-General Population
 Business
 General Population
 General Population
@@ -3828,7 +3309,6 @@ General Population
 Medical
 General Population
 Business
-General Population
 Labor
 Labor
 General Population
@@ -3843,8 +3323,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
-General Population
 Education
 General Population
 Education
@@ -3854,14 +3332,11 @@ Labor
 Labor
 General Population
 Labor
-General Population
 General Population
 General Population
 General Population
 General Population
 General Population
-General Population
-General Population
 Education
 General Population
 Labor
@@ -3870,18 +3345,14 @@ Education
 Business
 General Population
 General Population
-General Population
 Labor
 Agricultural
 Labor
-General Population
 Education
 General Population
 General Population
 Labor
 Education
-Education
-General Population
 Labor
 Labor
 General Population
@@ -3897,7 +3368,6 @@ General Population
 Agricultural
 General Population
 General Population
-General Population
 Education
 General Population
 General Population
@@ -3911,7 +3381,6 @@ Labor
 General Population
 General Population
 Medical
-General Population
 Ethnic
 General Population
 Education
@@ -3924,10 +3393,8 @@ Labor
 General Population
 Refugees/Displaced
 General Population
-Education
 Labor
 General Population
-General Population
 Agricultural
 General Population
 General Population
@@ -3937,28 +3404,23 @@ Education
 Education
 Medical
 Medical
-General Population
 Agricultural
 Labor
 General Population
 General Population
 General Population
-General Population
 Labor
 Labor
-General Population
 General Population
 Education
 General Population
 General Population
-General Population
 Education
 Refugees/Displaced
 General Population
 Labor
 General Population
 Labor
-General Population
 Agricultural
 General Population
 General Population
@@ -3968,19 +3430,14 @@ Education
 General Population
 Ethnic
 Labor
-General Population
 Medical
-General Population
 Labor
 Labor
 Labor
-Religious
 Labor
 Education
 General Population
 General Population
-General Population
-General Population
 Education
 General Population
 Ethnic
@@ -3990,13 +3447,10 @@ General Population
 Agricultural
 Ethnic
 General Population
-General Population
-General Population
 Education
 General Population
 General Population
 Labor
-Education
 General Population
 General Population
 General Population
@@ -4019,10 +3473,8 @@ Education
 Education
 General Population
 Labor
-Ethnic
 Medical
 Education
-General Population
 General Population
 Labor
 General Population
@@ -4030,13 +3482,11 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Education
 General Population
 Labor
 General Population
 Education
-General Population
 Labor
 Medical
 General Population
@@ -4048,13 +3498,11 @@ Education
 General Population
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
 Labor
 General Population
-General Population
 Labor
 Education
 Education
@@ -4071,37 +3519,29 @@ General Population
 Education
 General Population
 General Population
-Religious
 Education
 General Population
 Education
-General Population
 Media
 General Population
 Education
 General Population
 Education
 Ethnic
-Medical
 General Population
 Labor
 General Population
-General Population
 Legal
-General Population
 General Population
 General Population
 General Population
 Education
 General Population
-General Population
 Labor
 General Population
 Medical
 Labor
 Education
-General Population
-General Population
 Education
 Labor
 General Population
@@ -4114,30 +3554,25 @@ General Population
 Education
 General Population
 General Population
-Agricultural
 General Population
 Labor
 Media
 General Population
 General Population
-Religious
 Labor
 Medical
 Media
-General Population
 General Population
 General Population
 General Population
 General Population
 General Population
 General Population
-General Population
 Medical
 General Population
 General Population
 Education
 Ethnic
-Religious
 General Population
 General Population
 Labor
@@ -4147,23 +3582,18 @@ Education
 Labor
 General Population
 Education
-Education
 Labor
 Business
-General Population
 Education
 Education
-Education
 General Population
 Labor
 General Population
 Education
 Labor
 General Population
-Education
 General Population
 Labor
-Labor
 General Population
 Education
 Labor
@@ -4175,7 +3605,6 @@ Labor
 Medical
 General Population
 General Population
-Labor
 General Population
 Ethnic
 Education
@@ -4183,9 +3612,7 @@ Business
 Ethnic
 General Population
 General Population
-Labor
 Education
-Religious
 Education
 General Population
 General Population
@@ -4198,17 +3625,14 @@ Legal
 Education
 Legal
 Labor
-General Population
 Education
 General Population
 General Population
 Labor
-Business
 Ethnic
 General Population
 General Population
 Medical
-Education
 Medical
 General Population
 General Population
@@ -4220,7 +3644,6 @@ Education
 General Population
 Refugees/Displaced
 Education
-General Population
 General Population
 Labor
 General Population
@@ -4230,44 +3653,33 @@ Education
 Education
 Agricultural
 Education
-Labor
 General Population
 Education
 Education
-General Population
 Agricultural
 General Population
 Education
-General Population
 Labor
 Labor
-Education
 Labor
 Labor
-General Population
 Education
-General Population
 Labor
-General Population
 Agricultural
 General Population
 Labor
-General Population
 General Population
 General Population
 Agricultural
 General Population
-General Population
 Education
 General Population
 General Population
 Labor
 Labor
-General Population
 General Population
 General Population
 General Population
-Labor
 Education
 Agricultural
 General Population
@@ -4275,14 +3687,12 @@ Agricultural
 Medical
 Labor
 Medical
-General Population
 General Population
 General Population
 Education
 Business
 General Population
 General Population
-General Population
 Labor
 Education
 Labor
@@ -4300,40 +3710,31 @@ General Population
 Labor
 Ethnic
 Agricultural
-General Population
 General Population
-General Population
 Business
 Education
-General Population
 Education
 Education
 Business
 Education
-Labor
 General Population
-Labor
 Medical
 Medical
 Business
 Labor
 Education
 General Population
-Education
 General Population
 Labor
 Labor
 Education
 Labor
-Education
 Education
 General Population
-General Population
 Education
 Labor
 Labor
 Agricultural
-General Population
 Education
 Business
 General Population
@@ -4358,7 +3759,6 @@ General Population
 Education
 General Population
 General Population
-General Population
 Education
 General Population
 Agricultural
@@ -4384,7 +3784,6 @@ Agricultural
 Business
 Labor
 Labor
-Religious
 Education
 Medical
 General Population
@@ -4403,14 +3802,12 @@ General Population
 Education
 General Population
 Education
-Education
 General Population
 General Population
 Education
 General Population
 General Population
 General Population
-Education
 General Population
 Education
 Business
@@ -4421,11 +3818,9 @@ General Population
 General Population
 Labor
 Education
-Education
 General Population
 Education
 General Population
-Education
 Agricultural
 General Population
 General Population
@@ -4448,7 +3843,6 @@ Labor
 Medical
 General Population
 General Population
-General Population
 Education
 Business
 Agricultural
@@ -4458,33 +3852,23 @@ Labor
 General Population
 General Population
 Labor
-Religious
 Labor
 Education
 General Population
-General Population
-General Population
 Agricultural
 General Population
 Education
 Business
 Labor
 Education
-General Population
-General Population
 General Population
 Education
 Labor
 Labor
 Education
-General Population
-Education
-General Population
 Education
-General Population
 General Population
 General Population
-Education
 General Population
 Education
 Labor
@@ -4493,7 +3877,6 @@ Ethnic
 Education
 General Population
 Medical
-General Population
 General Population
 Agricultural
 Medical
@@ -4509,7 +3892,6 @@ General Population
 General Population
 Labor
 Labor
-General Population
 Labor
 Education
 Labor
@@ -4522,7 +3904,6 @@ Labor
 General Population
 Education
 Education
-Labor
 Labor
 Education
 Business
@@ -4531,11 +3912,8 @@ General Population
 General Population
 Labor
 Ethnic
-General Population
 Labor
-Education
 Education
-General Population
 Business
 Business
 Education
@@ -4551,24 +3929,18 @@ Education
 Labor
 Medical
 Labor
-General Population
 Education
 Labor
 Education
 General Population
 Ethnic
-General Population
 Education
-General Population
 Education
 General Population
 General Population
 Labor
-Labor
 General Population
 Labor
-Education
-General Population
 Education
 General Population
 General Population
@@ -4576,7 +3948,6 @@ Education
 Education
 Labor
 Media
-General Population
 General Population
 Labor
 Education
@@ -4588,23 +3959,19 @@ Education
 Labor
 Labor
 General Population
-Ethnic
 General Population
 Religious
 Education
 General Population
 Education
 Media
-General Population
 General Population
-General Population
 Education
 Labor
 General Population
 Medical
 Education
 General Population
-Education
 General Population
 General Population
 General Population
@@ -4613,9 +3980,7 @@ Education
 Education
 Education
 Labor
-General Population
 Labor
-Education
 Agricultural
 General Population
 Labor
@@ -4626,48 +3991,37 @@ General Population
 Education
 Legal
 General Population
-Refugees/Displaced
 Labor
 General Population
 Medical
 Labor
-Education
 Education
 General Population
 Agricultural
 Education
 Agricultural
-General Population
 Education
-Labor
-General Population
 Business
 General Population
 Education
 General Population
 Education
 Business
-General Population
 Labor
 Medical
-General Population
-General Population
 General Population
 Education
 Education
 Labor
 General Population
-General Population
 Labor
 Labor
 Labor
 Education
 Education
-General Population
 General Population
 Education
 Education
-Business
 Labor
 General Population
 Education
@@ -4687,16 +4041,12 @@ Labor
 General Population
 General Population
 Business
-General Population
 General Population
 Business
 General Population
 Education
-General Population
-General Population
 Business
 Labor
-Labor
 Business
 Business
 Labor
@@ -4712,12 +4062,10 @@ Medical
 Education
 Labor
 Education
-General Population
 General Population
 Labor
 General Population
 General Population
-General Population
 Business
 Education
 General Population
@@ -4736,7 +4084,6 @@ General Population
 Education
 Labor
 Education
-General Population
 General Population
 General Population
 Education
@@ -4758,7 +4105,6 @@ Education
 General Population
 Labor
 Labor
-General Population
 Agricultural
 Education
 General Population
@@ -4769,7 +4115,6 @@ Education
 General Population
 Education
 Medical
-General Population
 Labor
 Education
 Education
@@ -4782,21 +4127,16 @@ Education
 Labor
 Labor
 Labor
-Labor
-General Population
 General Population
 Education
 General Population
 Education
 General Population
 General Population
-Education
 General Population
 Business
-Education
 General Population
 General Population
-General Population
 Education
 Labor
 General Population
@@ -4808,9 +4148,7 @@ Education
 General Population
 Education
 Education
-General Population
 Education
-Religious
 Education
 Medical
 Labor
@@ -4821,7 +4159,6 @@ Labor
 Labor
 Education
 Media
-General Population
 General Population
 Education
 General Population
@@ -4835,12 +4172,10 @@ Education
 Education
 Business
 Education
-Education
 General Population
 Business
 Labor
 Labor
-General Population
 Media
 Labor
 General Population
@@ -4856,7 +4191,6 @@ General Population
 Labor
 Education
 Medical
-General Population
 Education
 Education
 Medical
@@ -4864,7 +4198,6 @@ Education
 Media
 Education
 Refugees/Displaced
-General Population
 Labor
 Labor
 General Population
@@ -4872,8 +4205,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
-General Population
 Labor
 Labor
 General Population
@@ -4885,10 +4216,7 @@ Business
 General Population
 General Population
 Labor
-Labor
-General Population
 Education
-Education
 Business
 General Population
 General Population
@@ -4904,7 +4232,6 @@ Education
 Business
 Labor
 Labor
-General Population
 Labor
 General Population
 Labor
@@ -4917,14 +4244,11 @@ General Population
 Refugees/Displaced
 Labor
 Labor
-General Population
 Medical
 Education
 Education
-General Population
 Education
 General Population
-Ethnic
 General Population
 Business
 Labor
@@ -4935,11 +4259,8 @@ General Population
 Business
 Education
 Labor
-General Population
 General Population
-Labor
 Medical
-Labor
 Labor
 General Population
 General Population
@@ -4954,20 +4275,17 @@ General Population
 Education
 General Population
 General Population
-General Population
 Education
 General Population
 Agricultural
 Education
 Education
-General Population
 General Population
 Education
 General Population
 Ethnic
 Education
 General Population
-Labor
 General Population
 General Population
 Education
@@ -4975,10 +4293,7 @@ Refugees/Displaced
 Medical
 Medical
 Labor
-Education
 General Population
-General Population
-Education
 Labor
 Labor
 General Population
@@ -4997,13 +4312,11 @@ Agricultural
 General Population
 Labor
 General Population
-General Population
 Legal
 Education
 Education
 General Population
 General Population
-Education
 Business
 General Population
 General Population
@@ -5018,15 +4331,12 @@ General Population
 General Population
 Labor
 Business
-General Population
 Agricultural
 General Population
 Business
 Labor
 Education
 General Population
-Medical
-Business
 Medical
 Labor
 Education
@@ -5037,18 +4347,14 @@ General Population
 General Population
 General Population
 Labor
-General Population
 General Population
 General Population
 General Population
 General Population
-Religious
 General Population
 Labor
 General Population
 General Population
-Religious
-Education
 Labor
 Labor
 Education
@@ -5061,7 +4367,6 @@ Labor
 Labor
 Labor
 Medical
-General Population
 Agricultural
 General Population
 Labor
@@ -5072,14 +4377,8 @@ Legal
 General Population
 General Population
 General Population
-General Population
-General Population
 Agricultural
-Education
-General Population
 Education
-Education
-Education
 General Population
 General Population
 Education
@@ -5101,7 +4400,6 @@ Labor
 General Population
 General Population
 Education
-General Population
 Labor
 Labor
 Business
@@ -5115,9 +4413,7 @@ Business
 General Population
 General Population
 Labor
-General Population
 Labor
-Business
 General Population
 Labor
 Labor
@@ -5127,7 +4423,6 @@ Education
 General Population
 General Population
 Medical
-General Population
 General Population
 General Population
 Education
@@ -5140,7 +4435,6 @@ Labor
 General Population
 Labor
 Education
-Education
 General Population
 General Population
 Education
@@ -5161,20 +4455,16 @@ Education
 General Population
 General Population
 General Population
-Business
 Refugees/Displaced
-General Population
 Education
 Education
 General Population
 Business
 Education
-General Population
 General Population
 Labor
 Labor
 General Population
-General Population
 Ethnic
 Education
 Labor
@@ -5182,10 +4472,8 @@ Education
 Education
 Agricultural
 Labor
-General Population
 General Population
 Labor
-General Population
 Ethnic
 General Population
 Labor
@@ -5202,13 +4490,11 @@ Education
 Education
 General Population
 Medical
-General Population
 General Population
 General Population
 Labor
 Labor
 General Population
-General Population
 Labor
 General Population
 General Population
@@ -5223,15 +4509,11 @@ Labor
 Labor
 Education
 Education
-General Population
 Labor
-General Population
 Business
 Education
 Labor
 General Population
-Labor
-Education
 Labor
 General Population
 General Population
@@ -5240,7 +4522,6 @@ General Population
 General Population
 Agricultural
 Medical
-General Population
 General Population
 General Population
 Labor
@@ -5254,17 +4535,14 @@ General Population
 Labor
 General Population
 Education
-Labor
 General Population
 General Population
 General Population
 Education
 Education
-General Population
 General Population
 General Population
 Education
-Refugees/Displaced
 Labor
 General Population
 Business
@@ -5276,12 +4554,9 @@ General Population
 Education
 Education
 Business
-General Population
 Labor
-Education
 Labor
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -5307,7 +4582,6 @@ Business
 Labor
 Labor
 General Population
-General Population
 Education
 Business
 General Population
@@ -5321,7 +4595,6 @@ Business
 General Population
 Labor
 Business
-General Population
 Labor
 Education
 Medical
@@ -5333,13 +4606,9 @@ Ethnic
 General Population
 General Population
 General Population
-General Population
 Medical
 Media
-General Population
 Labor
-General Population
-General Population
 General Population
 General Population
 General Population
@@ -5364,7 +4633,6 @@ General Population
 Education
 Education
 General Population
-General Population
 Labor
 Labor
 Education
@@ -5386,20 +4654,16 @@ Labor
 Education
 Agricultural
 Labor
-Education
 Business
 General Population
 Medical
 Labor
 Legal
-General Population
 Medical
 Labor
 Education
 Education
 Labor
-General Population
-Education
 General Population
 Labor
 General Population
@@ -5411,7 +4675,6 @@ Education
 General Population
 General Population
 Education
-Labor
 Labor
 General Population
 General Population
@@ -5430,25 +4693,18 @@ General Population
 General Population
 General Population
 General Population
-Ethnic
 Labor
-Education
-Media
 Labor
-General Population
 General Population
 Labor
 General Population
 General Population
-General Population
 Business
 Education
 Agricultural
 Labor
-General Population
 Education
 General Population
-General Population
 Education
 Labor
 Labor
@@ -5460,37 +4716,29 @@ Medical
 Education
 Business
 Education
-Ethnic
 Ethnic
 General Population
 General Population
 General Population
-General Population
 Labor
-Education
 Education
 General Population
 General Population
 General Population
 General Population
-General Population
 Education
 Education
-General Population
 Media
 General Population
 Labor
 General Population
 Education
 General Population
-General Population
 Medical
 Labor
-General Population
 General Population
 Education
 General Population
-Labor
 Medical
 General Population
 Labor
@@ -5499,13 +4747,11 @@ Labor
 Agricultural
 Labor
 Education
-General Population
 General Population
 General Population
 General Population
 Education
 Media
-General Population
 Legal
 Labor
 General Population
@@ -5517,7 +4763,6 @@ General Population
 Labor
 General Population
 Labor
-General Population
 Labor
 General Population
 General Population
@@ -5556,7 +4801,6 @@ Labor
 Medical
 General Population
 General Population
-General Population
 Education
 General Population
 General Population
@@ -5566,23 +4810,18 @@ Education
 Business
 Education
 Business
-General Population
 General Population
 Education
 General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 Education
 Education
-General Population
 General Population
-General Population
 Agricultural
 General Population
-Labor
 Labor
 Labor
 General Population
@@ -5595,7 +4834,6 @@ Education
 General Population
 Labor
 Business
-Labor
 General Population
 Labor
 Education
@@ -5613,7 +4851,6 @@ Ethnic
 Labor
 Education
 Labor
-General Population
 General Population
 Education
 Labor
@@ -5622,47 +4859,36 @@ Education
 General Population
 General Population
 Education
-General Population
 Ethnic
 General Population
 Education
 Labor
-General Population
 General Population
 General Population
 Education
 General Population
-General Population
-Ethnic
 General Population
 Labor
-General Population
-General Population
 Labor
 Labor
 General Population
 Business
 General Population
 General Population
-Ethnic
 Refugees/Displaced
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
 General Population
-General Population
 Labor
-General Population
 Agricultural
 General Population
 Business
 General Population
 Labor
 General Population
-General Population
 Labor
 Labor
 Agricultural
@@ -5679,7 +4905,6 @@ General Population
 Labor
 Education
 Education
-Business
 Education
 Education
 General Population
@@ -5687,8 +4912,6 @@ Labor
 General Population
 General Population
 Refugees/Displaced
-Education
-General Population
 General Population
 Medical
 Business
@@ -5700,8 +4923,6 @@ General Population
 General Population
 Education
 Medical
-General Population
-General Population
 Religious
 Education
 General Population
@@ -5709,16 +4930,13 @@ General Population
 Education
 Business
 Medical
-Medical
 Labor
 General Population
 General Population
 Legal
-General Population
 General Population
 Medical
 General Population
-General Population
 Labor
 Education
 Agricultural
@@ -5730,7 +4948,6 @@ General Population
 General Population
 Education
 Education
-General Population
 General Population
 Education
 Business
@@ -5751,17 +4968,13 @@ General Population
 Labor
 Business
 Education
-General Population
-General Population
 Education
 General Population
-General Population
 Labor
 Labor
 Labor
 Refugees/Displaced
 Agricultural
-General Population
 General Population
 Education
 Labor
@@ -5774,7 +4987,6 @@ Education
 Labor
 Education
 Labor
-General Population
 Education
 General Population
 Labor
@@ -5782,7 +4994,6 @@ General Population
 Education
 Education
 Labor
-General Population
 General Population
 General Population
 Labor
@@ -5792,8 +5003,6 @@ General Population
 Education
 General Population
 Labor
-Labor
-Education
 Education
 Education
 Education
@@ -5804,28 +5013,22 @@ Education
 General Population
 Labor
 General Population
-General Population
 Labor
 General Population
 General Population
 Education
 Education
 Agricultural
-General Population
 General Population
 General Population
 General Population
 Media
-General Population
 Agricultural
 Medical
 Medical
-General Population
 General Population
-Education
 General Population
 Labor
-General Population
 Education
 Education
 Education
@@ -5837,13 +5040,11 @@ Labor
 Education
 Labor
 General Population
-General Population
 Education
 Business
 Refugees/Displaced
 Education
 Ethnic
-General Population
 General Population
 Education
 Education
@@ -5858,9 +5059,7 @@ General Population
 Ethnic
 General Population
 General Population
-General Population
 Education
-General Population
 General Population
 General Population
 General Population
@@ -5877,9 +5076,7 @@ Education
 General Population
 Business
 Education
-Education
 Medical
-General Population
 General Population
 Agricultural
 General Population
@@ -5915,20 +5112,15 @@ Education
 General Population
 Education
 Medical
-General Population
-Religious
 Education
 Labor
 Education
 Labor
-Education
 Agricultural
 Agricultural
 General Population
 General Population
 Education
-General Population
-General Population
 General Population
 General Population
 Education
@@ -5939,7 +5131,6 @@ Agricultural
 General Population
 General Population
 General Population
-General Population
 Education
 Education
 Education
@@ -5954,21 +5145,17 @@ General Population
 Labor
 Labor
 General Population
-Education
 Education
 General Population
 General Population
-Religious
 Education
 Agricultural
 General Population
-Religious
 Education
 Labor
 Education
 Labor
 Labor
-Labor
 General Population
 Labor
 Education
@@ -6002,7 +5189,6 @@ General Population
 Labor
 General Population
 Ethnic
-General Population
 Education
 Education
 Labor
@@ -6023,17 +5209,14 @@ Business
 Education
 Education
 Medical
-General Population
 Legal
 Education
 Education
 General Population
 Education
 Business
-General Population
 General Population
 Education
-Education
 Labor
 Labor
 Education
@@ -6045,17 +5228,14 @@ General Population
 Labor
 Business
 Labor
-Education
 General Population
 Education
 Medical
 General Population
-General Population
 Education
 General Population
 General Population
 Labor
-Ethnic
 Education
 Labor
 Ethnic
@@ -6065,7 +5245,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Agricultural
 General Population
 Education
@@ -6075,10 +5254,8 @@ Labor
 Labor
 Education
 Media
-Refugees/Displaced
 Education
 General Population
-General Population
 Education
 Refugees/Displaced
 Labor
@@ -6119,16 +5296,12 @@ General Population
 Education
 Education
 Medical
-Business
 Legal
 Refugees/Displaced
 General Population
 Education
 General Population
-General Population
 Business
-Education
-General Population
 Legal
 General Population
 Education
@@ -6148,11 +5321,9 @@ Medical
 General Population
 Medical
 Labor
-General Population
 General Population
 General Population
 General Population
-General Population
 Business
 General Population
 Education
@@ -6164,28 +5335,20 @@ Labor
 General Population
 General Population
 Education
-Labor
 Agricultural
 Refugees/Displaced
 General Population
 Medical
 Education
-General Population
-General Population
 General Population
 Education
 General Population
-General Population
 Labor
-General Population
 General Population
-General Population
 Education
-General Population
 Education
 Labor
 General Population
-Labor
 Education
 Ethnic
 Ethnic
@@ -6195,11 +5358,9 @@ Labor
 Agricultural
 General Population
 Labor
-General Population
 Labor
 Education
 General Population
-General Population
 Labor
 Labor
 Agricultural
@@ -6216,7 +5377,6 @@ General Population
 General Population
 General Population
 Labor
-General Population
 General Population
 Labor
 Education
@@ -6224,7 +5384,6 @@ General Population
 Business
 Education
 Business
-General Population
 Education
 General Population
 General Population
@@ -6238,7 +5397,6 @@ Labor
 Labor
 Education
 Ethnic
-General Population
 General Population
 Education
 General Population
@@ -6257,17 +5415,14 @@ Education
 General Population
 General Population
 Business
-Education
 General Population
 Labor
 General Population
-Media
 Education
 General Population
 General Population
 Labor
 Labor
-Religious
 Business
 Legal
 General Population
@@ -6277,16 +5432,12 @@ General Population
 Labor
 General Population
 Education
-General Population
 Labor
 General Population
 Labor
-Education
-General Population
 General Population
 General Population
 General Population
-Labor
 General Population
 General Population
 Labor
@@ -6294,11 +5445,9 @@ Labor
 Education
 Labor
 Business
-General Population
 General Population
 General Population
 General Population
-General Population
 Education
 Business
 General Population
@@ -6313,7 +5462,6 @@ Labor
 Education
 General Population
 Labor
-General Population
 Education
 Education
 General Population
@@ -6329,11 +5477,9 @@ Education
 General Population
 General Population
 Labor
-Education
 General Population
 General Population
 Education
-Labor
 General Population
 General Population
 Labor
@@ -6342,30 +5488,23 @@ General Population
 General Population
 Business
 Business
-Business
-Religious
 General Population
 General Population
 General Population
-General Population
 Labor
 Labor
-Education
 General Population
 Medical
 Labor
 Business
 Education
 General Population
-General Population
 Education
 General Population
 Business
 General Population
 General Population
 Religious
-Labor
-General Population
 Medical
 Education
 Education
@@ -6387,15 +5526,10 @@ Labor
 General Population
 General Population
 Education
-General Population
 Education
-General Population
-General Population
 General Population
 General Population
 General Population
-General Population
-General Population
 Education
 Medical
 Education
@@ -6411,9 +5545,7 @@ General Population
 General Population
 Education
 General Population
-General Population
 Labor
-General Population
 Education
 Labor
 General Population
@@ -6430,26 +5562,19 @@ General Population
 General Population
 General Population
 Labor
-General Population
 Education
 General Population
-Medical
 Education
 Education
 Education
-Education
-General Population
 General Population
 Agricultural
 Ethnic
-General Population
 Labor
 Labor
 Labor
-General Population
 Labor
 General Population
-Agricultural
 Education
 Labor
 General Population
@@ -6485,43 +5610,31 @@ Agricultural
 Refugees/Displaced
 Education
 Labor
-Education
 General Population
-Education
 General Population
 Labor
 General Population
 Agricultural
-General Population
 Education
 General Population
 Education
 Labor
 Ethnic
-General Population
 Labor
-General Population
 General Population
 General Population
 Education
 General Population
 General Population
-Education
 General Population
 Education
 General Population
 Education
-General Population
 Labor
 Labor
 Media
-General Population
-General Population
-Ethnic
 General Population
 Legal
-General Population
-Education
 Medical
 General Population
 General Population
@@ -6530,7 +5643,6 @@ Labor
 Labor
 Labor
 Labor
-Religious
 Labor
 Education
 General Population
@@ -6547,11 +5659,9 @@ General Population
 Business
 Labor
 Labor
-Education
 General Population
 General Population
 Agricultural
-General Population
 General Population
 Agricultural
 General Population
@@ -6573,9 +5683,7 @@ General Population
 Business
 Labor
 General Population
-General Population
 Education
-General Population
 Medical
 Agricultural
 Agricultural
@@ -6591,17 +5699,13 @@ Education
 General Population
 Education
 Education
-Education
-Education
 Labor
 Labor
 Education
 Labor
 Labor
 Labor
-Labor
 General Population
-Education
 General Population
 General Population
 Education
@@ -6611,16 +5715,11 @@ General Population
 General Population
 Labor
 Education
-General Population
-General Population
 Business
 Media
-General Population
-Religious
 General Population
 General Population
 General Population
-General Population
 Education
 Education
 General Population
@@ -6633,7 +5732,6 @@ General Population
 General Population
 General Population
 Labor
-Education
 General Population
 General Population
 General Population
@@ -6650,7 +5748,6 @@ Labor
 General Population
 Labor
 General Population
-General Population
 Education
 General Population
 General Population
@@ -6674,7 +5771,6 @@ Labor
 Labor
 Labor
 General Population
-Education
 Education
 Education
 General Population
@@ -6684,9 +5780,7 @@ Business
 Ethnic
 General Population
 General Population
-General Population
 Media
-General Population
 Education
 General Population
 Education
@@ -6696,12 +5790,10 @@ General Population
 Labor
 Labor
 Education
-General Population
 Agricultural
 General Population
 General Population
 Agricultural
-Labor
 Labor
 Media
 Education
@@ -6711,28 +5803,22 @@ General Population
 General Population
 Labor
 General Population
-General Population
 Education
 General Population
-Ethnic
 Business
 General Population
 General Population
-Religious
 General Population
 General Population
 Labor
 General Population
 Education
 Education
-General Population
 Labor
 General Population
 General Population
 Labor
 Labor
-General Population
-General Population
 Education
 General Population
 Medical
@@ -6754,12 +5840,9 @@ General Population
 Labor
 Education
 General Population
-General Population
 Labor
 Medical
-General Population
 Education
-Ethnic
 General Population
 General Population
 Labor
@@ -6771,13 +5854,10 @@ General Population
 General Population
 General Population
 Business
-General Population
 General Population
 General Population
 General Population
-Education
 Business
-General Population
 Education
 General Population
 Education
@@ -6788,9 +5868,7 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Labor
-General Population
 General Population
 General Population
 Labor
@@ -6799,8 +5877,6 @@ General Population
 Education
 General Population
 Education
-General Population
-General Population
 General Population
 General Population
 General Population
@@ -6810,26 +5886,18 @@ Business
 Medical
 Education
 General Population
-Education
 General Population
-Education
 Labor
-Labor
 General Population
 Labor
 Education
-General Population
 General Population
-General Population
 Education
 General Population
 Labor
 General Population
 General Population
 Labor
-General Population
-General Population
-Education
 General Population
 General Population
 Ethnic
@@ -6843,9 +5911,6 @@ Agricultural
 Education
 Education
 General Population
-General Population
-General Population
-General Population
 Education
 Education
 General Population
@@ -6853,7 +5918,6 @@ Labor
 Education
 Ethnic
 General Population
-Education
 General Population
 Education
 Labor
@@ -6875,7 +5939,6 @@ Education
 Agricultural
 General Population
 General Population
-General Population
 Labor
 Refugees/Displaced
 General Population
@@ -6886,7 +5949,6 @@ General Population
 Business
 Education
 Business
-Ethnic
 Labor
 Education
 General Population
@@ -6907,10 +5969,8 @@ Education
 Labor
 Education
 Labor
-Labor
 Education
 Labor
-Education
 Education
 Labor
 General Population
@@ -6920,16 +5980,13 @@ General Population
 Labor
 General Population
 Agricultural
-General Population
 Labor
-General Population
 General Population
 Business
 Education
 Education
 Labor
 Labor
-General Population
 Business
 Labor
 Labor
@@ -6938,11 +5995,9 @@ Labor
 Education
 Labor
 Business
-Labor
 Education
 Labor
 General Population
-General Population
 Education
 General Population
 Education
@@ -6951,14 +6006,10 @@ Refugees/Displaced
 Labor
 General Population
 Labor
-General Population
 General Population
 Labor
-General Population
 Education
-General Population
 Education
-General Population
 Education
 Education
 General Population
@@ -6969,7 +6020,6 @@ General Population
 Labor
 Labor
 Medical
-General Population
 Education
 General Population
 General Population
@@ -6978,17 +6028,14 @@ General Population
 Labor
 Business
 Education
-General Population
 Business
 General Population
 Education
 Medical
-General Population
 General Population
 General Population
 Refugees/Displaced
 Business
-General Population
 Labor
 Labor
 Business
@@ -6996,9 +6043,6 @@ Labor
 Labor
 Education
 Labor
-General Population
-General Population
-General Population
 General Population
 General Population
 General Population
@@ -7007,19 +6051,14 @@ General Population
 General Population
 Education
 Labor
-General Population
-Labor
 Refugees/Displaced
 Labor
 General Population
 Agricultural
 General Population
 Education
-General Population
 Labor
-General Population
 Education
-Education
 General Population
 Agricultural
 Labor
@@ -7046,7 +6085,6 @@ General Population
 General Population
 Ethnic
 General Population
-Labor
 Labor
 Labor
 Education
@@ -7070,7 +6108,6 @@ Agricultural
 Education
 Medical
 General Population
-General Population
 Medical
 General Population
 Labor
@@ -7081,11 +6118,8 @@ Legal
 Labor
 General Population
 Labor
-General Population
 General Population
-General Population
 Labor
-General Population
 Education
 General Population
 General Population
@@ -7097,9 +6131,7 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Labor
-General Population
 Labor
 Medical
 Labor
@@ -7116,8 +6148,6 @@ General Population
 General Population
 Business
 General Population
-General Population
-Business
 Medical
 Education
 Education
@@ -7139,37 +6169,28 @@ Labor
 Labor
 Labor
 Ethnic
-General Population
 Labor
 General Population
 General Population
 General Population
-Labor
 General Population
 General Population
 General Population
 General Population
 Labor
-Education
 General Population
 Labor
 Education
 Labor
-General Population
 General Population
 Media
-Education
-General Population
 Education
 Education
 General Population
-General Population
 Education
 General Population
 Education
-Business
 General Population
-General Population
 Education
 General Population
 Labor
@@ -7186,7 +6207,6 @@ General Population
 Labor
 General Population
 Labor
-General Population
 General Population
 Labor
 General Population
@@ -7196,11 +6216,9 @@ General Population
 General Population
 Labor
 Education
-Labor
 General Population
 Labor
 Labor
-General Population
 Medical
 Labor
 Labor
@@ -7220,7 +6238,6 @@ Labor
 Labor
 General Population
 Education
-General Population
 Education
 Refugees/Displaced
 Education
@@ -7245,7 +6262,6 @@ Labor
 Education
 Labor
 Education
-General Population
 Labor
 Education
 Education
@@ -7258,7 +6274,6 @@ General Population
 General Population
 General Population
 Education
-Labor
 General Population
 Education
 Labor
@@ -7268,14 +6283,11 @@ General Population
 Agricultural
 Labor
 General Population
-Education
 Labor
-General Population
 Education
 General Population
 General Population
 General Population
-Labor
 Labor
 Business
 Education
@@ -7296,16 +6308,13 @@ General Population
 Medical
 General Population
 General Population
-General Population
 Education
 General Population
 Education
 Education
 General Population
-Education
 Education
 Education
-General Population
 Education
 Labor
 Labor
@@ -7331,8 +6340,6 @@ Business
 Labor
 Medical
 General Population
-Education
-Ethnic
 Media
 Medical
 Business
@@ -7342,13 +6349,10 @@ General Population
 General Population
 Labor
 Business
-General Population
-General Population
 Education
 General Population
 Medical
 General Population
-Education
 Education
 Agricultural
 Education
@@ -7362,7 +6366,6 @@ Ethnic
 General Population
 Labor
 Labor
-General Population
 Education
 General Population
 General Population
@@ -7374,13 +6377,11 @@ General Population
 Agricultural
 General Population
 Education
-General Population
 Labor
 General Population
 Education
 General Population
 Education
-General Population
 Education
 Agricultural
 Refugees/Displaced
@@ -7397,7 +6398,6 @@ Business
 Labor
 Labor
 Education
-General Population
 General Population
 Agricultural
 General Population
@@ -7405,31 +6405,21 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Labor
-General Population
-General Population
-General Population
 General Population
-Ethnic
 General Population
 Education
-General Population
 Business
-General Population
 Labor
-General Population
 General Population
 Labor
 Labor
 Labor
-General Population
 Education
 General Population
 General Population
 Labor
 Education
-General Population
 Education
 General Population
 Labor
@@ -7437,7 +6427,6 @@ General Population
 Education
 General Population
 Labor
-General Population
 Medical
 Labor
 Education
@@ -7446,10 +6435,8 @@ Education
 Education
 Business
 Education
-General Population
 General Population
 Labor
-Education
 Media
 Education
 General Population
@@ -7460,8 +6447,6 @@ General Population
 Labor
 General Population
 General Population
-Labor
-Business
 Labor
 Refugees/Displaced
 General Population
@@ -7473,14 +6458,11 @@ General Population
 General Population
 Business
 General Population
-Education
 Agricultural
-General Population
 Education
 General Population
 Labor
 Labor
-General Population
 General Population
 Education
 Education
@@ -7493,18 +6475,14 @@ Education
 Education
 General Population
 Business
-Labor
-Education
 Labor
 Labor
 General Population
 General Population
-General Population
 Labor
 Ethnic
 General Population
 Business
-General Population
 General Population
 General Population
 General Population
@@ -7528,9 +6506,7 @@ General Population
 Labor
 Business
 Education
-Education
 Labor
-Education
 General Population
 General Population
 Education
@@ -7538,28 +6514,22 @@ Education
 General Population
 Labor
 Education
-General Population
 Medical
 Education
 Labor
 General Population
 Medical
 Agricultural
-General Population
 General Population
 General Population
-Religious
 Business
 Education
-General Population
 Business
 General Population
-Business
 General Population
 General Population
 Education
 Labor
-General Population
 General Population
 General Population
 Education
@@ -7567,7 +6537,6 @@ General Population
 General Population
 Education
 General Population
-General Population
 Education
 Business
 General Population
@@ -7582,9 +6551,7 @@ General Population
 Labor
 General Population
 Labor
-Education
 General Population
-General Population
 Education
 General Population
 General Population
@@ -7592,7 +6559,6 @@ Ethnic
 Medical
 General Population
 Labor
-General Population
 Education
 Labor
 Labor
@@ -7609,8 +6575,6 @@ General Population
 Education
 Labor
 Education
-General Population
-General Population
 Education
 Labor
 General Population
@@ -7621,7 +6585,6 @@ Education
 Medical
 Labor
 General Population
-Religious
 Business
 General Population
 General Population
@@ -7643,23 +6606,18 @@ General Population
 Education
 Education
 Medical
-Labor
 Labor
 Agricultural
 General Population
 Labor
 General Population
 General Population
-General Population
 Labor
-General Population
 Ethnic
 General Population
 General Population
-General Population
 Education
 Agricultural
-General Population
 General Population
 Education
 General Population
@@ -7691,7 +6649,6 @@ Medical
 General Population
 General Population
 Education
-General Population
 Labor
 Labor
 Education
@@ -7705,64 +6662,45 @@ Labor
 Labor
 Labor
 Education
-General Population
 General Population
-General Population
 Business
 Labor
 General Population
 Medical
-Labor
-General Population
 Labor
 General Population
 Labor
-General Population
 General Population
-General Population
 Business
 Education
 Business
-General Population
 Business
 General Population
 Medical
 General Population
-General Population
 Labor
 General Population
 Business
 Education
 Education
-General Population
 General Population
 General Population
 Labor
 General Population
 General Population
-General Population
 Education
-General Population
-General Population
 Education
-General Population
 General Population
 General Population
-Ethnic
 Labor
 General Population
 Labor
 Labor
 Refugees/Displaced
 Labor
-General Population
 Labor
-Religious
-General Population
 General Population
-General Population
 Business
-General Population
 Labor
 Education
 Labor
@@ -7773,26 +6711,19 @@ General Population
 Education
 Agricultural
 Agricultural
-Education
-General Population
-General Population
+Education
 Media
 Labor
-Education
 General Population
 General Population
 General Population
 General Population
-General Population
-Medical
 General Population
 Education
 General Population
 Labor
 Education
 General Population
-General Population
-Labor
 Labor
 Education
 Education
@@ -7803,7 +6734,6 @@ Business
 Education
 Business
 General Population
-General Population
 Refugees/Displaced
 Labor
 Education
@@ -7817,7 +6747,6 @@ Labor
 General Population
 General Population
 Labor
-General Population
 Business
 Education
 Medical
@@ -7848,20 +6777,15 @@ Education
 General Population
 Labor
 General Population
-Business
-General Population
 General Population
 Labor
 Education
-General Population
 Labor
 Labor
 General Population
-Education
 Education
 Legal
 General Population
-General Population
 Labor
 General Population
 Labor
@@ -7869,27 +6793,22 @@ Labor
 Education
 Education
 Business
-General Population
 General Population
 Education
 Education
 Medical
-General Population
 Business
 Labor
 Education
 Medical
 General Population
 Labor
-Education
 General Population
 Education
 Refugees/Displaced
 Labor
-Labor
 General Population
 General Population
-Business
 Labor
 General Population
 General Population
@@ -7898,17 +6817,13 @@ Labor
 General Population
 Education
 Education
-Education
 Labor
 Labor
-General Population
 General Population
 General Population
-General Population
 Labor
 Education
 Education
-General Population
 Education
 General Population
 Labor
@@ -7919,12 +6834,10 @@ Agricultural
 General Population
 General Population
 Education
-Education
 General Population
 Business
 Labor
 Education
-General Population
 General Population
 General Population
 General Population
@@ -7932,7 +6845,6 @@ General Population
 Education
 General Population
 Education
-General Population
 Education
 General Population
 Religious
@@ -7946,7 +6858,6 @@ Education
 General Population
 Education
 Refugees/Displaced
-Labor
 Medical
 Education
 Media
@@ -7959,7 +6870,6 @@ Education
 Education
 Education
 General Population
-General Population
 Education
 General Population
 Labor
@@ -7974,19 +6884,16 @@ Education
 General Population
 Labor
 Business
-General Population
 Ethnic
 Labor
 General Population
 Labor
 Labor
-Labor
 Education
 Education
 General Population
 General Population
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -7997,16 +6904,11 @@ Medical
 Education
 Education
 Medical
-General Population
 Labor
 Medical
 Labor
 Education
 Labor
-General Population
-General Population
-Education
-General Population
 Education
 General Population
 General Population
@@ -8017,7 +6919,6 @@ Education
 Education
 Education
 Education
-General Population
 General Population
 Labor
 General Population
@@ -8027,7 +6928,6 @@ Education
 Labor
 Labor
 Labor
-General Population
 Education
 General Population
 Education
@@ -8038,13 +6938,11 @@ Business
 General Population
 Labor
 Agricultural
-General Population
 General Population
 General Population
 Education
 General Population
 Education
-Ethnic
 General Population
 General Population
 General Population
@@ -8055,7 +6953,6 @@ General Population
 Education
 General Population
 Education
-General Population
 Education
 Labor
 General Population
@@ -8068,8 +6965,6 @@ General Population
 Education
 General Population
 General Population
-General Population
-General Population
 Labor
 Ethnic
 Education
@@ -8079,14 +6974,12 @@ General Population
 Business
 Education
 General Population
-General Population
 Education
 Labor
 General Population
 General Population
 General Population
 Medical
-General Population
 General Population
 Medical
 General Population
@@ -8099,7 +6992,6 @@ Education
 Refugees/Displaced
 Labor
 General Population
-General Population
 Labor
 Business
 Labor
@@ -8117,12 +7009,10 @@ Education
 General Population
 Education
 Business
-General Population
 General Population
 Education
 Labor
 Education
-General Population
 Education
 Education
 Labor
@@ -8140,27 +7030,20 @@ General Population
 Education
 General Population
 General Population
-Labor
 Business
-General Population
 Labor
 Education
-General Population
-General Population
 Labor
 Education
 Labor
 Medical
-Labor
 General Population
 Business
 Education
-General Population
 Agricultural
 Medical
 Labor
 Labor
-General Population
 General Population
 Education
 General Population
@@ -8169,16 +7052,13 @@ Education
 Education
 Education
 General Population
-General Population
 Medical
 Labor
 Labor
-General Population
 Business
 Education
 General Population
 General Population
-General Population
 Refugees/Displaced
 General Population
 General Population
@@ -8192,7 +7072,6 @@ Labor
 General Population
 Education
 Labor
-General Population
 General Population
 General Population
 Education
@@ -8209,12 +7088,9 @@ Education
 Labor
 General Population
 Labor
-General Population
 Labor
-General Population
 General Population
 Education
-General Population
 Labor
 General Population
 Business
@@ -8227,7 +7103,6 @@ Labor
 Medical
 Education
 General Population
-Business
 General Population
 Labor
 Education
@@ -8235,13 +7110,11 @@ Education
 General Population
 General Population
 Education
-General Population
 Education
 General Population
 Education
 General Population
 Labor
-General Population
 General Population
 Legal
 Education
@@ -8258,12 +7131,10 @@ Agricultural
 Labor
 General Population
 General Population
-General Population
 Education
 General Population
 Agricultural
 Medical
-General Population
 Business
 Education
 Business
@@ -8273,9 +7144,7 @@ Education
 General Population
 General Population
 Labor
-General Population
 Education
-General Population
 General Population
 Labor
 Labor
@@ -8292,26 +7161,18 @@ Education
 Labor
 Education
 Education
-General Population
-Education
 Education
 Labor
 General Population
 General Population
-General Population
 Education
 Labor
-General Population
 General Population
 General Population
-General Population
-General Population
 Labor
 General Population
 Business
 General Population
-Media
-Business
 General Population
 General Population
 General Population
@@ -8322,7 +7183,6 @@ General Population
 General Population
 Education
 Education
-Education
 Labor
 General Population
 Agricultural
@@ -8342,13 +7202,9 @@ General Population
 General Population
 General Population
 General Population
-Education
 Business
-General Population
-General Population
 General Population
 General Population
-General Population
 Labor
 Business
 Business
@@ -8361,7 +7217,6 @@ Education
 General Population
 General Population
 Media
-General Population
 General Population
 General Population
 Labor
@@ -8379,25 +7234,19 @@ Labor
 Medical
 General Population
 Labor
-General Population
 Medical
 Labor
 Medical
-General Population
 Education
 Medical
-General Population
 Education
-General Population
 Medical
 General Population
-General Population
 Labor
 General Population
 Labor
 General Population
 Labor
-General Population
 General Population
 Labor
 Ethnic
@@ -8407,20 +7256,14 @@ Education
 General Population
 General Population
 General Population
-Education
-General Population
-General Population
 Legal
-Education
 Agricultural
 Labor
 General Population
 General Population
-General Population
 Education
 General Population
 Education
-General Population
 General Population
 Education
 Education
@@ -8435,13 +7278,11 @@ Media
 General Population
 Legal
 General Population
-General Population
 Education
 Education
 General Population
 Education
 Agricultural
-Education
 Education
 General Population
 General Population
@@ -8458,9 +7299,7 @@ General Population
 General Population
 General Population
 General Population
-Education
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -8468,8 +7307,6 @@ Education
 Labor
 Labor
 Labor
-Labor
-General Population
 General Population
 Agricultural
 General Population
@@ -8482,7 +7319,6 @@ Agricultural
 Labor
 Education
 Education
-Education
 Agricultural
 Labor
 Labor
@@ -8490,7 +7326,6 @@ General Population
 General Population
 Education
 Business
-Education
 General Population
 General Population
 Business
@@ -8502,17 +7337,14 @@ General Population
 Education
 General Population
 General Population
-General Population
 Agricultural
 General Population
 General Population
 Education
 General Population
 Education
-General Population
 General Population
 Medical
-General Population
 Agricultural
 Labor
 Labor
@@ -8527,8 +7359,6 @@ Education
 General Population
 General Population
 Education
-General Population
-Religious
 Business
 Medical
 Education
@@ -8536,28 +7366,23 @@ General Population
 General Population
 Labor
 Education
-General Population
 General Population
 General Population
 General Population
-General Population
 Agricultural
 Agricultural
 Labor
-General Population
 General Population
 Agricultural
 General Population
 Business
 Education
 General Population
-General Population
 Labor
 General Population
 General Population
 General Population
 Labor
-General Population
 General Population
 General Population
 Refugees/Displaced
@@ -8567,7 +7392,6 @@ General Population
 Ethnic
 General Population
 General Population
-General Population
 Medical
 Labor
 Labor
@@ -8576,7 +7400,6 @@ General Population
 General Population
 Agricultural
 General Population
-Ethnic
 Medical
 General Population
 General Population
@@ -8585,7 +7408,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Education
 Labor
 General Population
@@ -8598,14 +7420,10 @@ General Population
 Business
 General Population
 Labor
-General Population
 General Population
 General Population
 Medical
-Education
 Labor
-Education
-Education
 Medical
 Labor
 Education
@@ -8618,7 +7436,6 @@ General Population
 Labor
 Education
 Education
-General Population
 Labor
 General Population
 Labor
@@ -8638,7 +7455,6 @@ Agricultural
 General Population
 General Population
 Labor
-General Population
 Labor
 General Population
 Labor
@@ -8646,19 +7462,14 @@ Education
 Labor
 Labor
 Education
-General Population
 General Population
 General Population
 General Population
-General Population
-Education
 General Population
 General Population
 General Population
 Labor
 General Population
-General Population
-General Population
 Education
 Labor
 General Population
@@ -8669,7 +7480,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Labor
 Education
 Medical
@@ -8680,7 +7490,6 @@ Business
 General Population
 General Population
 General Population
-Business
 General Population
 Labor
 General Population
@@ -8692,13 +7501,9 @@ Agricultural
 General Population
 Business
 Refugees/Displaced
-Medical
-General Population
 General Population
 Labor
 Agricultural
-General Population
-General Population
 General Population
 General Population
 General Population
@@ -8717,28 +7522,22 @@ General Population
 Education
 Education
 Labor
-General Population
 Education
 General Population
 Education
 Education
-General Population
 Education
 Medical
 Education
 Education
-Education
 General Population
 General Population
 Education
-Refugees/Displaced
 General Population
 Education
 General Population
 General Population
 General Population
-General Population
-General Population
 Education
 Business
 Education
@@ -8747,10 +7546,7 @@ General Population
 Labor
 General Population
 Education
-General Population
 Education
-General Population
-Religious
 Education
 General Population
 General Population
@@ -8765,21 +7561,17 @@ General Population
 Education
 Labor
 Education
-General Population
 Education
 Education
 Labor
-General Population
 Education
 Education
 General Population
 Education
 Education
 Education
-General Population
 General Population
 General Population
-Education
 Labor
 General Population
 Medical
@@ -8787,7 +7579,6 @@ General Population
 Education
 Labor
 Education
-General Population
 General Population
 Education
 Medical
@@ -8801,20 +7592,15 @@ General Population
 Labor
 Education
 General Population
-General Population
 Education
 Labor
 Legal
-General Population
 Education
 Education
 Medical
 Labor
-Labor
-General Population
 Education
 General Population
-Labor
 Education
 Education
 General Population
@@ -8829,9 +7615,7 @@ General Population
 Education
 Labor
 General Population
-Education
 General Population
-Agricultural
 Labor
 Education
 General Population
@@ -8846,7 +7630,6 @@ Education
 Labor
 General Population
 General Population
-Religious
 General Population
 Education
 General Population
@@ -8857,7 +7640,6 @@ Labor
 Medical
 Education
 General Population
-General Population
 Agricultural
 General Population
 Ethnic
@@ -8872,20 +7654,17 @@ Labor
 Education
 General Population
 Business
-General Population
 General Population
 Media
 General Population
 General Population
 Education
-General Population
 Labor
 Education
 Labor
 Business
 Medical
 Business
-General Population
 Legal
 General Population
 Education
@@ -8893,17 +7672,13 @@ General Population
 Labor
 General Population
 General Population
-Education
 Labor
-General Population
 General Population
 Ethnic
 General Population
-General Population
 Ethnic
 Labor
 Agricultural
-General Population
 Education
 Education
 Labor
@@ -8935,7 +7710,6 @@ General Population
 General Population
 Labor
 General Population
-Education
 General Population
 General Population
 Ethnic
@@ -8946,7 +7720,6 @@ Labor
 Education
 General Population
 Education
-Religious
 Medical
 General Population
 General Population
@@ -8955,7 +7728,6 @@ Labor
 Agricultural
 General Population
 General Population
-General Population
 Business
 Labor
 General Population
@@ -8968,13 +7740,10 @@ Education
 Education
 General Population
 Education
-General Population
 General Population
 General Population
 Education
-General Population
 Education
-General Population
 General Population
 Labor
 General Population
@@ -9001,10 +7770,7 @@ Refugees/Displaced
 Education
 General Population
 General Population
-General Population
-General Population
 Agricultural
-General Population
 Agricultural
 Labor
 Labor
@@ -9016,15 +7782,12 @@ General Population
 General Population
 General Population
 Labor
-General Population
-Education
 General Population
 General Population
 Agricultural
 Labor
 General Population
 General Population
-Education
 General Population
 General Population
 General Population
@@ -9034,8 +7797,6 @@ Education
 General Population
 General Population
 Business
-Education
-General Population
 Labor
 General Population
 Medical
@@ -9045,9 +7806,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
-General Population
-General Population
 Agricultural
 General Population
 General Population
@@ -9061,7 +7819,6 @@ Labor
 General Population
 General Population
 General Population
-Labor
 Labor
 Labor
 General Population
@@ -9081,9 +7838,7 @@ General Population
 General Population
 General Population
 Education
-Education
 Business
-Education
 Education
 Ethnic
 General Population
@@ -9099,21 +7854,18 @@ Labor
 Education
 Agricultural
 General Population
-Religious
 Labor
 Education
 Labor
 General Population
 General Population
 Education
-General Population
 Education
 General Population
 Medical
 Education
 Education
 General Population
-Labor
 Education
 Labor
 Education
@@ -9122,13 +7874,10 @@ Education
 Business
 Education
 Labor
-Education
 Refugees/Displaced
 General Population
 General Population
-General Population
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -9141,7 +7890,6 @@ General Population
 Labor
 General Population
 General Population
-General Population
 Labor
 General Population
 General Population
@@ -9151,7 +7899,6 @@ Business
 Labor
 General Population
 Labor
-Media
 General Population
 General Population
 Labor
@@ -9162,17 +7909,13 @@ Education
 Labor
 General Population
 Labor
-Education
 General Population
 Education
-Labor
 Business
-General Population
 Labor
 Labor
 General Population
 Business
-Religious
 Labor
 Labor
 Medical
@@ -9194,7 +7937,6 @@ Media
 Labor
 General Population
 General Population
-Business
 Labor
 Ethnic
 General Population
@@ -9218,16 +7960,12 @@ Education
 Ethnic
 General Population
 Agricultural
-General Population
 General Population
 General Population
-General Population
 Labor
-General Population
 General Population
 General Population
 Agricultural
-General Population
 Labor
 General Population
 Media
@@ -9240,7 +7978,6 @@ Business
 General Population
 General Population
 Labor
-Education
 Labor
 Education
 Business
@@ -9252,7 +7989,6 @@ Labor
 Agricultural
 General Population
 General Population
-General Population
 Medical
 Labor
 Medical
@@ -9301,16 +8037,11 @@ General Population
 General Population
 Education
 Labor
-General Population
 General Population
 Education
-Labor
 Legal
 Ethnic
-Education
-Religious
 Labor
-General Population
 Education
 Education
 Education
@@ -9332,9 +8063,7 @@ Education
 Labor
 Labor
 Education
-General Population
 Education
-General Population
 General Population
 Medical
 General Population
@@ -9346,11 +8075,9 @@ Education
 Labor
 Labor
 Medical
-Refugees/Displaced
 Agricultural
 General Population
 Labor
-General Population
 General Population
 General Population
 Ethnic
@@ -9358,7 +8085,6 @@ Education
 Labor
 Labor
 Medical
-General Population
 Labor
 Labor
 Medical
@@ -9368,21 +8094,16 @@ Education
 Medical
 General Population
 Refugees/Displaced
-General Population
-General Population
 Education
 General Population
 Labor
-General Population
 Education
 General Population
-General Population
 Medical
 Agricultural
 Ethnic
 Labor
 Education
-General Population
 Education
 General Population
 General Population
@@ -9398,9 +8119,7 @@ Business
 Labor
 Media
 General Population
-General Population
 Education
-General Population
 General Population
 General Population
 General Population
@@ -9411,11 +8130,9 @@ General Population
 Business
 General Population
 Business
-General Population
 Labor
 General Population
 Labor
-Religious
 General Population
 General Population
 General Population
@@ -9433,8 +8150,6 @@ Education
 General Population
 Education
 Labor
-Labor
-General Population
 General Population
 Labor
 Labor
@@ -9445,7 +8160,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 General Population
@@ -9455,17 +8169,12 @@ General Population
 Education
 Medical
 Agricultural
-General Population
 Education
 Business
 Education
 General Population
 General Population
 Labor
-Labor
-Education
-General Population
-Education
 General Population
 Labor
 Education
@@ -9476,18 +8185,14 @@ General Population
 General Population
 Labor
 Labor
-Labor
-General Population
 Medical
 Labor
 Labor
-Labor
 General Population
 Education
 Business
 Education
 Education
-General Population
 General Population
 General Population
 Labor
@@ -9495,7 +8200,6 @@ Education
 Medical
 General Population
 Education
-Religious
 Education
 Education
 Media
@@ -9508,21 +8212,15 @@ Labor
 Labor
 Labor
 Education
-General Population
-General Population
 Labor
-General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 Labor
-General Population
 General Population
 Education
 Labor
-General Population
 Education
 Agricultural
 General Population
@@ -9538,7 +8236,6 @@ Education
 General Population
 Education
 Labor
-Education
 General Population
 Education
 General Population
@@ -9567,7 +8264,6 @@ Agricultural
 Ethnic
 General Population
 General Population
-General Population
 Education
 Labor
 General Population
@@ -9577,24 +8273,19 @@ Labor
 General Population
 General Population
 Labor
-General Population
 Business
 General Population
 General Population
-General Population
 Labor
 Labor
 Education
-General Population
 General Population
 Labor
-General Population
 Labor
 Medical
 Education
 General Population
 General Population
-Education
 Education
 Labor
 Labor
@@ -9609,20 +8300,16 @@ Education
 General Population
 General Population
 General Population
-General Population
 Medical
 General Population
 General Population
 Labor
 Education
-General Population
 General Population
 General Population
 Refugees/Displaced
-General Population
 Labor
 Education
-General Population
 General Population
 General Population
 General Population
@@ -9636,9 +8323,7 @@ Education
 General Population
 Education
 Education
-Education
 Agricultural
-General Population
 General Population
 Medical
 General Population
@@ -9649,9 +8334,7 @@ Labor
 Labor
 General Population
 General Population
-General Population
 Education
-Labor
 Education
 Labor
 Labor
@@ -9661,7 +8344,6 @@ Labor
 General Population
 Education
 General Population
-General Population
 Medical
 General Population
 Business
@@ -9676,7 +8358,6 @@ Refugees/Displaced
 Education
 General Population
 Medical
-General Population
 Medical
 General Population
 General Population
@@ -9685,17 +8366,12 @@ Education
 Medical
 General Population
 Labor
-General Population
 General Population
 General Population
 General Population
 General Population
 Labor
 Labor
-Labor
-Labor
-General Population
-General Population
 General Population
 General Population
 Labor
@@ -9708,7 +8384,6 @@ General Population
 Business
 Labor
 General Population
-General Population
 Education
 General Population
 General Population
@@ -9725,7 +8400,6 @@ Education
 General Population
 Labor
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -9742,14 +8416,8 @@ Media
 General Population
 Education
 Education
-General Population
-General Population
 General Population
 General Population
-Agricultural
-General Population
-General Population
-General Population
 General Population
 General Population
 General Population
@@ -9764,7 +8432,6 @@ Education
 Labor
 Education
 General Population
-General Population
 Refugees/Displaced
 General Population
 Education
@@ -9776,7 +8443,6 @@ General Population
 General Population
 General Population
 Refugees/Displaced
-Education
 Education
 Education
 Labor
@@ -9808,7 +8474,6 @@ Labor
 General Population
 Education
 General Population
-General Population
 Labor
 Business
 Labor
@@ -9822,7 +8487,6 @@ Education
 Business
 Business
 Labor
-Education
 General Population
 Education
 General Population
@@ -9839,7 +8503,6 @@ Labor
 General Population
 General Population
 Education
-Media
 Education
 General Population
 Medical
@@ -9848,15 +8511,12 @@ General Population
 Labor
 Agricultural
 Labor
-General Population
 Education
 General Population
 Business
 Labor
 General Population
-General Population
 Labor
-General Population
 General Population
 General Population
 Education
@@ -9873,7 +8533,6 @@ General Population
 Education
 General Population
 Medical
-General Population
 Labor
 Education
 Labor
@@ -9886,18 +8545,15 @@ General Population
 General Population
 General Population
 Agricultural
-General Population
 Education
 General Population
 General Population
-General Population
 Labor
 General Population
 General Population
 General Population
 Medical
 Education
-General Population
 General Population
 General Population
 General Population
@@ -9906,18 +8562,15 @@ General Population
 Labor
 Labor
 General Population
-General Population
 Labor
 Education
 Education
 General Population
-Education
 Business
 Labor
 Labor
 Agricultural
 Labor
-General Population
 Medical
 General Population
 Labor
@@ -9938,7 +8591,6 @@ General Population
 Media
 Education
 Education
-Labor
 General Population
 Education
 Labor
@@ -9946,7 +8598,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Education
 Education
 Labor
@@ -9956,7 +8607,6 @@ General Population
 General Population
 Education
 Medical
-General Population
 Labor
 General Population
 Labor
@@ -9966,7 +8616,6 @@ Media
 General Population
 General Population
 General Population
-General Population
 Medical
 General Population
 Medical
@@ -9977,9 +8626,7 @@ General Population
 Education
 Refugees/Displaced
 Labor
-Religious
 General Population
-General Population
 Education
 Labor
 General Population
@@ -9989,22 +8636,18 @@ General Population
 General Population
 Labor
 Medical
-General Population
 Labor
 Education
 General Population
 General Population
-General Population
 Education
 General Population
 Medical
-General Population
 General Population
 Labor
 Education
 Education
 Labor
-General Population
 Education
 Education
 Business
@@ -10013,7 +8656,6 @@ Ethnic
 Labor
 General Population
 Education
-Labor
 Labor
 Refugees/Displaced
 Education
@@ -10043,34 +8685,27 @@ General Population
 Education
 General Population
 General Population
-Labor
 General Population
 Labor
-General Population
 Education
 General Population
 Labor
-Labor
 General Population
 General Population
 Labor
 General Population
 Education
 Education
-General Population
 General Population
 General Population
 Education
 Medical
-General Population
 Ethnic
 General Population
-Business
 Ethnic
 General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 General Population
@@ -10088,7 +8723,6 @@ General Population
 Labor
 General Population
 Labor
-Education
 General Population
 General Population
 Education
@@ -10107,7 +8741,6 @@ Business
 General Population
 Agricultural
 General Population
-General Population
 Religious
 Education
 Education
@@ -10138,7 +8771,6 @@ General Population
 General Population
 Education
 Education
-General Population
 General Population
 General Population
 Business
@@ -10152,7 +8784,6 @@ Legal
 Education
 Education
 General Population
-General Population
 Labor
 Labor
 Education
@@ -10174,7 +8805,6 @@ Labor
 General Population
 General Population
 Agricultural
-General Population
 Education
 General Population
 Ethnic
@@ -10195,7 +8825,6 @@ Education
 Agricultural
 General Population
 Labor
-General Population
 Refugees/Displaced
 General Population
 Legal
@@ -10210,7 +8839,6 @@ Agricultural
 Medical
 General Population
 Labor
-Religious
 Labor
 General Population
 General Population
@@ -10219,7 +8847,6 @@ Medical
 General Population
 Education
 Education
-Education
 General Population
 Education
 Labor
@@ -10233,23 +8860,18 @@ Business
 General Population
 General Population
 Medical
-General Population
 General Population
 General Population
 General Population
 General Population
 Ethnic
-General Population
 Ethnic
 Education
-General Population
 General Population
 General Population
 General Population
 General Population
 General Population
-General Population
-General Population
 Medical
 Education
 General Population
@@ -10272,16 +8894,13 @@ Education
 Education
 General Population
 General Population
-General Population
 Labor
 Labor
 Business
 General Population
 Labor
-Education
 Labor
 General Population
-Education
 General Population
 General Population
 Education
@@ -10301,10 +8920,8 @@ General Population
 General Population
 Agricultural
 Labor
-General Population
 General Population
 General Population
-Business
 Labor
 Education
 General Population
@@ -10317,17 +8934,14 @@ Education
 General Population
 Education
 Labor
-General Population
 Education
 Education
 Education
 Education
 General Population
-Medical
 General Population
 Education
 Labor
-General Population
 General Population
 Media
 Labor
@@ -10338,7 +8952,6 @@ General Population
 Labor
 General Population
 Labor
-General Population
 Medical
 Labor
 General Population
@@ -10356,19 +8969,15 @@ General Population
 General Population
 Education
 General Population
-Ethnic
 General Population
 Education
 Business
 Ethnic
 General Population
-General Population
 Labor
-General Population
 General Population
 General Population
 Education
-Agricultural
 Labor
 Ethnic
 Labor
@@ -10376,10 +8985,8 @@ General Population
 General Population
 Labor
 Labor
-General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 Business
@@ -10392,7 +8999,6 @@ Labor
 Labor
 General Population
 General Population
-Religious
 Labor
 Labor
 Legal
@@ -10405,13 +9011,10 @@ Agricultural
 Labor
 General Population
 General Population
-General Population
 Education
-General Population
 General Population
 Education
 Labor
-General Population
 Labor
 General Population
 Labor
@@ -10422,10 +9025,8 @@ General Population
 General Population
 Education
 General Population
-Education
 Labor
 Labor
-Business
 General Population
 Labor
 Education
@@ -10440,7 +9041,6 @@ Education
 General Population
 Labor
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -10448,8 +9048,6 @@ Education
 Education
 General Population
 Labor
-Labor
-Ethnic
 General Population
 Labor
 Labor
@@ -10459,7 +9057,6 @@ Labor
 Labor
 Education
 Labor
-General Population
 Labor
 General Population
 General Population
@@ -10468,7 +9065,6 @@ Labor
 General Population
 Education
 General Population
-Education
 General Population
 Education
 Labor
@@ -10478,12 +9074,10 @@ General Population
 Business
 Education
 Education
-General Population
 Education
 Business
 Refugees/Displaced
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -10493,26 +9087,22 @@ General Population
 Labor
 Education
 Labor
-Education
 Labor
 Education
 Labor
 Medical
 Education
 Agricultural
-General Population
 General Population
 Labor
 Labor
 General Population
 General Population
-General Population
 Education
 Labor
 General Population
 General Population
 Agricultural
-Education
 General Population
 Medical
 General Population
@@ -10527,11 +9117,9 @@ Agricultural
 General Population
 General Population
 Labor
-Business
 Education
 Labor
 Media
-General Population
 General Population
 General Population
 General Population
@@ -10540,20 +9128,16 @@ General Population
 General Population
 General Population
 Labor
-General Population
 Labor
 Education
 General Population
 General Population
 Labor
-General Population
 General Population
 General Population
 Refugees/Displaced
 Education
-General Population
 Labor
-General Population
 General Population
 Labor
 General Population
@@ -10577,8 +9161,6 @@ General Population
 Labor
 Business
 General Population
-Labor
-General Population
 General Population
 Medical
 Education
@@ -10601,12 +9183,10 @@ Agricultural
 General Population
 General Population
 General Population
-General Population
 Agricultural
 Education
 Education
 Education
-General Population
 General Population
 Legal
 Labor
@@ -10616,7 +9196,6 @@ Ethnic
 Education
 Ethnic
 Education
-Labor
 Education
 General Population
 Labor
@@ -10624,7 +9203,6 @@ Ethnic
 Medical
 General Population
 General Population
-Medical
 Labor
 General Population
 General Population
@@ -10636,55 +9214,43 @@ General Population
 General Population
 Labor
 Ethnic
-General Population
 Education
 Labor
-Education
 Labor
 General Population
 General Population
 General Population
-General Population
-General Population
 Labor
 Education
 General Population
 General Population
-General Population
 Labor
-General Population
 Labor
 Medical
 Labor
 Business
 Labor
-Education
-General Population
 General Population
 General Population
 Education
 Education
 General Population
 General Population
-General Population
 Education
 General Population
 Medical
-General Population
 General Population
 Labor
 Education
 General Population
 Labor
 Labor
-Labor
 General Population
 Medical
 Education
 Education
 Labor
 Education
-General Population
 Media
 Labor
 General Population
@@ -10707,9 +9273,7 @@ General Population
 Labor
 Agricultural
 Agricultural
-General Population
 Labor
-General Population
 Labor
 Education
 General Population
@@ -10732,19 +9296,13 @@ General Population
 Agricultural
 Labor
 General Population
-Labor
 General Population
 Education
-General Population
-General Population
-General Population
 Refugees/Displaced
 Medical
-General Population
 Labor
 Labor
 Business
-General Population
 General Population
 Labor
 Ethnic
@@ -10764,20 +9322,14 @@ General Population
 General Population
 Labor
 General Population
-General Population
-Education
 Education
 General Population
 Labor
-General Population
 Labor
-General Population
 Education
 General Population
-General Population
 Labor
 Labor
-Education
 Education
 Labor
 General Population
@@ -10786,10 +9338,8 @@ Education
 Education
 Labor
 Education
-General Population
 Labor
 Labor
-General Population
 General Population
 General Population
 Media
@@ -10808,14 +9358,11 @@ General Population
 General Population
 General Population
 General Population
-General Population
-Education
 Medical
 Ethnic
 Labor
 General Population
 Education
-General Population
 Education
 General Population
 Education
@@ -10828,7 +9375,6 @@ General Population
 Agricultural
 General Population
 Education
-General Population
 General Population
 General Population
 Agricultural
@@ -10840,8 +9386,6 @@ General Population
 Labor
 General Population
 Medical
-Education
-General Population
 Labor
 General Population
 Ethnic
@@ -10853,13 +9397,11 @@ General Population
 General Population
 General Population
 Labor
-General Population
 Agricultural
 Education
 Education
 Business
 Agricultural
-General Population
 General Population
 Media
 Labor
@@ -10876,7 +9418,6 @@ Labor
 Labor
 Medical
 General Population
-Agricultural
 General Population
 General Population
 General Population
@@ -10892,15 +9433,12 @@ Media
 Labor
 Labor
 Labor
-Education
 General Population
-General Population
 Business
 Education
 Ethnic
 General Population
 Labor
-General Population
 Education
 Labor
 General Population
@@ -10919,12 +9457,10 @@ Education
 Labor
 General Population
 General Population
-General Population
 Labor
 General Population
 General Population
 Business
-General Population
 General Population
 General Population
 Labor
@@ -10942,11 +9478,9 @@ General Population
 Education
 Medical
 Labor
-Education
 Medical
 Labor
 Education
-General Population
 Ethnic
 Agricultural
 General Population
@@ -10958,11 +9492,9 @@ Labor
 Education
 General Population
 General Population
-Education
 Labor
 Business
 Education
-General Population
 General Population
 General Population
 General Population
@@ -10975,10 +9507,8 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Education
 General Population
-Labor
 Education
 Labor
 Labor
@@ -10997,7 +9527,6 @@ General Population
 Labor
 General Population
 Media
-Labor
 Education
 Education
 Labor
@@ -11012,13 +9541,11 @@ Education
 General Population
 Labor
 Business
-General Population
 General Population
 Business
 Education
 Labor
 Education
-Education
 General Population
 Medical
 General Population
@@ -11027,7 +9554,6 @@ General Population
 General Population
 Education
 Business
-General Population
 Labor
 Labor
 General Population
@@ -11040,34 +9566,26 @@ Education
 General Population
 General Population
 General Population
-General Population
 Education
-General Population
 General Population
 General Population
 General Population
 General Population
-Labor
 Education
 General Population
 Education
-Religious
 Agricultural
 General Population
-Business
 Education
-General Population
 Medical
 Medical
 Media
-General Population
 Labor
 Education
 Education
 General Population
 Medical
 Labor
-Education
 Labor
 General Population
 General Population
@@ -11082,17 +9600,12 @@ Labor
 Ethnic
 General Population
 Labor
-Education
-Education
 Education
 Ethnic
-General Population
 Labor
 General Population
 Labor
-General Population
 General Population
-Refugees/Displaced
 General Population
 Education
 General Population
@@ -11102,34 +9615,27 @@ Education
 Education
 Labor
 Agricultural
-General Population
-Religious
 General Population
 General Population
 Legal
 Labor
 Labor
-General Population
 Medical
 Labor
 Labor
-Labor
 Education
 Labor
 Education
 General Population
 General Population
 Agricultural
-General Population
 General Population
 General Population
 General Population
 Business
 General Population
 Education
-Education
 Labor
-General Population
 Labor
 General Population
 Agricultural
@@ -11144,17 +9650,13 @@ General Population
 Labor
 Education
 General Population
-General Population
 Education
 Refugees/Displaced
-Religious
 Labor
-General Population
 Education
 Labor
 Education
 Labor
-General Population
 General Population
 General Population
 Education
@@ -11164,14 +9666,11 @@ Labor
 General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 Agricultural
 Business
-General Population
 General Population
-Labor
 General Population
 General Population
 Agricultural
@@ -11187,14 +9686,12 @@ General Population
 General Population
 Education
 Medical
-General Population
 Education
 General Population
 General Population
 Labor
 General Population
 General Population
-General Population
 Education
 Labor
 Labor
@@ -11205,7 +9702,6 @@ Business
 Education
 General Population
 Education
-General Population
 Agricultural
 General Population
 Education
@@ -11224,11 +9720,9 @@ Education
 Labor
 General Population
 General Population
-Education
 General Population
 General Population
 Agricultural
-General Population
 General Population
 General Population
 Labor
@@ -11243,8 +9737,6 @@ General Population
 Medical
 Labor
 Ethnic
-Education
-Religious
 Education
 Agricultural
 Labor
@@ -11253,10 +9745,8 @@ General Population
 General Population
 Religious
 Education
-Education
 Labor
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -11295,10 +9785,8 @@ General Population
 Legal
 Education
 Education
-General Population
 Labor
 Education
-General Population
 Medical
 Education
 General Population
@@ -11318,23 +9806,19 @@ Labor
 Education
 Legal
 Education
-General Population
 Media
 Labor
 Education
 Labor
 General Population
 Business
-General Population
 General Population
 General Population
 Education
 Education
 Labor
-Labor
 General Population
 Agricultural
-General Population
 General Population
 General Population
 General Population
@@ -11343,11 +9827,8 @@ Education
 Education
 General Population
 Legal
-General Population
 Education
-General Population
 Business
-Ethnic
 General Population
 Refugees/Displaced
 Labor
@@ -11357,18 +9838,13 @@ General Population
 General Population
 Labor
 Education
-General Population
 General Population
-General Population
 Agricultural
 Education
-General Population
 General Population
 General Population
 General Population
 Education
-General Population
-General Population
 Education
 Education
 Labor
@@ -11384,7 +9860,6 @@ General Population
 Agricultural
 General Population
 General Population
-General Population
 Labor
 General Population
 General Population
@@ -11394,10 +9869,8 @@ General Population
 Labor
 Labor
 Media
-Education
 Business
 General Population
-Religious
 Labor
 Labor
 General Population
@@ -11407,7 +9880,6 @@ General Population
 Labor
 General Population
 Education
-General Population
 Education
 Labor
 Medical
@@ -11421,7 +9893,6 @@ Labor
 Education
 Medical
 Labor
-Labor
 Education
 General Population
 General Population
@@ -11430,7 +9901,6 @@ Education
 Labor
 General Population
 Labor
-Ethnic
 Medical
 Refugees/Displaced
 Labor
@@ -11465,14 +9935,11 @@ General Population
 General Population
 Business
 Education
-General Population
 Labor
 Labor
 General Population
 Labor
-Education
 General Population
-Religious
 General Population
 Business
 Ethnic
@@ -11484,7 +9951,6 @@ General Population
 General Population
 General Population
 Education
-General Population
 General Population
 General Population
 Education
@@ -11498,28 +9964,21 @@ Labor
 Education
 Education
 General Population
-Labor
 Medical
 Medical
-General Population
 General Population
 Labor
 Labor
 General Population
 Education
 General Population
-Education
-General Population
 Labor
 Medical
 Agricultural
 Labor
-Business
 Refugees/Displaced
-General Population
 General Population
 General Population
-Religious
 General Population
 General Population
 General Population
@@ -11550,16 +10009,12 @@ Labor
 Labor
 General Population
 Labor
-Business
 Labor
 Education
-Ethnic
 Education
 Business
-General Population
 Education
 Medical
-General Population
 Media
 Labor
 Business
@@ -11569,7 +10024,6 @@ Labor
 General Population
 General Population
 Medical
-Education
 Business
 General Population
 Labor
@@ -11579,24 +10033,20 @@ General Population
 Education
 General Population
 General Population
-General Population
 Education
 Education
-General Population
 General Population
 Medical
 Education
 Labor
 Education
 Labor
-Labor
 Education
 Agricultural
 Medical
 General Population
 General Population
 Medical
-Labor
 General Population
 Education
 Labor
@@ -11613,12 +10063,8 @@ General Population
 General Population
 General Population
 Education
-Education
-General Population
 General Population
-General Population
 Education
-General Population
 Education
 Education
 General Population
@@ -11633,17 +10079,13 @@ Labor
 General Population
 Education
 General Population
-General Population
 Legal
 Labor
 Labor
 General Population
 Labor
 Education
-Labor
-Business
 Education
-General Population
 Agricultural
 Refugees/Displaced
 Labor
@@ -11656,10 +10098,8 @@ General Population
 Medical
 General Population
 General Population
-General Population
 Refugees/Displaced
 Education
-General Population
 General Population
 General Population
 Labor
@@ -11671,7 +10111,6 @@ General Population
 Business
 Labor
 Labor
-Religious
 Legal
 Education
 Labor
@@ -11679,13 +10118,11 @@ General Population
 Education
 Business
 General Population
-Education
 General Population
 General Population
 Labor
 Labor
 General Population
-General Population
 Labor
 General Population
 Labor
@@ -11696,55 +10133,45 @@ Labor
 General Population
 General Population
 General Population
-Education
 Education
 General Population
 Labor
 General Population
 Education
-Business
 General Population
 General Population
 General Population
 Medical
 Labor
-General Population
 General Population
 General Population
-General Population
-Labor
 General Population
 General Population
 Labor
-Labor
-Business
-General Population
-General Population
-Education
-Education
-Medical
-Medical
-Education
 General Population
 General Population
 Labor
+Business
 General Population
 General Population
 Education
 Education
+Medical
+Medical
 Education
 General Population
 Labor
+Education
 General Population
 Labor
 Labor
+Labor
 Education
 Business
 Labor
 Labor
 Education
 Labor
-General Population
 General Population
 Education
 General Population
@@ -11761,7 +10188,6 @@ Labor
 Education
 Labor
 Education
-Education
 General Population
 General Population
 General Population
@@ -11772,11 +10198,9 @@ Labor
 General Population
 Labor
 Labor
-General Population
 General Population
 General Population
 Education
-General Population
 Labor
 Labor
 Education
@@ -11790,30 +10214,24 @@ General Population
 Business
 Agricultural
 Education
-General Population
 General Population
 General Population
 Education
 Labor
 Education
 General Population
-General Population
 Labor
 Labor
-General Population
 General Population
 General Population
 Business
 Education
-General Population
-General Population
 Education
 General Population
 Labor
 Labor
 Labor
 Education
-General Population
 Education
 Business
 Medical
@@ -11826,13 +10244,9 @@ General Population
 General Population
 Labor
 Labor
-General Population
 Agricultural
-Agricultural
 Education
 Education
-Labor
-General Population
 Labor
 General Population
 Medical
@@ -11841,7 +10255,6 @@ Education
 Medical
 Education
 Education
-General Population
 General Population
 General Population
 General Population
@@ -11851,16 +10264,12 @@ Business
 General Population
 Agricultural
 General Population
-General Population
 Agricultural
 General Population
-Labor
-Labor
 General Population
 Labor
 General Population
 Labor
-General Population
 Labor
 Labor
 Labor
@@ -11869,10 +10278,8 @@ Ethnic
 Education
 Labor
 General Population
-General Population
 Education
 Labor
-General Population
 General Population
 Education
 Labor
@@ -11881,27 +10288,19 @@ General Population
 Education
 Agricultural
 Ethnic
-General Population
-General Population
-General Population
 Labor
-General Population
 Education
 Labor
 Education
 Labor
-General Population
 Labor
 Media
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
 Agricultural
-General Population
-Ethnic
 Labor
 General Population
 General Population
@@ -11921,28 +10320,21 @@ Labor
 General Population
 Medical
 Education
-General Population
-Religious
 General Population
 General Population
 Labor
 Labor
 General Population
 Labor
-General Population
 Education
 General Population
 Agricultural
-Education
 Education
 General Population
 Business
-Education
 Labor
 General Population
 Business
-General Population
-General Population
 Education
 General Population
 Labor
@@ -11950,7 +10342,6 @@ Education
 General Population
 Labor
 General Population
-Medical
 General Population
 Labor
 Education
@@ -11964,7 +10355,6 @@ General Population
 Business
 General Population
 Education
-General Population
 Labor
 General Population
 General Population
@@ -11983,13 +10373,11 @@ General Population
 Medical
 General Population
 Labor
-Education
 General Population
 General Population
 Education
 Labor
 General Population
-Religious
 Labor
 General Population
 Education
@@ -11998,13 +10386,10 @@ Education
 General Population
 Education
 Labor
-General Population
 General Population
 General Population
 General Population
-General Population
 Labor
-General Population
 General Population
 General Population
 Labor
@@ -12012,19 +10397,16 @@ General Population
 Labor
 Agricultural
 General Population
-General Population
 Labor
 General Population
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
 Education
 Medical
 Ethnic
-Education
 General Population
 Education
 Medical
@@ -12035,19 +10417,13 @@ Labor
 Labor
 General Population
 General Population
-Business
-Business
 Education
 General Population
 Medical
-Agricultural
 Labor
 General Population
-General Population
 Education
-General Population
 Medical
-General Population
 Refugees/Displaced
 Labor
 General Population
@@ -12064,7 +10440,6 @@ General Population
 Medical
 General Population
 Business
-General Population
 General Population
 General Population
 Medical
@@ -12077,9 +10452,7 @@ Education
 General Population
 Agricultural
 Medical
-General Population
 Labor
-Business
 General Population
 Education
 General Population
@@ -12089,19 +10462,16 @@ Agricultural
 Labor
 Labor
 General Population
-Media
 Labor
 Labor
 General Population
 General Population
 Ethnic
 Agricultural
-Religious
 Medical
 Labor
 General Population
 Labor
-Education
 General Population
 General Population
 General Population
@@ -12116,18 +10486,14 @@ Medical
 General Population
 Education
 Ethnic
-General Population
 General Population
 General Population
 Business
-Education
 General Population
 Education
 General Population
 Medical
-General Population
 General Population
-Education
 General Population
 Agricultural
 General Population
@@ -12143,28 +10509,22 @@ Business
 General Population
 Labor
 Labor
-General Population
 General Population
 General Population
 General Population
 Labor
 Education
 General Population
-General Population
-General Population
 Medical
 General Population
 General Population
 Labor
 General Population
 Education
-General Population
-General Population
 Education
 Labor
 General Population
 General Population
-General Population
 Labor
 General Population
 Education
@@ -12177,12 +10537,10 @@ Education
 General Population
 General Population
 Media
-General Population
 Refugees/Displaced
 Business
 Education
 General Population
-General Population
 Labor
 General Population
 Medical
@@ -12196,7 +10554,6 @@ Medical
 General Population
 Education
 Labor
-General Population
 General Population
 General Population
 Business
@@ -12205,7 +10562,6 @@ General Population
 General Population
 Medical
 General Population
-Labor
 Education
 General Population
 Medical
@@ -12216,7 +10572,6 @@ Education
 General Population
 Education
 Medical
-General Population
 General Population
 General Population
 General Population
@@ -12224,7 +10579,6 @@ Business
 Education
 Education
 Labor
-Labor
 General Population
 General Population
 General Population
@@ -12234,26 +10588,21 @@ Labor
 Education
 Education
 Education
-General Population
 Ethnic
 Labor
 Labor
 General Population
 General Population
 Labor
-Education
-Education
 Business
 Labor
 General Population
 Education
 Labor
 General Population
-General Population
 Ethnic
 Agricultural
 Business
-General Population
 Education
 Agricultural
 Labor
@@ -12263,13 +10612,10 @@ Labor
 General Population
 Education
 Medical
-Labor
 General Population
 Education
 General Population
-Education
 Labor
-General Population
 Agricultural
 General Population
 General Population
@@ -12283,7 +10629,6 @@ Medical
 Labor
 General Population
 Agricultural
-General Population
 Labor
 General Population
 Religious
@@ -12298,8 +10643,6 @@ Labor
 Education
 Legal
 General Population
-General Population
-General Population
 Medical
 Education
 General Population
@@ -12307,16 +10650,13 @@ Education
 Education
 Education
 General Population
-Labor
 Business
 Refugees/Displaced
 Medical
-General Population
 Education
 Education
 Agricultural
 Labor
-Education
 General Population
 Education
 General Population
@@ -12332,7 +10672,6 @@ General Population
 General Population
 Labor
 Media
-General Population
 General Population
 General Population
 General Population
@@ -12345,7 +10684,6 @@ General Population
 General Population
 Education
 Labor
-General Population
 Business
 General Population
 Education
@@ -12354,7 +10692,6 @@ Business
 Business
 Labor
 Education
-General Population
 Education
 Education
 Labor
@@ -12363,7 +10700,6 @@ General Population
 Labor
 Medical
 Education
-General Population
 Labor
 Labor
 Media
@@ -12379,15 +10715,12 @@ General Population
 Business
 Medical
 Labor
-General Population
 Business
 General Population
 Labor
 Education
 General Population
-General Population
 Labor
-General Population
 Education
 General Population
 General Population
@@ -12397,7 +10730,6 @@ General Population
 Labor
 General Population
 Labor
-Labor
 Education
 General Population
 Business
@@ -12428,11 +10760,9 @@ Labor
 Labor
 General Population
 Education
-General Population
 General Population
 Labor
 Business
-General Population
 Business
 Business
 Medical
@@ -12443,26 +10773,18 @@ Labor
 Labor
 General Population
 Agricultural
-General Population
 General Population
 Business
 Medical
-General Population
-General Population
-General Population
-General Population
 Education
-General Population
 Religious
 General Population
 Education
 Business
 Business
-General Population
 General Population
 General Population
 Education
-Education
 General Population
 Labor
 Education
@@ -12474,7 +10796,6 @@ Labor
 General Population
 General Population
 Education
-Medical
 Labor
 Labor
 General Population
@@ -12485,39 +10806,31 @@ Labor
 Ethnic
 Education
 General Population
-Medical
 Labor
-General Population
 General Population
 General Population
 Agricultural
-Education
 Agricultural
 Labor
 General Population
 General Population
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
 General Population
 Refugees/Displaced
 Education
-General Population
-Business
 Ethnic
 Legal
 Labor
 Labor
 Labor
 General Population
-General Population
 Labor
 Education
 Education
-General Population
 Education
 General Population
 Labor
@@ -12530,17 +10843,13 @@ General Population
 Education
 General Population
 Education
-Education
-General Population
 General Population
 Education
 Education
 General Population
-Labor
 Education
 Labor
 Labor
-Education
 General Population
 Labor
 Labor
@@ -12552,7 +10861,6 @@ Education
 General Population
 Labor
 General Population
-General Population
 Labor
 Education
 Labor
@@ -12562,25 +10870,18 @@ General Population
 Education
 General Population
 Agricultural
-General Population
 General Population
 General Population
 General Population
 Education
-Education
-General Population
-Media
 General Population
 General Population
 Labor
-Education
 Education
 Education
 General Population
 General Population
-General Population
 Education
-General Population
 General Population
 Education
 Labor
@@ -12589,13 +10890,11 @@ Education
 General Population
 Medical
 General Population
-General Population
 Labor
 Labor
 Labor
 General Population
 Labor
-Education
 Education
 General Population
 Medical
@@ -12612,7 +10911,6 @@ General Population
 Education
 General Population
 Business
-Education
 General Population
 Business
 Medical
@@ -12643,7 +10941,6 @@ General Population
 Ethnic
 Labor
 General Population
-Education
 Education
 Ethnic
 Labor
@@ -12653,8 +10950,6 @@ Medical
 General Population
 Labor
 Education
-Religious
-Education
 General Population
 Education
 General Population
@@ -12663,13 +10958,10 @@ Labor
 General Population
 Agricultural
 General Population
-General Population
 Education
-General Population
 General Population
 General Population
 Education
-Education
 Business
 General Population
 Medical
@@ -12708,9 +11000,7 @@ Education
 Labor
 Education
 Education
-General Population
 Medical
-General Population
 Education
 Labor
 General Population
@@ -12727,7 +11017,6 @@ General Population
 Education
 General Population
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -12735,12 +11024,8 @@ Labor
 Education
 General Population
 Labor
-General Population
 Labor
 Labor
-General Population
-General Population
-General Population
 Education
 Labor
 Education
@@ -12755,7 +11040,6 @@ Labor
 Labor
 General Population
 Medical
-Education
 General Population
 Agricultural
 General Population
@@ -12768,7 +11052,6 @@ Business
 General Population
 General Population
 General Population
-Labor
 Education
 General Population
 General Population
@@ -12776,13 +11059,11 @@ General Population
 Agricultural
 Labor
 Labor
-General Population
 Labor
 General Population
 General Population
 Labor
 General Population
-Education
 Education
 Education
 General Population
@@ -12796,7 +11077,6 @@ General Population
 Education
 General Population
 General Population
-Labor
 General Population
 Education
 General Population
@@ -12810,17 +11090,13 @@ Education
 Medical
 Labor
 Labor
-General Population
 General Population
 Labor
-Labor
 General Population
 Labor
-General Population
 General Population
 General Population
 General Population
-General Population
 Business
 Medical
 Agricultural
@@ -12847,11 +11123,9 @@ Education
 General Population
 Business
 General Population
-Education
 General Population
 Labor
 Labor
-General Population
 Ethnic
 Education
 General Population
@@ -12870,19 +11144,16 @@ Labor
 General Population
 Education
 Education
-General Population
 Education
 General Population
 General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 Labor
 Labor
 Agricultural
-General Population
 Education
 General Population
 Education
@@ -12890,7 +11161,6 @@ Education
 General Population
 Labor
 General Population
-General Population
 Ethnic
 Medical
 General Population
@@ -12911,7 +11181,6 @@ Labor
 Education
 Agricultural
 General Population
-Medical
 General Population
 Refugees/Displaced
 General Population
@@ -12919,10 +11188,8 @@ Labor
 Labor
 Labor
 Ethnic
-General Population
 Labor
 Education
-General Population
 General Population
 General Population
 General Population
@@ -12932,7 +11199,6 @@ Legal
 General Population
 Education
 General Population
-General Population
 Education
 General Population
 General Population
@@ -12966,7 +11232,6 @@ Labor
 General Population
 Education
 Business
-General Population
 General Population
 General Population
 Business
@@ -12979,12 +11244,9 @@ Education
 Labor
 Education
 Education
-Labor
-General Population
 General Population
 General Population
 General Population
-General Population
 Labor
 Education
 Labor
@@ -13000,10 +11262,7 @@ Education
 Labor
 General Population
 Business
-General Population
 General Population
-Education
-Education
 General Population
 Agricultural
 General Population
@@ -13014,7 +11273,6 @@ Education
 General Population
 Labor
 General Population
-Education
 Media
 General Population
 General Population
@@ -13022,12 +11280,10 @@ Medical
 General Population
 Medical
 Education
-General Population
 Education
 Labor
 Education
 Media
-General Population
 Labor
 Medical
 Labor
@@ -13038,7 +11294,6 @@ Education
 Business
 General Population
 General Population
-Media
 General Population
 General Population
 Education
@@ -13048,7 +11303,6 @@ Agricultural
 General Population
 Labor
 General Population
-Education
 General Population
 General Population
 General Population
@@ -13077,13 +11331,11 @@ Education
 General Population
 Education
 Labor
-General Population
 Education
 General Population
 General Population
 Labor
 Labor
-General Population
 Ethnic
 Education
 Business
@@ -13094,7 +11346,6 @@ Agricultural
 Medical
 Refugees/Displaced
 General Population
-Education
 Education
 Labor
 General Population
@@ -13111,11 +11362,8 @@ General Population
 General Population
 General Population
 Media
-General Population
-Labor
 Labor
 General Population
-General Population
 Labor
 General Population
 Education
@@ -13124,17 +11372,13 @@ Education
 Education
 General Population
 Labor
-General Population
 General Population
 General Population
-General Population
 Labor
-General Population
 Education
 General Population
 Education
 General Population
-General Population
 Medical
 Labor
 Labor
@@ -13166,12 +11410,9 @@ Education
 Education
 General Population
 Education
-General Population
 General Population
-General Population
 Labor
 Ethnic
-General Population
 General Population
 General Population
 General Population
@@ -13183,14 +11424,12 @@ General Population
 Education
 Agricultural
 General Population
-General Population
 Labor
 Medical
 Education
 General Population
 Ethnic
 Labor
-General Population
 Labor
 General Population
 General Population
@@ -13198,18 +11437,12 @@ Labor
 General Population
 Labor
 Labor
-General Population
-General Population
 General Population
 General Population
-Labor
 Education
-Labor
 General Population
 Education
 General Population
-General Population
-Education
 General Population
 General Population
 General Population
@@ -13220,7 +11453,6 @@ Education
 General Population
 Labor
 General Population
-General Population
 Education
 General Population
 General Population
@@ -13240,16 +11472,11 @@ Business
 General Population
 Education
 Labor
-General Population
-General Population
-General Population
 Education
 Education
 General Population
-Business
 General Population
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -13262,9 +11489,7 @@ Education
 Education
 Business
 Refugees/Displaced
-General Population
 Education
-General Population
 General Population
 General Population
 Education
@@ -13278,8 +11503,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
-Ethnic
 Labor
 Labor
 Labor
@@ -13291,10 +11514,8 @@ General Population
 General Population
 Education
 General Population
-Labor
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
@@ -13302,7 +11523,6 @@ Labor
 Labor
 Business
 General Population
-Religious
 Education
 General Population
 Education
@@ -13312,8 +11532,6 @@ Refugees/Displaced
 Labor
 General Population
 Media
-General Population
-General Population
 Education
 Medical
 General Population
@@ -13331,10 +11549,8 @@ Labor
 Ethnic
 Education
 Labor
-General Population
 General Population
 General Population
-General Population
 Labor
 Education
 Education
@@ -13357,27 +11573,21 @@ Labor
 Education
 Business
 Education
-General Population
 Business
 Business
-Religious
-General Population
 General Population
 Business
 General Population
 General Population
 Labor
-Religious
 Education
 General Population
 Education
-General Population
 General Population
 Education
 General Population
 Labor
 Labor
-General Population
 Labor
 Labor
 General Population
@@ -13386,12 +11596,10 @@ General Population
 General Population
 General Population
 Business
-General Population
 General Population
 General Population
 Education
 Labor
-General Population
 Labor
 Agricultural
 General Population
@@ -13402,10 +11610,8 @@ Business
 Labor
 Labor
 General Population
-Education
 Labor
 Business
-Education
 General Population
 Labor
 General Population
@@ -13420,7 +11626,6 @@ Business
 Education
 Education
 Ethnic
-Education
 Education
 General Population
 General Population
@@ -13431,7 +11636,6 @@ Labor
 Education
 Labor
 General Population
-General Population
 Business
 Refugees/Displaced
 Business
@@ -13444,7 +11648,6 @@ General Population
 General Population
 Ethnic
 Agricultural
-General Population
 Education
 Medical
 General Population
@@ -13456,8 +11659,6 @@ Labor
 Education
 General Population
 Education
-Religious
-General Population
 Education
 General Population
 Labor
@@ -13481,21 +11682,15 @@ Labor
 General Population
 General Population
 Labor
-Education
 General Population
 Education
 Ethnic
 Agricultural
 Business
-General Population
 General Population
 Labor
-Education
-General Population
-Religious
 Labor
 Labor
-Education
 Education
 General Population
 Education
@@ -13507,7 +11702,6 @@ Education
 General Population
 General Population
 General Population
-General Population
 Agricultural
 Medical
 Business
@@ -13517,28 +11711,20 @@ Refugees/Displaced
 Medical
 General Population
 Labor
-General Population
 General Population
-Labor
 General Population
 Education
 Education
-General Population
 Education
-General Population
 Labor
 Education
-General Population
 Education
 General Population
-General Population
-Religious
 Labor
 General Population
 Business
 Education
 General Population
-General Population
 Agricultural
 Business
 General Population
@@ -13557,8 +11743,6 @@ Education
 Labor
 Education
 Labor
-Business
-General Population
 Education
 Education
 Agricultural
@@ -13575,7 +11759,6 @@ General Population
 Education
 Labor
 General Population
-Legal
 Business
 Medical
 Agricultural
@@ -13589,7 +11772,6 @@ General Population
 Education
 Labor
 General Population
-General Population
 Education
 Education
 General Population
@@ -13613,15 +11795,10 @@ General Population
 Agricultural
 Labor
 Labor
-General Population
-Education
-General Population
 General Population
 Legal
 Education
 General Population
-Education
-General Population
 Business
 General Population
 General Population
@@ -13661,7 +11838,6 @@ Agricultural
 General Population
 Education
 Education
-General Population
 General Population
 Agricultural
 Education
@@ -13701,7 +11877,6 @@ General Population
 General Population
 Labor
 Labor
-General Population
 Business
 General Population
 Media
@@ -13723,11 +11898,9 @@ Ethnic
 Medical
 General Population
 Medical
-General Population
 Education
 Labor
 General Population
-General Population
 Education
 Refugees/Displaced
 Labor
@@ -13739,10 +11912,8 @@ General Population
 Labor
 Labor
 Refugees/Displaced
-General Population
 Labor
 Labor
-General Population
 Labor
 Education
 Agricultural
@@ -13759,7 +11930,6 @@ Education
 Agricultural
 General Population
 Education
-General Population
 General Population
 General Population
 Business
@@ -13779,10 +11949,8 @@ Labor
 General Population
 General Population
 General Population
-General Population
 Business
 Education
-General Population
 General Population
 General Population
 Labor
@@ -13798,21 +11966,17 @@ Legal
 Education
 General Population
 Refugees/Displaced
-General Population
 Labor
 General Population
 Education
 Labor
 Education
-General Population
 General Population
 General Population
 Business
 Education
-Business
 General Population
 General Population
-Education
 Labor
 Education
 General Population
@@ -13828,26 +11992,18 @@ General Population
 General Population
 General Population
 General Population
-General Population
-General Population
 Labor
 Business
 Education
 Education
 Education
 Education
-General Population
-General Population
 General Population
 General Population
 Education
-Education
 Agricultural
 Agricultural
-Education
-Education
 Labor
-General Population
 Labor
 General Population
 Education
@@ -13860,7 +12016,6 @@ Labor
 Education
 Education
 General Population
-General Population
 Labor
 General Population
 Business
@@ -13868,12 +12023,10 @@ General Population
 Labor
 General Population
 Labor
-General Population
 Labor
 Education
 General Population
 Education
-Education
 Medical
 Business
 General Population
@@ -13882,7 +12035,6 @@ Education
 Labor
 Medical
 Education
-General Population
 Labor
 Education
 Education
@@ -13890,23 +12042,18 @@ General Population
 Labor
 Education
 General Population
-General Population
 Religious
 Labor
 Labor
 Labor
 Labor
-General Population
 Education
 Labor
 Medical
 General Population
 General Population
-General Population
 Labor
 Labor
-Business
-General Population
 Medical
 General Population
 Labor
@@ -13918,20 +12065,16 @@ Business
 Labor
 General Population
 Agricultural
-Religious
-General Population
 Labor
 Education
 Education
 Labor
 Labor
 General Population
-Agricultural
 Business
 Education
 General Population
 Labor
-General Population
 Refugees/Displaced
 General Population
 General Population
@@ -13956,16 +12099,12 @@ General Population
 General Population
 Labor
 Education
-General Population
 General Population
 Labor
 General Population
-General Population
 Labor
 Labor
-General Population
 Labor
-General Population
 Education
 Labor
 Business
@@ -13974,7 +12113,6 @@ Labor
 General Population
 Ethnic
 Labor
-General Population
 General Population
 Medical
 Media
@@ -13985,7 +12123,6 @@ Labor
 General Population
 General Population
 General Population
-Education
 Agricultural
 General Population
 Labor
@@ -14004,10 +12141,8 @@ General Population
 Medical
 Business
 General Population
-Medical
 Education
 Education
-Education
 Labor
 Business
 General Population
@@ -14019,41 +12154,31 @@ Labor
 Labor
 Education
 Labor
-General Population
 Agricultural
-General Population
-General Population
 General Population
 General Population
 General Population
 General Population
 General Population
-General Population
 Education
 Business
 Agricultural
 Education
 Ethnic
-Labor
 Labor
 General Population
-General Population
 Education
 Ethnic
 Education
 Education
-General Population
 General Population
 General Population
 Agricultural
 Labor
 Education
 General Population
-General Population
-General Population
 Agricultural
 General Population
-General Population
 Education
 General Population
 General Population
@@ -14062,26 +12187,22 @@ Ethnic
 Labor
 General Population
 Ethnic
-General Population
 Labor
 Labor
 General Population
 General Population
 Agricultural
-General Population
 Education
 General Population
 General Population
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
 Education
 Agricultural
 General Population
-General Population
 Labor
 Ethnic
 General Population
@@ -14089,7 +12210,6 @@ General Population
 Business
 General Population
 Ethnic
-Education
 Refugees/Displaced
 General Population
 Labor
@@ -14097,7 +12217,6 @@ General Population
 Labor
 Business
 General Population
-General Population
 Education
 General Population
 Refugees/Displaced
@@ -14106,26 +12225,21 @@ Labor
 General Population
 Education
 Business
-General Population
 Labor
 Education
 Labor
 Media
 Labor
 Business
-Education
-Education
 Education
 General Population
 Business
 Legal
 General Population
-General Population
 Labor
 General Population
 General Population
 General Population
-Education
 Labor
 Education
 General Population
@@ -14135,22 +12249,17 @@ Education
 Labor
 General Population
 General Population
-General Population
 Labor
 Education
 General Population
 General Population
 General Population
-Education
 General Population
 Education
 Education
 Education
 General Population
-Religious
-General Population
 Education
-General Population
 Education
 General Population
 Education
@@ -14158,7 +12267,6 @@ General Population
 General Population
 Agricultural
 General Population
-Education
 Labor
 General Population
 General Population
@@ -14185,17 +12293,14 @@ General Population
 Labor
 General Population
 General Population
-General Population
 Education
 General Population
 Refugees/Displaced
-General Population
 Labor
 General Population
 General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 Labor
@@ -14218,8 +12323,6 @@ General Population
 Education
 Medical
 Education
-General Population
-General Population
 Education
 Refugees/Displaced
 Business
@@ -14237,13 +12340,9 @@ Agricultural
 General Population
 Education
 Ethnic
-Education
 Education
 Agricultural
-General Population
-General Population
 General Population
-General Population
 Labor
 Agricultural
 General Population
@@ -14253,7 +12352,6 @@ Labor
 General Population
 Labor
 Agricultural
-General Population
 Agricultural
 General Population
 Education
@@ -14263,7 +12361,6 @@ Labor
 Agricultural
 Medical
 Business
-General Population
 Labor
 Labor
 General Population
@@ -14278,7 +12375,6 @@ Business
 Education
 General Population
 Medical
-General Population
 Agricultural
 Labor
 Education
@@ -14287,15 +12383,11 @@ General Population
 Education
 Labor
 Education
-Education
 Agricultural
 General Population
 Labor
-Business
 General Population
-General Population
 Labor
-Education
 Business
 Education
 General Population
@@ -14303,11 +12395,9 @@ General Population
 Labor
 Education
 Medical
-Education
 General Population
 General Population
 Education
-General Population
 Education
 General Population
 General Population
@@ -14316,8 +12406,6 @@ General Population
 General Population
 General Population
 Education
-General Population
-General Population
 General Population
 Labor
 General Population
@@ -14332,7 +12420,6 @@ Agricultural
 General Population
 Education
 Medical
-Business
 Labor
 Education
 Education
@@ -14346,15 +12433,12 @@ General Population
 General Population
 Education
 Labor
-General Population
-Education
 General Population
 Media
 General Population
 General Population
 Education
 Ethnic
-Religious
 Agricultural
 Medical
 Ethnic
@@ -14363,20 +12447,16 @@ Education
 Labor
 Labor
 Labor
-Religious
 Education
 Education
 Education
 Labor
 Labor
 Agricultural
-General Population
 General Population
-Education
 General Population
 General Population
 Labor
-General Population
 General Population
 Labor
 Religious
@@ -14385,13 +12465,10 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Education
-General Population
 General Population
 General Population
 Education
-General Population
 Agricultural
 General Population
 General Population
@@ -14409,9 +12486,7 @@ General Population
 Labor
 Labor
 Medical
-General Population
 Labor
-Business
 Ethnic
 General Population
 Labor
@@ -14420,36 +12495,28 @@ Education
 General Population
 General Population
 Labor
-General Population
 General Population
 General Population
-General Population
 Business
 General Population
 Education
 Education
 General Population
-Labor
 General Population
 General Population
 General Population
 General Population
 Business
-General Population
 Labor
 General Population
 General Population
 Labor
-General Population
 Labor
 General Population
 General Population
-Education
 General Population
 Labor
-General Population
 Labor
-General Population
 Education
 Education
 Medical
@@ -14461,19 +12528,14 @@ Labor
 Medical
 Labor
 Labor
-General Population
 General Population
-General Population
 Labor
 Education
 Labor
 Labor
 Refugees/Displaced
 Medical
-Education
-Religious
 Labor
-General Population
 General Population
 Medical
 Business
@@ -14501,17 +12563,14 @@ General Population
 Labor
 Labor
 General Population
-General Population
 Education
 Education
 Labor
 Labor
 Agricultural
 Labor
-General Population
 General Population
 General Population
-General Population
 Education
 General Population
 Education
@@ -14524,7 +12583,6 @@ Education
 Business
 Medical
 Agricultural
-General Population
 Education
 Education
 General Population
@@ -14538,7 +12596,6 @@ Education
 General Population
 Education
 General Population
-General Population
 Labor
 General Population
 Medical
@@ -14546,7 +12603,6 @@ General Population
 General Population
 Ethnic
 Medical
-General Population
 General Population
 Education
 Education
@@ -14570,7 +12626,6 @@ General Population
 Labor
 Labor
 Education
-General Population
 Education
 Medical
 General Population
@@ -14593,27 +12648,20 @@ General Population
 Education
 Education
 Agricultural
-General Population
 General Population
-General Population
 Agricultural
 Labor
-General Population
 General Population
 General Population
 General Population
 General Population
-General Population
-Education
 Education
 General Population
-General Population
 Labor
 General Population
 Labor
 General Population
 Education
-General Population
 General Population
 Business
 Education
@@ -14621,15 +12669,12 @@ Education
 General Population
 Education
 General Population
-General Population
 Labor
 Labor
 Education
 Education
-General Population
 General Population
 General Population
-General Population
 Business
 Education
 General Population
@@ -14644,17 +12689,14 @@ Labor
 Education
 Labor
 Education
-General Population
 General Population
 General Population
 Labor
 General Population
-General Population
 Labor
 Education
 Labor
 Labor
-General Population
 General Population
 Labor
 Labor
@@ -14666,7 +12708,6 @@ General Population
 Education
 Education
 General Population
-Education
 Religious
 Labor
 Labor
@@ -14689,16 +12730,13 @@ Labor
 General Population
 Business
 General Population
-Education
 General Population
 Labor
 General Population
 Labor
 Agricultural
 General Population
-General Population
 Labor
-General Population
 Labor
 Medical
 Education
@@ -14707,12 +12745,10 @@ Business
 General Population
 General Population
 General Population
-General Population
 Agricultural
 Education
 Education
 Labor
-General Population
 General Population
 Education
 Business
@@ -14728,23 +12764,18 @@ General Population
 Medical
 General Population
 Refugees/Displaced
-Education
 Labor
 Medical
-General Population
 General Population
 General Population
 Education
 Business
 Labor
-General Population
 Labor
 Education
 Medical
 General Population
-Labor
 Labor
-General Population
 Education
 Education
 Labor
@@ -14752,9 +12783,7 @@ Education
 Labor
 Education
 Medical
-Religious
 General Population
-Education
 General Population
 Labor
 General Population
@@ -14769,7 +12798,6 @@ Education
 Business
 General Population
 Media
-General Population
 Labor
 General Population
 General Population
@@ -14791,13 +12819,10 @@ General Population
 Business
 Education
 General Population
-Education
-General Population
 Labor
 Labor
 General Population
 Business
-General Population
 Labor
 Labor
 General Population
@@ -14865,7 +12890,6 @@ Labor
 General Population
 Medical
 Labor
-Agricultural
 General Population
 Labor
 Education
@@ -14874,17 +12898,13 @@ Medical
 General Population
 General Population
 General Population
-Business
 General Population
 Education
 Medical
 Education
-General Population
 Ethnic
 Labor
-General Population
 Education
-General Population
 Agricultural
 Labor
 Labor
@@ -14894,18 +12914,14 @@ Education
 Education
 General Population
 Education
-General Population
 Education
-General Population
 Business
 Agricultural
 General Population
 Labor
 Refugees/Displaced
-General Population
 Labor
 Labor
-General Population
 Education
 Medical
 Refugees/Displaced
@@ -14913,8 +12929,6 @@ Education
 Labor
 General Population
 General Population
-Education
-General Population
 Labor
 General Population
 General Population
@@ -14929,15 +12943,11 @@ General Population
 Education
 Education
 Education
-General Population
 Labor
-General Population
 General Population
-General Population
 Business
 Religious
 Labor
-General Population
 General Population
 Education
 Labor
@@ -14947,37 +12957,24 @@ General Population
 Labor
 Medical
 Labor
-General Population
-General Population
 General Population
 General Population
 General Population
-General Population
-General Population
 Education
-General Population
-Agricultural
 Labor
-General Population
 Labor
-General Population
-General Population
-General Population
 General Population
 General Population
 General Population
-General Population
 Labor
 Labor
 Labor
 Labor
 Education
 General Population
-Education
 General Population
 Business
 General Population
-General Population
 Education
 General Population
 Labor
@@ -14985,10 +12982,8 @@ Agricultural
 Agricultural
 General Population
 Education
-General Population
 Labor
 General Population
-Education
 Labor
 Education
 Business
@@ -15000,12 +12995,10 @@ General Population
 General Population
 Education
 Business
-General Population
 General Population
 General Population
 General Population
 Education
-General Population
 Education
 Religious
 Legal
@@ -15013,7 +13006,6 @@ Education
 Labor
 Business
 Labor
-General Population
 General Population
 Agricultural
 General Population
@@ -15026,14 +13018,11 @@ Medical
 General Population
 Labor
 General Population
-General Population
 Labor
 Religious
-General Population
 General Population
 General Population
 General Population
-General Population
 Education
 Medical
 Labor
@@ -15041,15 +13030,11 @@ General Population
 General Population
 Labor
 General Population
-Ethnic
 Agricultural
-General Population
 Business
 Labor
 Agricultural
 Ethnic
-General Population
-General Population
 Agricultural
 General Population
 Labor
@@ -15064,22 +13049,17 @@ Education
 Education
 Labor
 General Population
-Education
 Labor
 Media
 Labor
 General Population
 General Population
 General Population
-General Population
-General Population
-General Population
 Labor
 Labor
 Labor
 Labor
 Business
-Labor
 Labor
 Labor
 Education
@@ -15094,34 +13074,24 @@ General Population
 General Population
 Ethnic
 General Population
-General Population
-Education
 Labor
 General Population
 Business
 General Population
-General Population
 Labor
-General Population
 General Population
 General Population
 Medical
 General Population
 General Population
 General Population
-General Population
-General Population
 Labor
-General Population
 Education
-General Population
 Education
 General Population
 General Population
 General Population
 General Population
-General Population
-General Population
 Business
 Agricultural
 Agricultural
@@ -15130,16 +13100,13 @@ Labor
 Medical
 General Population
 General Population
-General Population
 Education
 Labor
 Labor
 Business
 Ethnic
-General Population
 General Population
 General Population
-General Population
 Labor
 Labor
 Education
@@ -15163,7 +13130,6 @@ Labor
 General Population
 Education
 Business
-General Population
 General Population
 General Population
 Media
@@ -15190,12 +13156,9 @@ Education
 General Population
 Business
 Labor
-Refugees/Displaced
 General Population
 Labor
-Medical
 General Population
-Labor
 Media
 Labor
 Labor
@@ -15213,7 +13176,6 @@ Labor
 General Population
 Ethnic
 Labor
-General Population
 General Population
 General Population
 Education
@@ -15221,20 +13183,16 @@ Media
 General Population
 Labor
 General Population
-General Population
-Labor
 General Population
 Education
 Education
 Business
 Labor
-General Population
 Education
 Agricultural
 Business
 General Population
 Education
-General Population
 General Population
 General Population
 Business
@@ -15258,13 +13216,11 @@ General Population
 General Population
 General Population
 Education
-Refugees/Displaced
 Education
 General Population
 Education
 Agricultural
 Labor
-Religious
 General Population
 Labor
 Education
@@ -15304,8 +13260,6 @@ Labor
 Agricultural
 General Population
 Business
-Labor
-Education
 Education
 Medical
 General Population
@@ -15313,7 +13267,6 @@ General Population
 Education
 Education
 General Population
-General Population
 Education
 General Population
 General Population
@@ -15321,7 +13274,6 @@ General Population
 Medical
 General Population
 Medical
-General Population
 General Population
 Labor
 General Population
@@ -15334,7 +13286,6 @@ General Population
 General Population
 General Population
 Education
-Education
 Business
 Labor
 General Population
@@ -15346,9 +13297,7 @@ General Population
 General Population
 General Population
 Labor
-General Population
 Ethnic
-General Population
 Labor
 Business
 Agricultural
@@ -15363,7 +13312,6 @@ Agricultural
 Business
 Education
 General Population
-Religious
 Media
 General Population
 General Population
@@ -15381,9 +13329,7 @@ General Population
 General Population
 Labor
 General Population
-General Population
 Refugees/Displaced
-General Population
 Labor
 Medical
 Labor
@@ -15399,7 +13345,6 @@ General Population
 General Population
 Education
 Education
-General Population
 Medical
 General Population
 Labor
@@ -15409,12 +13354,10 @@ Education
 Medical
 Labor
 General Population
-Labor
 General Population
 Education
 General Population
 Labor
-Business
 General Population
 General Population
 General Population
@@ -15429,14 +13372,12 @@ Business
 General Population
 Labor
 Labor
-General Population
 General Population
 Business
 General Population
 Education
 Business
 General Population
-Ethnic
 Labor
 General Population
 General Population
@@ -15456,7 +13397,6 @@ Labor
 Education
 General Population
 Labor
-Education
 Labor
 General Population
 Medical
@@ -15478,7 +13418,6 @@ General Population
 General Population
 Labor
 General Population
-General Population
 Education
 General Population
 General Population
@@ -15487,7 +13426,6 @@ General Population
 General Population
 Education
 Education
-General Population
 General Population
 Agricultural
 Education
@@ -15496,15 +13434,12 @@ Medical
 Labor
 Labor
 Labor
-General Population
 Education
 Education
 Labor
-General Population
 General Population
 General Population
 General Population
-General Population
 Education
 Medical
 General Population
@@ -15514,9 +13449,7 @@ General Population
 Labor
 General Population
 General Population
-Education
 Education
-Labor
 Agricultural
 Labor
 Education
@@ -15525,37 +13458,28 @@ Education
 General Population
 Education
 Education
-General Population
 General Population
 Education
 Business
-Labor
-Education
 Refugees/Displaced
 General Population
 General Population
 General Population
-General Population
-Labor
 Media
 General Population
 General Population
-General Population
 Media
 General Population
 General Population
 Labor
 Business
-General Population
 Labor
 General Population
 Labor
-General Population
 Religious
 Labor
 General Population
 Education
-General Population
 Education
 Education
 General Population
@@ -15578,8 +13502,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
-General Population
 Education
 Education
 General Population
@@ -15592,12 +13514,10 @@ Education
 Ethnic
 Education
 General Population
-General Population
 Agricultural
 Education
 Medical
 General Population
-General Population
 Labor
 General Population
 Medical
@@ -15606,7 +13526,6 @@ Medical
 General Population
 General Population
 Education
-Refugees/Displaced
 Labor
 General Population
 Education
@@ -15623,7 +13542,6 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Agricultural
 Education
 Education
@@ -15646,14 +13564,11 @@ General Population
 Education
 General Population
 Education
-General Population
 Labor
-General Population
 Education
 Education
 General Population
 Labor
-General Population
 Agricultural
 Education
 Agricultural
@@ -15665,34 +13580,25 @@ General Population
 General Population
 Business
 General Population
-General Population
-General Population
 Education
-Ethnic
 Education
 Business
 Business
 General Population
 Labor
-Religious
 Education
-Education
 Business
 Ethnic
-General Population
 General Population
 Labor
-Labor
 Education
 Education
 Labor
 Labor
 Education
-General Population
 General Population
 Business
 Agricultural
-Labor
 Agricultural
 Labor
 Labor
@@ -15706,10 +13612,8 @@ General Population
 Labor
 General Population
 Labor
-General Population
 General Population
 General Population
-General Population
 Education
 Education
 Agricultural
@@ -15717,47 +13621,38 @@ General Population
 General Population
 Labor
 Education
-General Population
 General Population
 Agricultural
 Labor
 Agricultural
 Labor
 General Population
-General Population
 Media
 General Population
 General Population
-Ethnic
 Labor
 Education
 General Population
 General Population
-General Population
 Refugees/Displaced
 Education
 Education
 Agricultural
-General Population
 Business
 Labor
 Business
 Agricultural
 General Population
-Education
 General Population
 General Population
 Labor
 Education
 Labor
 Education
-General Population
 General Population
-General Population
 Education
 Labor
 Education
-General Population
 General Population
 General Population
 General Population
@@ -15795,7 +13690,6 @@ General Population
 General Population
 Education
 Labor
-Education
 Labor
 General Population
 Ethnic
@@ -15809,7 +13703,6 @@ Education
 General Population
 Labor
 Ethnic
-General Population
 Labor
 General Population
 Education
@@ -15819,17 +13712,14 @@ General Population
 Medical
 Education
 Business
-General Population
 Medical
 General Population
 Agricultural
 Education
-General Population
 General Population
 Education
 General Population
 General Population
-General Population
 Agricultural
 General Population
 Labor
@@ -15839,7 +13729,6 @@ Education
 Education
 Education
 Business
-Education
 General Population
 Labor
 General Population
@@ -15852,14 +13741,10 @@ General Population
 General Population
 Labor
 General Population
-General Population
 Labor
 Legal
 General Population
-Education
 Education
-Labor
-General Population
 Business
 Labor
 Medical
@@ -15867,7 +13752,6 @@ Education
 Labor
 General Population
 General Population
-Education
 Labor
 General Population
 Labor
@@ -15880,14 +13764,12 @@ Education
 Education
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
 Education
 General Population
 Medical
-Education
 Labor
 General Population
 Education
@@ -15912,10 +13794,7 @@ General Population
 General Population
 General Population
 Agricultural
-General Population
 Education
-Education
-General Population
 Labor
 General Population
 General Population
@@ -15923,9 +13802,6 @@ Labor
 General Population
 General Population
 General Population
-General Population
-General Population
-General Population
 Labor
 General Population
 General Population
@@ -15934,17 +13810,13 @@ General Population
 General Population
 General Population
 Education
-General Population
 Business
 Education
 Agricultural
 Education
 Business
 General Population
-General Population
-Labor
 Labor
-General Population
 Labor
 General Population
 General Population
@@ -15963,7 +13835,6 @@ Education
 Agricultural
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
@@ -15977,18 +13848,14 @@ Education
 Medical
 General Population
 Labor
-General Population
-Education
 Education
 Labor
 Education
 General Population
-General Population
 Business
 General Population
 General Population
 General Population
-Education
 General Population
 Education
 General Population
@@ -16005,14 +13872,12 @@ Education
 General Population
 General Population
 General Population
-General Population
 Education
 General Population
 Education
 General Population
 Refugees/Displaced
 General Population
-Education
 Medical
 Business
 General Population
@@ -16022,7 +13887,6 @@ Labor
 General Population
 General Population
 General Population
-General Population
 Education
 Agricultural
 General Population
@@ -16036,7 +13900,6 @@ Education
 Education
 General Population
 Education
-General Population
 General Population
 General Population
 Medical
@@ -16055,24 +13918,16 @@ General Population
 General Population
 General Population
 General Population
-General Population
-General Population
-General Population
 Medical
-General Population
 General Population
 General Population
 General Population
 General Population
-General Population
 Ethnic
 Education
-General Population
 General Population
-Labor
 Education
 Labor
-General Population
 General Population
 General Population
 Business
@@ -16082,7 +13937,6 @@ Business
 Labor
 General Population
 General Population
-Labor
 Agricultural
 General Population
 General Population
@@ -16091,7 +13945,6 @@ General Population
 Education
 Medical
 General Population
-Education
 Education
 Labor
 Labor
@@ -16099,7 +13952,6 @@ Education
 Education
 Medical
 Business
-General Population
 Education
 Education
 General Population
@@ -16112,8 +13964,6 @@ General Population
 Labor
 General Population
 Ethnic
-General Population
-General Population
 Business
 General Population
 General Population
@@ -16123,9 +13973,7 @@ Education
 Education
 Labor
 Education
-General Population
 General Population
-Labor
 General Population
 Labor
 Education
@@ -16136,9 +13984,7 @@ General Population
 Labor
 General Population
 Media
-General Population
 Media
-Education
 Labor
 Education
 Education
@@ -16146,7 +13992,6 @@ Education
 Education
 General Population
 Labor
-General Population
 Business
 General Population
 Labor
@@ -16162,14 +14007,11 @@ Education
 Education
 General Population
 General Population
-General Population
-Religious
 General Population
 General Population
 General Population
 General Population
 Refugees/Displaced
-Labor
 Ethnic
 Labor
 General Population
@@ -16179,8 +14021,6 @@ Education
 Education
 General Population
 Business
-Religious
-Religious
 General Population
 General Population
 General Population
@@ -16202,11 +14042,9 @@ General Population
 Labor
 Medical
 Education
-General Population
 Agricultural
 Business
 Ethnic
-General Population
 Education
 General Population
 Labor
@@ -16218,7 +14056,6 @@ Labor
 Labor
 General Population
 Education
-General Population
 Labor
 General Population
 Business
@@ -16256,15 +14093,12 @@ Labor
 General Population
 General Population
 General Population
-General Population
 Labor
 Education
 Education
 Education
-General Population
 Education
 Education
-Ethnic
 Agricultural
 Labor
 General Population
@@ -16279,17 +14113,14 @@ Education
 General Population
 Education
 General Population
-Labor
 Agricultural
 General Population
 Labor
 Labor
 General Population
 General Population
-General Population
 Education
 Education
-General Population
 General Population
 Labor
 Labor
@@ -16305,7 +14136,6 @@ Agricultural
 Labor
 Education
 General Population
-General Population
 Labor
 General Population
 General Population
@@ -16335,7 +14165,6 @@ General Population
 Medical
 General Population
 Agricultural
-Medical
 General Population
 Medical
 Labor
@@ -16367,14 +14196,10 @@ General Population
 General Population
 Agricultural
 Labor
-General Population
-General Population
 General Population
 General Population
 General Population
 General Population
-General Population
-Labor
 Medical
 General Population
 General Population
@@ -16382,9 +14207,7 @@ General Population
 Business
 General Population
 General Population
-General Population
 Agricultural
-General Population
 Education
 General Population
 General Population
@@ -16392,9 +14215,7 @@ Labor
 General Population
 Education
 General Population
-Ethnic
 General Population
-Education
 Education
 Refugees/Displaced
 Religious
@@ -16411,8 +14232,6 @@ Education
 Education
 Agricultural
 Labor
-General Population
-Ethnic
 Labor
 Labor
 Business
@@ -16421,7 +14240,6 @@ Medical
 General Population
 General Population
 General Population
-General Population
 Education
 Education
 General Population
@@ -16431,11 +14249,8 @@ Labor
 General Population
 General Population
 Education
-General Population
 General Population
-General Population
 Labor
-General Population
 General Population
 Ethnic
 Labor
@@ -16453,10 +14268,7 @@ General Population
 Labor
 Agricultural
 General Population
-Education
 Business
-General Population
-Education
 General Population
 Agricultural
 Education
@@ -16468,14 +14280,12 @@ Education
 General Population
 Education
 Labor
-Education
 Education
 General Population
 Labor
 Medical
 Labor
 Education
-Business
 General Population
 Education
 Ethnic
@@ -16484,8 +14294,6 @@ General Population
 Medical
 Ethnic
 General Population
-Religious
-Business
 Education
 General Population
 Labor
@@ -16511,20 +14319,16 @@ Labor
 General Population
 Education
 Medical
-General Population
 Agricultural
 Education
 General Population
-General Population
 Education
 General Population
 Labor
 General Population
 General Population
 Labor
-General Population
 Labor
-General Population
 Agricultural
 Business
 Education
@@ -16537,12 +14341,9 @@ Labor
 General Population
 Labor
 Medical
-Labor
-General Population
 Labor
 Labor
 Labor
-General Population
 Refugees/Displaced
 General Population
 Labor
@@ -16567,9 +14368,7 @@ General Population
 Labor
 Education
 Labor
-Refugees/Displaced
 Labor
-Religious
 Education
 Education
 Labor
@@ -16577,16 +14376,13 @@ Labor
 Education
 Labor
 Labor
-Ethnic
 Labor
 Medical
 General Population
 General Population
-Religious
 General Population
 Medical
 Labor
-Education
 Agricultural
 General Population
 Labor
@@ -16616,16 +14412,12 @@ Education
 Education
 Labor
 Labor
-General Population
 Labor
-Religious
 General Population
 Labor
 Education
-General Population
 General Population
 General Population
-General Population
 Business
 General Population
 Education
@@ -16647,7 +14439,6 @@ Labor
 Labor
 General Population
 Education
-General Population
 General Population
 General Population
 General Population
@@ -16660,10 +14451,7 @@ General Population
 General Population
 General Population
 General Population
-General Population
 Education
-General Population
-General Population
 Labor
 Labor
 Education
@@ -16671,7 +14459,6 @@ Medical
 General Population
 General Population
 Media
-General Population
 General Population
 Labor
 Labor
@@ -16681,7 +14468,6 @@ General Population
 Labor
 General Population
 General Population
-General Population
 Labor
 Education
 Education
@@ -16692,25 +14478,19 @@ General Population
 Education
 Education
 Labor
-General Population
 General Population
 Education
 General Population
-General Population
-Education
 Labor
 Education
 General Population
-General Population
 Labor
 Business
-General Population
 General Population
 Labor
 General Population
 General Population
 Medical
-Education
 General Population
 Ethnic
 Labor
@@ -16720,14 +14500,12 @@ Religious
 Labor
 Labor
 Labor
-General Population
 Labor
 Agricultural
 General Population
 General Population
 General Population
 General Population
-General Population
 Medical
 Media
 Education
@@ -16735,7 +14513,6 @@ Labor
 Business
 General Population
 Education
-General Population
 Labor
 Labor
 Labor
@@ -16752,19 +14529,15 @@ Business
 Education
 General Population
 Education
-General Population
 Labor
 General Population
 General Population
 General Population
 Business
-General Population
 Education
 Agricultural
-Education
 General Population
 Labor
-General Population
 General Population
 General Population
 Ethnic
@@ -16790,15 +14563,10 @@ General Population
 Medical
 General Population
 Education
-General Population
 Medical
-General Population
-General Population
 Labor
 Business
 General Population
-Religious
-Religious
 Agricultural
 General Population
 Labor
@@ -16809,18 +14577,13 @@ General Population
 Medical
 General Population
 Labor
-General Population
 General Population
-Education
 General Population
-Labor
 General Population
 Labor
-General Population
 Labor
 Labor
 Labor
-General Population
 Education
 Labor
 Labor
@@ -16830,8 +14593,6 @@ General Population
 Education
 General Population
 Labor
-General Population
-General Population
 Labor
 Medical
 Medical
@@ -16842,7 +14603,6 @@ Ethnic
 Education
 General Population
 General Population
-General Population
 Education
 Ethnic
 Business
@@ -16850,14 +14610,12 @@ Business
 General Population
 Legal
 Medical
-General Population
 General Population
 Legal
 Education
 Labor
 Labor
 General Population
-General Population
 Education
 Labor
 Education
@@ -16871,17 +14629,12 @@ Education
 Labor
 Labor
 Labor
-General Population
 Education
 Education
 Business
-Ethnic
-General Population
 General Population
 General Population
-General Population
 Labor
-Education
 General Population
 Business
 General Population
@@ -16894,7 +14647,6 @@ General Population
 Ethnic
 General Population
 Education
-Education
 General Population
 General Population
 Education
@@ -16905,11 +14657,8 @@ Labor
 Business
 Education
 Labor
-General Population
 General Population
 General Population
-General Population
-General Population
 Labor
 Medical
 General Population
@@ -16922,7 +14671,6 @@ Education
 General Population
 General Population
 General Population
-General Population
 Labor
 General Population
 Education
@@ -16934,53 +14682,41 @@ General Population
 Education
 Labor
 Education
-General Population
 Labor
 General Population
 Labor
 Labor
-Labor
 General Population
 Labor
 Education
 Labor
 Education
 Business
-General Population
 General Population
 General Population
 General Population
-General Population
 Business
 Labor
-General Population
 Ethnic
-General Population
 Labor
 Labor
 Labor
-General Population
 General Population
 General Population
-General Population
 Education
 Labor
 Labor
 Legal
-General Population
 General Population
 Education
 Labor
-Religious
 Labor
-General Population
 Labor
 Agricultural
 Education
 Medical
 General Population
 General Population
-Labor
 General Population
 Labor
 Education
@@ -16988,7 +14724,6 @@ Ethnic
 Education
 Media
 Labor
-General Population
 General Population
 General Population
 General Population
@@ -17002,13 +14737,8 @@ General Population
 General Population
 Labor
 General Population
-General Population
-General Population
 Business
 Ethnic
-General Population
-General Population
-General Population
 Labor
 General Population
 Labor
@@ -17028,7 +14758,6 @@ General Population
 General Population
 Education
 Labor
-General Population
 Refugees/Displaced
 General Population
 General Population
@@ -17036,10 +14765,7 @@ General Population
 Medical
 General Population
 Labor
-General Population
-General Population
 General Population
-General Population
 Agricultural
 Legal
 Ethnic
@@ -17068,15 +14794,12 @@ General Population
 General Population
 General Population
 Labor
-General Population
 Labor
 Labor
 Labor
 General Population
 Education
 Education
-Labor
-General Population
 Labor
 General Population
 Education
@@ -17095,7 +14818,6 @@ General Population
 General Population
 Education
 General Population
-Education
 General Population
 Labor
 Labor
@@ -17111,7 +14833,6 @@ General Population
 Education
 General Population
 Education
-Labor
 Labor
 Business
 Medical
@@ -17119,7 +14840,6 @@ General Population
 General Population
 Education
 Labor
-Business
 General Population
 Education
 Medical
@@ -17131,49 +14851,38 @@ Education
 Education
 Education
 Labor
-General Population
 Business
 Labor
 Medical
 Medical
 Education
-Education
 Labor
-General Population
-Education
 General Population
 Agricultural
 General Population
 Labor
 Labor
 Refugees/Displaced
-General Population
 General Population
 Education
 Education
 Labor
-Labor
 Education
 General Population
 General Population
 Medical
-General Population
 General Population
 General Population
-General Population
 Education
 Labor
 General Population
 General Population
 General Population
 Labor
-General Population
 General Population
 General Population
 General Population
-General Population
 Labor
-General Population
 General Population
 Labor
 Business
@@ -17200,12 +14909,9 @@ Labor
 Labor
 Ethnic
 Education
-General Population
-General Population
 General Population
 Labor
 General Population
-Education
 Business
 General Population
 Labor
@@ -17231,7 +14937,6 @@ General Population
 Education
 General Population
 Labor
-Business
 General Population
 Education
 Education
@@ -17242,22 +14947,16 @@ General Population
 General Population
 General Population
 General Population
-Business
-Education
 General Population
 Labor
 Business
 General Population
 General Population
 Business
-General Population
 Labor
-General Population
 Labor
 Agricultural
 Labor
-Labor
-Education
 Education
 Education
 Labor
@@ -17271,12 +14970,10 @@ Labor
 Labor
 Education
 General Population
-General Population
 Labor
 Business
 General Population
 Labor
-General Population
 Education
 General Population
 Education
@@ -17303,15 +15000,11 @@ Medical
 Labor
 Labor
 Labor
-Labor
 General Population
 Business
 Labor
-General Population
 General Population
-Education
 General Population
-Labor
 Labor
 Labor
 General Population
@@ -17333,7 +15026,6 @@ Education
 Labor
 Medical
 Education
-General Population
 Education
 General Population
 General Population
@@ -17342,11 +15034,8 @@ Labor
 General Population
 Education
 Education
-Religious
 General Population
 Education
-Education
-General Population
 Labor
 General Population
 General Population
@@ -17354,29 +15043,23 @@ Labor
 General Population
 General Population
 Labor
-General Population
 Education
 Labor
 Education
-General Population
 Labor
 General Population
-General Population
 Education
-Labor
 Labor
 General Population
 Agricultural
 General Population
 Labor
 General Population
-General Population
 Labor
 Labor
 General Population
 Education
 Labor
-General Population
 General Population
 General Population
 Education
@@ -17386,7 +15069,6 @@ Labor
 General Population
 Labor
 Labor
-Education
 Labor
 General Population
 Labor
@@ -17404,7 +15086,6 @@ General Population
 General Population
 General Population
 Labor
-General Population
 Labor
 Labor
 Agricultural
@@ -17412,7 +15093,6 @@ Labor
 General Population
 Education
 Labor
-General Population
 Medical
 Education
 Education
@@ -17432,7 +15112,6 @@ Labor
 Business
 General Population
 Labor
-Education
 Refugees/Displaced
 General Population
 General Population
@@ -17443,13 +15122,10 @@ General Population
 Agricultural
 General Population
 General Population
-General Population
 Medical
 Education
-General Population
 General Population
 Business
-Labor
 Education
 General Population
 Medical
@@ -17466,7 +15142,6 @@ Education
 General Population
 General Population
 Agricultural
-General Population
 Education
 Legal
 Legal
@@ -17491,7 +15166,6 @@ General Population
 Education
 Business
 General Population
-General Population
 Education
 Media
 General Population
@@ -17503,11 +15177,9 @@ Education
 General Population
 Education
 Education
-General Population
 General Population
 Education
 Labor
-General Population
 Labor
 Labor
 Labor
@@ -17539,36 +15211,27 @@ General Population
 Education
 General Population
 Business
-General Population
 General Population
 Education
 General Population
-General Population
-General Population
 Education
 General Population
 Education
-General Population
 Agricultural
 Education
 Education
 Agricultural
 Labor
 Business
-Labor
-General Population
 Labor
 General Population
 Education
 Education
 Business
-General Population
 General Population
 General Population
 General Population
 General Population
-General Population
-General Population
 Labor
 Business
 General Population
@@ -17578,7 +15241,6 @@ Education
 General Population
 General Population
 General Population
-Education
 General Population
 General Population
 Education
