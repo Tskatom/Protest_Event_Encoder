@@ -447,3 +447,38 @@ class MLPDropout(object):
                 p_y_given_x = T.nnet.softmax(T.dot(next_layer_input, layer.W) +
                                              layer.b)
         return p_y_given_x
+
+def optimizer(cost, params, learning_rate, eps=0.95, rho=1e-6, momentum=0.95, method='sgd'):
+    updates = []
+    if(method == 'sgd-memotum'):
+        print "Using sgd-memotum"
+        for param in params:
+            param_update = theano.shared(param.get_value()*0., broadcastable=param.broadcastable)
+            gparam = T.grad(cost, param)
+            updates.append((param, param - learning_rate*(gparam / T.sqrt(param_update + eps))))
+            updates.append((param_update, param_update + (gparam ** 2)))
+    elif (method == 'adagrad'):
+        print "Using adagrad"
+        for param in params:
+            param_update = theano.shared(param.get_value()*0., broadcastable=param.broadcastable)
+            gparam = T.grad(cost, param)
+            param_update_u = param_update + (gparam ** 2)
+            updates.append((param, param - learning_rate*(gparam / T.sqrt(param_update_u + eps))))
+            updates.append((param_update, param_update_u))
+    elif(method == 'adadelta'):
+        print "Using adadelta"
+        for param in params:
+            param_update_1 = theano.shared(param.get_value()*0., broadcastable=param.broadcastable)
+            param_update_2 = theano.shared(param.get_value()*0., broadcastable=param.broadcastable)
+            gparam = T.grad(cost, param)
+            param_update_1_u = rho*param_update_1+(1. - rho)*(gparam ** 2)
+            dparam = -T.sqrt((param_update_2 + eps) / (param_update_1_u + eps)) * gparam
+            updates.append((param, param+dparam))
+            updates.append((param_update_1, param_update_1_u))
+            updates.append((param_update_2, rho*param_update_2+(1. - rho)*(dparam ** 2)))
+    else:
+        print "Using normal method"
+        for param in params:
+            updates.append((param, param - learning_rate*T.grad(cost, param)))
+    return updates
+
