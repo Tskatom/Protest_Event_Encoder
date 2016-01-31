@@ -10,8 +10,8 @@ import re
 import random
 
 def main():
-    infolder = "./data/single_label"
-    outfolder = "./data/treating_MIL_single_label"
+    infolder = "./data/single_label/0"
+    outfolder = "./data/treating_single_label"
     prefix = "spanish_protest"
 
     treating_sens = {"011": "Los hospitales de Suchitoto y Sonsonate se encuentran en reducción de labores . ",
@@ -38,7 +38,6 @@ def main():
             "013": "energy",
             "014": "economic",
             "015": "government",
-            "016": "other",
             "General Population": "population",
             "Labor": "labor",
             "Religious": "religious",
@@ -51,7 +50,7 @@ def main():
             "Media": "media",
             "Legal": "legal"
             }
-    groups = ["train", "valid", "test"]
+    groups = ["train", "test"]
     for g in groups:
         infile = os.path.join(infolder, "%s_%s.txt.tok" % (prefix, g))
         outfile = os.path.join(outfolder, "%s_%s.txt.tok" % (prefix, g))

@@ -112,11 +112,12 @@ def transform_dataset(dataset, word2id, class2id, max_sens=40, max_words=80, pad
 
     train_pop_y = [class2id["pop"][c] for c in train_pop_class]
     test_pop_y = [class2id["pop"][c] for c in test_pop_class]
-    train_y = construct_joint_y(train_pop_y, train_type_y)
     
     train_type_y = [class2id["type"][c] for c in train_type_class]
     test_type_y = [class2id["type"][c] for c in test_type_class]
+    
     test_y = construct_joint_y(test_pop_y, test_type_y)
+    train_y = construct_joint_y(train_pop_y, train_type_y)
 
     return [(train_doc_ids, train_y), (test_doc_ids, test_y)]
 
@@ -217,7 +218,7 @@ def run_cnn(exp_name,
                 input_shape=None,
                 filter_shape=filter_shape,
                 pool_size=pool_size, activation=activation)
-        sen_vecs = conv_layer.output.reshape((x.shape[0], 1, x.shape[1], num_maps))
+        sen_vecs = conv_layer.output.reshape((x.shape[0], x.shape[1], num_maps))
         sen_vecs = sen_vecs.dimshuffle(0, 2, 1)
         doc_vec = T.max(sen_vecs, axis=2).flatten(2)
         layer1_inputs.append(doc_vec)
@@ -234,10 +235,10 @@ def run_cnn(exp_name,
     pop_factor = nn.MLDropout(rng, 
             input=layer1_input,
             layer_sizes=hidden_units,
-            dropout_rates=[dropout_rate for i in len(hidden_units)-1],
-            activations=[activation for i in len(hidden_units)-1])
+            dropout_rates=[dropout_rate for i in range(len(hidden_units)-1)],
+            activations=[activation for i in range(len(hidden_units)-1)])
     pop_factor_output = pop_factor.output.dimshuffle(0,1,'x')
-    pop_factor_dropout_output = pop_factor.dropout_output.dumshuffle(0,1,'x')
+    pop_factor_dropout_output = pop_factor.dropout_output.dimshuffle(0,1,'x')
 
     #######################
     # Task Type #####
@@ -247,8 +248,8 @@ def run_cnn(exp_name,
     type_factor = nn.MLDropout(rng,
             input=layer1_input,
             layer_sizes=type_hidden_units,
-            dropout_rates=[dropout_rate for i in len(type_hidden_units)-1],
-            activations=[activation for i in len(type_hidden_units)-1])
+            dropout_rates=[dropout_rate for i in range(len(type_hidden_units)-1)],
+            activations=[activation for i in range(len(type_hidden_units)-1)])
     type_factor_output = type_factor.output.dimshuffle(0,'x',1)
     type_factor_dropout_output = type_factor.dropout_output.dimshuffle(0,'x',1)
 
@@ -267,8 +268,8 @@ def run_cnn(exp_name,
     joint_probs = T.nnet.softmax(joint_act.flatten(2))
     joint_probs_dropout = T.nnet.softmax(joint_act_dropout.flatten(2))
     
-    neg_likelihood = -T.mean(T.sum(T.log(T.joint_probs * y), axsi=1))
-    neg_likelihood_dropout = -T.mean(T.sum(T.log(T.joint_probs_dropout * y), axsi=1))
+    neg_likelihood = -T.mean(T.log(T.sum(joint_probs * y, axis=1)))
+    neg_likelihood_dropout = -T.mean(T.log(T.sum(joint_probs_dropout * y, axis=1)))
 
     joint_preds = T.argmax(joint_probs, axis=1)
     pop_preds = joint_preds // type_hidden_units[-1]
@@ -313,7 +314,7 @@ def run_cnn(exp_name,
     # Train model func #
     #####################
     index = T.iscalar()
-    train_func = function([index], cost, updates=grad_updates,
+    train_func = function([index], neg_likelihood_dropout, updates=grad_updates,
             givens={
                 x: train_x[index*batch_size:(index+1)*batch_size],
                 y: train_y[index*batch_size:(index+1)*batch_size]
