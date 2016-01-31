@@ -84,7 +84,7 @@ def load_dataset(prefix, sufix_1, sufix_2):
         sufix eg: pop_cat
     """
     dataset = []
-    for group in ["train", "valid", "test"]:
+    for group in ["train", "test"]:
         x_fn = "%s_%s.txt.tok" % (prefix, group)
         y1_fn = "%s_%s.%s" % (prefix, group, sufix_1)
         y2_fn = "%s_%s.%s" % (prefix, group, sufix_2)
@@ -308,8 +308,7 @@ def run_cnn(exp_name,
     np.random.seed(1234)
     
     train_x, train_pop_y, train_type_y = shared_dataset(dataset[0])
-    valid_x, valid_pop_y, valid_type_y = shared_dataset(dataset[1])
-    test_x, test_pop_y, test_type_y = shared_dataset(dataset[2])
+    test_x, test_pop_y, test_type_y = shared_dataset(dataset[1])
 
     n_train_batches = int(np.ceil(1.0 * len(dataset[0][0]) / batch_size))
     n_test_batches = int(np.ceil(1.0 * len(dataset[1][0]) / batch_size))
