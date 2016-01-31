@@ -98,24 +98,20 @@ def load_dataset(prefix, sufix_1, sufix_2):
 
 def transform_dataset(dataset, word2id, class2id, max_sens=40, max_words=80, padding=5):
     """Transform the dataset into digits"""
-    train_set, valid_set, test_set = dataset
+    train_set, test_set = dataset
     train_doc, train_pop_class, train_type_class = train_set
-    valid_doc, valid_pop_class, valid_type_class = valid_set
     test_doc, test_pop_class, test_type_class = test_set
     
     train_doc_ids = [split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in train_doc]
-    valid_doc_ids = [split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in valid_doc]
     test_doc_ids = [split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in test_doc]
 
     train_pop_y = [class2id["pop"][c] for c in train_pop_class]
-    valid_pop_y = [class2id["pop"][c] for c in valid_pop_class]
     test_pop_y = [class2id["pop"][c] for c in test_pop_class]
     
     train_type_y = [class2id["type"][c] for c in train_type_class]
-    valid_type_y = [class2id["type"][c] for c in valid_type_class]
     test_type_y = [class2id["type"][c] for c in test_type_class]
 
-    return [(train_doc_ids, train_pop_y, train_type_y), (valid_doc_ids, valid_pop_y, valid_type_y), (test_doc_ids, test_pop_y, test_type_y)]
+    return [(train_doc_ids, train_pop_y, train_type_y), (test_doc_ids, test_pop_y, test_type_y)]
 
 
 def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
@@ -247,38 +243,6 @@ def run_cnn(exp_name,
 
         conv_layers.append(conv_layer)
         layer1_inputs.append(sen_vecs)
-
-        """
-        theta_value = np.random.random((num_maps, 1))
-        theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
-                name="theta", borrow=True)
-        # keep the top k score and set all others to 0
-        weighted_sen_vecs, sen_score = keep_max(sen_vecs, theta, k)
-        # reduce sentence score to 2 dim
-        sentence_scores.append(sen_score.flatten(2))
-        #doc_vec = T.sum(weighted_sen_vecs, axis=2)
-        doc_vec = T.max(weighted_sen_vecs, axis=2)
-        layer1_input = doc_vec.flatten(2)
-        conv_layers.append(conv_layer)
-        layer1_inputs.append(layer1_input)
-        thetas.append(theta)
-        """
-
-        """
-        doc_filter_shape = (num_maps, 1, 1, num_maps)
-        doc_pool_size = (num_sens, 1)
-        doc_conv_layer = nn.ConvPoolLayer(rng, 
-                input=sen_vecs,
-                input_shape=None,
-                filter_shape=doc_filter_shape,
-                pool_size=doc_pool_size,
-                activation=activation)
-        layer1_input = doc_conv_layer.output.flatten(2)
-
-        conv_layers.append(conv_layer)
-        conv_layers.append(doc_conv_layer)
-        layer1_inputs.append(layer1_input)
-        """
     
     sen_vec = T.concatenate(layer1_inputs, 3)
     # score the sentences
@@ -311,19 +275,12 @@ def run_cnn(exp_name,
 
     cost = model.negative_log_likelihood(y_pop)
     dropout_cost = model.dropout_negative_log_likelihood(y_pop)
-    """
-    grad_updates = sgd_updates_adadelta(params, 
-            dropout_cost, 
-            lr_decay, 
-            1e-6, 
-            sqr_norm_lim)
-    """
 
     #######################
     # classifier Type #####
     #######################
     type_hidden_units = [num for num in hidden_units]
-    type_hidden_units[-1] = 6
+    type_hidden_units[-1] = 5
     type_model = nn.MLPDropout(rng,
             input=layer1_input,
             layer_sizes=type_hidden_units,
@@ -355,8 +312,7 @@ def run_cnn(exp_name,
     test_x, test_pop_y, test_type_y = shared_dataset(dataset[2])
 
     n_train_batches = int(np.ceil(1.0 * len(dataset[0][0]) / batch_size))
-    n_valid_batches = int(np.ceil(1.0 * len(dataset[1][0]) / batch_size))
-    n_test_batches = int(np.ceil(1.0 * len(dataset[2][0]) / batch_size))
+    n_test_batches = int(np.ceil(1.0 * len(dataset[1][0]) / batch_size))
 
     #####################
     # Train model func #
@@ -369,18 +325,11 @@ def run_cnn(exp_name,
                 y_type:train_type_y[index*batch_size:(index+1)*batch_size]
                 })
     
-    valid_train_func = function([index], total_cost, updates=total_grad_updates,
-            givens={
-                x: valid_x[index*batch_size:(index+1)*batch_size],
-                y_pop: valid_pop_y[index*batch_size:(index+1)*batch_size],
-                y_type:valid_type_y[index*batch_size:(index+1)*batch_size]
-                })
-
-
     test_pred = function([index], total_preds,
             givens={
                 x:test_x[index*batch_size:(index+1)*batch_size],
                 })
+    
     test_sentence_est = function([index], final_sen_score,
             givens={
                 x: test_x[index*batch_size:(index+1)*batch_size]
@@ -392,8 +341,7 @@ def run_cnn(exp_name,
     patience_increase = 2
     improvement_threshold = 1.005
     
-    n_valid = len(dataset[1][0])
-    n_test = len(dataset[2][0])
+    n_test = len(dataset[1][0])
 
     epoch = 0
     best_params = None
@@ -405,8 +353,8 @@ def run_cnn(exp_name,
     log_file = open(log_fn, 'w')
 
     print "Start to train the model....."
-    cpu_tst_pop_y = np.asarray(dataset[2][1])
-    cpu_tst_type_y = np.asarray(dataset[2][2])
+    cpu_tst_pop_y = np.asarray(dataset[1][1])
+    cpu_tst_type_y = np.asarray(dataset[1][2])
 
     def compute_score(true_list, pred_list):
         mat = np.equal(true_list, pred_list)
@@ -423,8 +371,6 @@ def run_cnn(exp_name,
             costs.append(cost_epoch)
             set_zero(zero_vec)
         
-        # do validatiovalidn
-        valid_cost = [valid_train_func(i) for i in np.random.permutation(xrange(n_valid_batches))]
 
         if epoch % print_freq == 0:
             # do test
