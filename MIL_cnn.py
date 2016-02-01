@@ -85,7 +85,7 @@ def load_dataset(prefix, sufix_1, sufix_2):
         sufix eg: pop_cat
     """
     dataset = []
-    for group in ["train", "valid", "test"]:
+    for group in ["train", "test"]:
         x_fn = "%s_%s.txt.tok" % (prefix, group)
         y1_fn = "%s_%s.%s" % (prefix, group, sufix_1)
         y2_fn = "%s_%s.%s" % (prefix, group, sufix_2)
@@ -99,24 +99,20 @@ def load_dataset(prefix, sufix_1, sufix_2):
 
 def transform_dataset(dataset, word2id, class2id, max_sens=40, max_words=80, padding=5):
     """Transform the dataset into digits"""
-    train_set, valid_set, test_set = dataset
+    train_set, test_set = dataset
     train_doc, train_pop_class, train_type_class = train_set
-    valid_doc, valid_pop_class, valid_type_class = valid_set
     test_doc, test_pop_class, test_type_class = test_set
     
     train_doc_ids = [split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in train_doc]
-    valid_doc_ids = [split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in valid_doc]
     test_doc_ids = [split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in test_doc]
 
     train_pop_y = [class2id["pop"][c] for c in train_pop_class]
-    valid_pop_y = [class2id["pop"][c] for c in valid_pop_class]
     test_pop_y = [class2id["pop"][c] for c in test_pop_class]
     
     train_type_y = [class2id["type"][c] for c in train_type_class]
-    valid_type_y = [class2id["type"][c] for c in valid_type_class]
     test_type_y = [class2id["type"][c] for c in test_type_class]
 
-    return [(train_doc_ids, train_pop_y, train_type_y), (valid_doc_ids, valid_pop_y, valid_type_y), (test_doc_ids, test_pop_y, test_type_y)]
+    return [(train_doc_ids, train_pop_y, train_type_y), (test_doc_ids, test_pop_y, test_type_y)]
 
 
 def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
@@ -460,12 +456,10 @@ def run_cnn(exp_name,
     np.random.seed(1234)
     
     train_x, train_pop_y, train_type_y = shared_dataset(dataset[0])
-    valid_x, valid_pop_y, valid_type_y = shared_dataset(dataset[1])
-    test_x, test_pop_y, test_type_y = shared_dataset(dataset[2])
+    test_x, test_pop_y, test_type_y = shared_dataset(dataset[1])
 
     n_train_batches = int(np.ceil(1.0 * len(dataset[0][0]) / batch_size))
-    n_valid_batches = int(np.ceil(1.0 * len(dataset[1][0]) / batch_size))
-    n_test_batches = int(np.ceil(1.0 * len(dataset[2][0]) / batch_size))
+    n_test_batches = int(np.ceil(1.0 * len(dataset[1][0]) / batch_size))
 
     #####################
     # Train model func #
@@ -477,14 +471,13 @@ def run_cnn(exp_name,
                 pop_y: train_pop_y[index*batch_size:(index+1)*batch_size],
                 type_y:train_type_y[index*batch_size:(index+1)*batch_size]
                 })
-    
-    valid_train_func = function([index], total_drop_cost, updates=total_grad_updates,
+   
+    train_pred_detail = function([index], total_out,
             givens={
-                x: valid_x[index*batch_size:(index+1)*batch_size],
-                pop_y: valid_pop_y[index*batch_size:(index+1)*batch_size],
-                type_y:valid_type_y[index*batch_size:(index+1)*batch_size]
+                x:train_x[index*batch_size:(index+1)*batch_size],
+                pop_y:train_pop_y[index*batch_size:(index+1)*batch_size],
+                type_y:train_type_y[index*batch_size:(index+1)*batch_size]
                 })
-    
 
     test_pred_detail = function([index], total_out,
             givens={
@@ -499,8 +492,7 @@ def run_cnn(exp_name,
     patience_increase = 2
     improvement_threshold = 1.005
     
-    n_valid = len(dataset[1][0])
-    n_test = len(dataset[2][0])
+    n_test = len(dataset[1][0])
 
     epoch = 0
     best_params = None
@@ -522,9 +514,6 @@ def run_cnn(exp_name,
             cost_epoch = train_func(minibatch_index)
             costs.append(cost_epoch)
             set_zero(zero_vec)
-        
-        # do validatiovalidn
-        valid_cost = [valid_train_func(i) for i in np.random.permutation(xrange(n_valid_batches))]
 
         if epoch % print_freq == 0:
             # do test
@@ -563,12 +552,33 @@ def run_cnn(exp_name,
             with open(os.path.join(perf_fn, "%s_%d.type_pred" % (exp_name, epoch)), 'w') as epf:
                 for p in type_preds:
                     epf.write("%d\n" % int(p))
-            print pop_sens
-            with open(os.path.join(perf_fn, "%s_%d.pop_sens" % (exp_name, epoch)), 'w') as epf:
+            
+            with open(os.path.join(perf_fn, "%s_%d.test_pop_sens" % (exp_name, epoch)), 'w') as epf:
                 for s in pop_sens:
                     epf.write("%d\n" % int(s))
 
-            with open(os.path.join(perf_fn, "%s_%d.type_sens" % (exp_name, epoch)), 'w') as epf:
+            with open(os.path.join(perf_fn, "%s_%d.test_type_sens" % (exp_name, epoch)), 'w') as epf:
+                for s in type_sens:
+                    epf.write("%d\n" % int(s))
+            
+            train_pop_sens = []
+            train_type_sens = []
+
+            for i in xrange(n_train_batches):
+                train_pop_pred, train_type_pred, train_pop_error, train_type_error, train_pop_sen, train_type_sen = train_pred_detail(i)
+
+                train_pop_sens.append(train_pop_sen)
+                train_type_sens.append(train_type_sen)
+
+            pop_sens = np.concatenate(train_pop_sens)
+            type_sens = np.concatenate(train_type_sens)
+
+            
+            with open(os.path.join(perf_fn, "%s_%d.train_pop_sens" % (exp_name, epoch)), 'w') as epf:
+                for s in pop_sens:
+                    epf.write("%d\n" % int(s))
+
+            with open(os.path.join(perf_fn, "%s_%d.train_type_sens" % (exp_name, epoch)), 'w') as epf:
                 for s in type_sens:
                     epf.write("%d\n" % int(s))
             
@@ -577,7 +587,7 @@ def run_cnn(exp_name,
             log_file.write(message + "\n")
             log_file.flush()
 
-            if (pop_perf + type_perf) > total_score:
+            if (pop_perf + type_perf) > total_score and False:
                 total_score = pop_perf + type_perf
                 # save the model
                 model_name = os.path.join(perf_fn, "%s_%d.best_model" % (exp_name, epoch))

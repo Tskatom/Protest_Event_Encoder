@@ -32,6 +32,38 @@ def parse_args():
     ap.add_argument("--keywords_file", type=str, help="keywords file")
     return ap.parse_args()
 
+def generate_k_sentence(keywords_file, infolder="../data/single_label", 
+        outfolder="../data/single_label_sen", k=2):
+    sufixs = ["train", "test"]
+    for sufix in sufixs:
+        for fold in range(5):
+            in_file_name = os.path.join(infolder, "%d/spanish_protest_%s.txt.tok" % (fold, sufix))
+            
+            docs = []
+            with open(in_file_name) as infile:
+                for line in infile:
+                    doc = line.strip()
+                    sens = re.split("\.|\?|\|", doc)
+                    sens = [sen for sen in sens if len(sen.strip().split(" ")) > 5]
+                    docs.append(sens)
+            
+            # choose random sentence
+            random_folder = os.path.join(outfolder, "random")
+            if not os.path.exists(random_folder):
+                os.mkdir(random_folder)
+            k_folder = os.path.join(random_folder, "%d" % fold)
+            if not os.path.exists(k_folder):
+                os.mkdir(k_folder)
+
+            outfile = os.path.join(k_folder, os.path.basename(in_file_name))
+            with open(outfile, 'w') as otf:
+                for doc_sens in docs:
+                    if len(doc_sens) == 1:
+                        pass
+
+
+
+
 def filter_sen(es_file, key_file, outfolder):
     words = [w.strip() for w in open(key_file)]
     rule = '|'.join(words)
