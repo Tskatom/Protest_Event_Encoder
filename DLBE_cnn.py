@@ -333,6 +333,11 @@ def run_cnn(exp_name,
             givens={
                 x: test_x[index*batch_size:(index+1)*batch_size]
                 })
+    
+    train_sentence_est = function([index], final_sen_score,
+            givens={
+                x: train_x[index*batch_size:(index+1)*batch_size]
+                })
 
 
     # apply early stop strategy
@@ -394,9 +399,14 @@ def run_cnn(exp_name,
                 total_score = test_pop_score + test_type_score
                 # save the sentence score
                 test_sen_score = [test_sentence_est(i) for i in xrange(n_test_batches)]
-                score_file = "%s_%d.score" % (exp_name, epoch)
+                score_file = "./results/%s_%d_test.score" % (exp_name, epoch)
                 with open(score_file, "wb") as sm:
                     cPickle.dump(test_sen_score, sm)
+                
+                train_sen_score = [train_sentence_est(i) for i in xrange(n_train_batches)]
+                score_file = "./results/%s_%d_train.score" % (exp_name, epoch)
+                with open(score_file, "wb") as sm:
+                    cPickle.dump(train_sen_score, sm)
 
         end_time = timeit.default_timer()
         print "Finish one iteration using %f m" % ((end_time - start_time)/60.)
