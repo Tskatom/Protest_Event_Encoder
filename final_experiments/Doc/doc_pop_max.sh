@@ -9,7 +9,7 @@ text_tool=${home}/workspace/Protest_Event_Encoder/util/tools.py
 model_exe=${home}/workspace/Protest_Event_Encoder/CNN_Sen_max.py
 options="LowerCase UTF8 RemoveNumbers"
 max_num=100000
-min_word_count=1
+min_word_count=10
 word_dm=50
 
 echo Generating vocabulary for training data ... \n
@@ -26,10 +26,10 @@ python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_rando
 echo Start Training the model
 for i in `seq 0 4`;
 do
-    exp_name=doc_pop_max_fold_${i}
+    exp_name=doc_pop_max_F30_fold_${i}
     log_fn=./log/${exp_name}.log
     perf_fn=./results/
-    param_fn=./doc_pop_max_param.json
+    param_fn=./doc_pop_max_param_F30.json
     python $model_exe --prefix ${home}/workspace/Protest_Event_Encoder/data/single_label/${i}/spanish_protest --sufix pop_cat --word2vec $vec_trained_fn --dict_fn ${home}/workspace/Protest_Event_Encoder/data/pop_cat.dic --max_sens 30 --max_words 70 --padding 2 --exp_name $exp_name --max_iter 100 --batch_size 100 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn
 
 done
