@@ -1,0 +1,7 @@
+{
+"name": "./results/DLBE_MLT_w50_k2_d100_fold_%s_b50_%d",
+"batch_size": 50,
+"folds":{"0":40, "1":50, "2":20, "3":30, "4":35},
+"sen_folder": "/home/ubuntu/workspace/Protest_Event_Encoder/data/single_label",
+"out_folder": "/home/ubuntu/workspace/Protest_Event_Encoder/data/single_label_sen/DLBE"
+}
