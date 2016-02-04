@@ -415,7 +415,7 @@ def main():
     sufix = args.sufix
     dict_fn = args.dict_fn
     n_out = args.n_out
-    log_name = "mlp_fold_%d.log" % args.fold
+    log_name = "mlp_fold_%s_%d.log" % (sufix, args.fold)
 
     test_mlp(log_name, prefix, sufix, dict_fn, n_out=n_out)
 

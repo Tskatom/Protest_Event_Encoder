@@ -26,10 +26,10 @@ python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_rando
 echo Start Training the model
 for i in `seq 0 4`;
 do
-    exp_name=doc_type_max_fold_${i}
+    exp_name=doc_type_max_F30_fold_${i}
     log_fn=./log/${exp_name}.log
     perf_fn=./results/
-    param_fn=./doc_type_max_param.json
+    param_fn=./doc_type_max_param_F30.json
     python $model_exe --prefix ${home}/workspace/Protest_Event_Encoder/data/single_label/${i}/spanish_protest --sufix type_cat --word2vec $vec_trained_fn --dict_fn ${home}/workspace/Protest_Event_Encoder/data/type_cat.dic --max_sens 30 --max_words 70 --padding 2 --exp_name $exp_name --max_iter 100 --batch_size 100 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn
 
 done
