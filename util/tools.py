@@ -11,6 +11,7 @@ import argparse
 import numpy as np
 import cPickle
 import re
+import shutil
 
 def parse_args():
     ap = argparse.ArgumentParser()
@@ -32,13 +33,15 @@ def parse_args():
     ap.add_argument("--keywords_file", type=str, help="keywords file")
     return ap.parse_args()
 
-def generate_k_sentence(keywords_file, infolder="../data/single_label", 
+def generate_k_sentence(keyword_file, infolder="../data/single_label", 
         outfolder="../data/single_label_sen", k=2):
     sufixs = ["train", "test"]
     for sufix in sufixs:
         for fold in range(5):
             in_file_name = os.path.join(infolder, "%d/spanish_protest_%s.txt.tok" % (fold, sufix))
-            
+            pop_cat = os.path.join(infolder, "%d/spanish_protest_%s.pop_cat" % (fold, sufix))
+            type_cat = os.path.join(infolder, "%d/spanish_protest_%s.type_cat" % (fold, sufix))
+
             docs = []
             with open(in_file_name) as infile:
                 for line in infile:
@@ -58,10 +61,60 @@ def generate_k_sentence(keywords_file, infolder="../data/single_label",
             outfile = os.path.join(k_folder, os.path.basename(in_file_name))
             with open(outfile, 'w') as otf:
                 for doc_sens in docs:
-                    if len(doc_sens) == 1:
-                        pass
+                    # randomly choose two sentences
+                    ids = range(len(doc_sens))
+                    random.shuffle(ids)
+                    for id in ids[:2]:
+                        otf.write(doc_sens[id] + " . ")
+                    otf.write("\n")
+            # copy the cat file
+            shutil.copy2(pop_cat, k_folder)
+            shutil.copy2(type_cat, k_folder)
 
+            # choose the top 2
+            first_folder = os.path.join(outfolder, "first")
+            if not os.path.exists(first_folder):
+                os.mkdir(first_folder)
+            k_folder = os.path.join(first_folder, "%d" % fold)
+            if not os.path.exists(k_folder):
+                os.mkdir(k_folder)
+            outfile = os.path.join(k_folder, os.path.basename(in_file_name))
+            with open(outfile, 'w') as otf:
+                for doc_sens in docs:
+                    for sen in doc_sens[:2]:
+                        otf.write(sen + " . ")
+                    otf.write("\n")
+            # copy the cat file
+            shutil.copy2(pop_cat, k_folder)
+            shutil.copy2(type_cat, k_folder)
 
+            # choose the two sentences with protest keywords
+            key_folder = os.path.join(outfolder, "keywords")
+            if not os.path.exists(key_folder):
+                os.mkdir(key_folder)
+            k_folder = os.path.join(key_folder, "%d" % fold)
+            if not os.path.exists(k_folder):
+                os.mkdir(k_folder)
+            outfile = os.path.join(k_folder, os.path.basename(in_file_name))
+            with open(outfile, 'w') as otf, open(keyword_file) as kf:
+                words = [w.strip() for w in kf]
+                rule = '|'.join(words)
+                pattern = re.compile(rule, re.I)
+                for doc in docs:
+                    matched_sens = []
+                    for sen in doc:
+                        if pattern.search(sen):
+                            matched_sens.append(sen)
+                    # add first 2 sentences if no sentences matched
+                    if len(matched_sens) == 0:
+                        matched_sens = doc
+                    for sen in matched_sens[:2]:
+                        otf.write(sen + " . ")
+                    otf.write("\n")
+
+            # copy the cat file
+            shutil.copy2(pop_cat, k_folder)
+            shutil.copy2(type_cat, k_folder)
 
 
 def filter_sen(es_file, key_file, outfolder):
@@ -275,6 +328,9 @@ def main():
         pop_label_file = args.pop_label_file
         eventType_file = args.eventType_file
         split_text_set_train_test(es_file, en_file, pop_label_file, eventType_file)
+    elif task == "get_k_sentence":
+        keywords_file = args.keywords_file
+        generate_k_sentence(keywords_file)
 
 
 if __name__ == "__main__":

@@ -11,6 +11,7 @@ import timeit
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 import numpy as np
+import argparse
 
 def svm_experiment(train_set, test_set): 
     train_set_x, train_set_y = train_set 
@@ -59,12 +60,21 @@ def svm_tfidf(prefix, sufix, dic_fn):
     test_score = svm_experiment([train_set_x, train_y], [test_set_x, test_y])
     return test_score
 
+def parse_args():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--exp", type=str, default="single_label")
+    return ap.parse_args()
+
 def main():
     
     pop_scores = []
     type_scores = []
+
+    args = parse_args()
+    exp = args.exp
+
     for i in range(5):
-        prefix = "./data/single_label/%d/spanish_protest" % i
+        prefix = "./data/%s/%d/spanish_protest" % (exp, i)
         sufix = "pop_cat"
         dic_fn = "./data/pop_cat.dic"
 

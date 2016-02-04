@@ -388,10 +388,12 @@ def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.01, L1_reg=0.00, L
             message = ('epoch %i, minibatch %i/%i, test error of best model %f %%') % (epoch, minibatch_index + 1, n_train_batches, test_score * 100.)
             print message
             log.write(message + "\n")
+            log.flush()
 
         end_time = timeit.default_timer()
         print "Finish %d epoch using %f" % (epoch, (end_time - start_time)/60.)
-
+    log.flush()
+    log.close()
     end_time = timeit.default_timer()
     print >> sys.stderr, ('The code for file ' +
                           os.path.split(__file__)[1] +

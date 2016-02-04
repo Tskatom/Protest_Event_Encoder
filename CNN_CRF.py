@@ -220,7 +220,7 @@ def run_cnn(exp_name,
                 pool_size=pool_size, activation=activation)
         sen_vecs = conv_layer.output.reshape((x.shape[0], x.shape[1], num_maps))
         sen_vecs = sen_vecs.dimshuffle(0, 2, 1)
-        doc_vec = T.max(sen_vecs, axis=2).flatten(2)
+        doc_vec = T.sum(sen_vecs, axis=2).flatten(2)
         layer1_inputs.append(doc_vec)
         conv_layers.append(conv_layer)
 
