@@ -11,6 +11,7 @@ import argparse
 import numpy as np
 import cPickle
 import re
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 def parse_args():
     ap = argparse.ArgumentParser()
@@ -30,6 +31,8 @@ def parse_args():
             default="../data/single_label/eventType_label.txt")
     ap.add_argument("--outfolder", type=str, help="output folder")
     ap.add_argument("--keywords_file", type=str, help="keywords file")
+    ap.add_argument("--infolder", type=str)
+    ap.add_argument("--vocab_file", type=str, default="../data/spanish_protest.trn-100000.vocab")
     return ap.parse_args()
 
 def generate_k_sentence(keywords_file, infolder="../data/single_label", 
@@ -239,7 +242,44 @@ def split_text_set(es_file, en_file, pop_label_file, eventType_file):
             with open(file_name, 'w') as df:
                 for line in data[j]:
                     df.write(line)
-            
+
+def generate_sen_tfidf(vocab, folder):
+    print "Total %d vocabulaies" % len(vocab)
+    vect = TfidfVectorizer(vocabulary=vocab)
+    train_file = os.path.join(folder, "spanish_protest_train.txt.tok")
+    test_file = os.path.join(folder, "spanish_protest_test.txt.tok")
+    train_docs = [line.lower().strip() for line in open(train_file)]
+    test_docs = [line.lower().strip() for line in open(test_file)]
+
+    train_tfidf = vect.fit_transform(train_docs)
+    test_tfidf = vect.transform(test_docs)
+
+    # generate the sentence level TFIDF
+    # using the bag of the words representation
+    
+    def get_sen_tfidf(docs, docs_tfidf): 
+        sens_tfidf = []
+        for doc, doc_tfidf in zip(docs, docs_tfidf):
+            sens = re.split("\.|\?|\|", doc.lower())
+            sens = [sen for sen in sens if len(sen.strip().split(" ")) > 5]
+            sen_tfidf = np.zeros((len(sens), len(vocab)))
+            for i, sen in enumerate(sens):
+                tokens = sen.split()
+                tids = [vocab[t] for t in tokens if t in vocab]
+                if len(tids) > 0:
+                    sen_tfidf[i][tids] = doc_tfidf[tids]
+            sens_tfidf.append(sen_tfidf)
+        return np.asarray(sens_tfidf)
+
+    #train_sens_tfidf = get_sen_tfidf(train_docs, train_tfidf)
+    #test_sens_tfidf = get_sen_tfidf(test_docs, test_tfidf)
+
+    train_out_file = os.path.join(folder, "spanish_protest_train.sens_tfidf")
+    test_out_file = os.path.join(folder, "spanish_protest_test.sens_tfidf")
+
+    with open(train_out_file, 'w') as trof, open(test_out_file, 'w') as teof:
+        cPickle.dump(train_tfidf, trof)
+        cPickle.dump(test_tfidf, teof)
 
 def main():
     args = parse_args()
@@ -275,6 +315,15 @@ def main():
         pop_label_file = args.pop_label_file
         eventType_file = args.eventType_file
         split_text_set_train_test(es_file, en_file, pop_label_file, eventType_file)
+    elif task == "get_sens_tfidf":
+        vocab_file = args.vocab_file
+        infolder = args.infolder
+
+        # setup the vocab
+        vocab = {l.strip().split('\t')[0]:i for i, l in enumerate(open(vocab_file))}
+        for i in range(5):
+            fold_folder = os.path.join(infolder, "%s" % i)
+            generate_sen_tfidf(vocab, fold_folder)
 
 
 if __name__ == "__main__":
