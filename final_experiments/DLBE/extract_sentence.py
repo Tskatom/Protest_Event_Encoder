@@ -55,7 +55,7 @@ def DLBE(dlbe_config):
                         if sid >= len(sens):
                             continue
                         else:
-                            otf.write(sens[sid]) + " . "
+                            otf.write(sens[sid] + " . ")
                     otf.write("\n")
 
             # copy the class file
@@ -63,6 +63,8 @@ def DLBE(dlbe_config):
             type_cat = os.path.join(data_folder, "spanish_protest_%s.type_cat" % part)
             shutil.copy2(pop_cat, outfolder)
             shutil.copy2(type_cat, outfolder)
+        with open('./chosen_sens_%s' % fold, 'w') as css:
+            cPickle.dump(choosen_sens, css)
 
 def main():
     dlbe_config_file = sys.argv[1]
