@@ -70,6 +70,7 @@ class HiddenLayer(object):
         self.output = self.activation(pre_activation)
         self.params = [self.W, self.b]
         self.L2 = T.sum(self.W ** 2)
+        self.L1 = T.sum(abs(self.W))
 
 
 class MLP(object):
@@ -155,6 +156,7 @@ class LogisticRegressionLayer(object):
 
         self.params = [self.W, self.b]
         self.L2 = T.sum(self.W ** 2)
+        self.L1 = T.sum(abs(self.W))
 
     def negative_log_likelihood(self, y):
         """
@@ -245,6 +247,7 @@ class ConvPoolLayer(object):
         self.output_index = T.argmax(act_conv_out)
         self.params = [self.W, self.b]
         self.L2 = T.sum(self.W ** 2)
+        self.L1 = T.sum(abs(self.W))
 
     def predict(self, new_data, batch_size):
         image_shape = (batch_size, 1, self.input_shape[2], self.input_shape[3])
@@ -287,63 +290,6 @@ class DropoutHiddenLayer(HiddenLayer):
             )
         self.output = dropout_from_layer(rng, self.output, p=dropout_rate)
 
-class MLDropout(object):
-    """A multi Layer Neural Network with dropout"""
-    def __init__(self, rng, input, layer_sizes, dropout_rates, activations,
-            Ws=None, bs=None):
-        self.weight_matrix_sizes = zip(layer_sizes, layer_sizes[1:])
-        self.layers = []
-        self.dropout_layers = []
-        self.activations = activations
-        if Ws is None:
-            Ws = [None] * len(self.weight_matrix_sizes)
-        else:
-            assert len(Ws) == len(self.weight_matrix_sizes)
-
-        if bs is None:
-            bs = [None] * len(self.weight_matrix_sizes)
-        else:
-            assert len(bs) == len(self.weight_matrix_sizes)
-
-        next_layer_input = input
-        next_dropout_layer_input = dropout_from_layer(rng,
-                                                      input,
-                                                      p=dropout_rates[0])
-        L2s = []
-        layer_count = 0
-        for idx, ns in enumerate(self.weight_matrix_sizes):
-            n_in, n_out = ns
-            next_dropout_layer = DropoutHiddenLayer(rng=rng,
-                input=next_dropout_layer_input,
-                activation=self.activations[layer_count],
-                n_in=n_in,
-                n_out=n_out,
-                dropout_rate=dropout_rates[layer_count],
-                W=Ws[idx],
-                b=bs[idx])
-            self.dropout_layers.append(next_dropout_layer)
-            next_dropout_layer_input = next_dropout_layer.output
-            L2s.append(next_dropout_layer.L2)
-
-            # resuse the parameters from the dropout layer here
-            next_layer = HiddenLayer(rng=rng,
-                input=next_layer_input,
-                activation=self.activations[layer_count],
-                W=next_dropout_layer.W * (1 - dropout_rates[layer_count]),
-                b=next_dropout_layer.b,
-                n_in=n_in,
-                n_out=n_out)
-            self.layers.append(next_layer)
-            next_layer_input = next_layer.output
-            layer_count += 1
-
-        self.L2 = T.sum(L2s)
-
-        # drop out params
-        self.params = [param for layer in self.dropout_layers
-                       for param in layer.params]
-        self.dropout_output = self.dropout_layers[-1].output
-        self.output = self.layers[-1].output
 
 class MLPDropout(object):
     """A multi Layer Neural Network with dropout"""
@@ -368,6 +314,7 @@ class MLPDropout(object):
                                                       input,
                                                       p=dropout_rates[0])
         L2s = []
+        L1s = []
         layer_count = 0
         for idx, ns in enumerate(self.weight_matrix_sizes[:-1]):
             n_in, n_out = ns
@@ -382,6 +329,7 @@ class MLPDropout(object):
             self.dropout_layers.append(next_dropout_layer)
             next_dropout_layer_input = next_dropout_layer.output
             L2s.append(next_dropout_layer.L2)
+            L1s.append(next_dropout_layer.L1)
 
             # resuse the parameters from the dropout layer here
             next_layer = HiddenLayer(rng=rng,
@@ -402,6 +350,7 @@ class MLPDropout(object):
             n_in=n_in, n_out=n_out, W=Ws[-1], b=bs[-1])
         self.dropout_layers.append(dropout_output_layer)
         L2s.append(dropout_output_layer.L2)
+        L1s.append(dropout_output_layer.L1)
 
         # reuse the parameters again
         output_layer = LogisticRegressionLayer(
@@ -418,6 +367,7 @@ class MLPDropout(object):
         self.errors = self.layers[-1].errors
         self.preds = self.layers[-1].y_pred
         self.L2 = T.sum(L2s)
+        self.L1 = T.sum(L1s)
 
         # drop out params
         self.params = [param for layer in self.dropout_layers
