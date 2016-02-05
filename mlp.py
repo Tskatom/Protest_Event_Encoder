@@ -36,6 +36,8 @@ import argparse
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 import nn_layers as nn
+import numpy as np
+from DLBE_cnn import sgd_updates_adadelta
 
 def ReLU(x):
     return T.maximum(0.0, x)
@@ -237,7 +239,7 @@ def load_dataset(prefix, sufix, dic_fn, vocab_fn='./data/spanish_protest.trn-100
     return [(train_shared_x, train_shared_y), (test_shared_x, test_shared_y)]
     
 
-def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.01, L1_reg=0.001, L2_reg=0.001, n_epochs=1000, batch_size=50, n_hidden=500, n_out=11):
+def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.05, L1_reg=0.000, L2_reg=0.0001, n_epochs=1000, batch_size=100, n_hidden=500, n_out=11):
     """
     Demonstrate stochastic gradient descent optimization for a multilayer
     perceptron
@@ -292,7 +294,7 @@ def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.01, L1_reg=0.001, 
             rng,
             input=x,
             layer_sizes=[20612, 500, n_out],
-            dropout_rates=[0.5, 0.3],
+            dropout_rates=[0.5, 0.5],
             activations=[ReLU]
             )
     """
@@ -303,13 +305,13 @@ def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.01, L1_reg=0.001, 
         n_hidden=n_hidden,
         n_out=n_out
     )
-    """
+   """ 
     # start-snippet-4
     # the cost we minimize during training is the negative log likelihood of
     # the model plus the regularization terms (L1 and L2); cost is expressed
     # here symbolically
     cost = (
-        classifier.dropout_negative_log_likelihood(y)
+        classifier.negative_log_likelihood(y)
         + L1_reg * classifier.L1
         + L2_reg * classifier.L2
     )
@@ -339,11 +341,19 @@ def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.01, L1_reg=0.001, 
     # B = [b1, b2, b3, b4], zip generates a list C of same size, where each
     # element is a pair formed from the two lists :
     #    C = [(a1, b1), (a2, b2), (a3, b3), (a4, b4)]
+    """
+    updates = sgd_updates_adadelta(classifier.params, 
+            cost,
+            0.95,
+            1e-6,
+            9)
     updates = [
         (param, param - learning_rate * gparam)
         for param, gparam in zip(classifier.params, gparams)
     ]
-
+    """
+   
+    updates = nn.optimizer(cost, classifier.params, 0.01, method="adadelta")
     # compiling a Theano function `train_model` that returns the cost, but
     # in the same time updates the parameter of the model based on the rules
     # defined in `updates`
@@ -386,9 +396,11 @@ def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.01, L1_reg=0.001, 
     while (epoch < n_epochs) and (not done_looping):
         epoch = epoch + 1
         start_time = timeit.default_timer()
-        for minibatch_index in xrange(n_train_batches):
+        costs = []
+        for minibatch_index in np.random.permutation(xrange(n_train_batches)):
 
             minibatch_avg_cost = train_model(minibatch_index)
+            costs.append(minibatch_avg_cost)
             # iteration number
             iter = (epoch - 1) * n_train_batches + minibatch_index
 
@@ -403,13 +415,13 @@ def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.01, L1_reg=0.001, 
             log.flush()
 
         end_time = timeit.default_timer()
-        print "Finish %d epoch using %f" % (epoch, (end_time - start_time)/60.)
+        print "Finish %d epoch using %f with cost %f" % (epoch, (end_time - start_time)/60., np.mean(costs))
     log.flush()
     log.close()
     end_time = timeit.default_timer()
     print >> sys.stderr, ('The code for file ' +
                           os.path.split(__file__)[1] +
-                          ' ran for %.2fm' % ((end_time - start_time) / 60.))
+                          ' ran for %.2fm ' % ((end_time - start_time) / 60.))
 
 def parse_args():
     ap = argparse.ArgumentParser()

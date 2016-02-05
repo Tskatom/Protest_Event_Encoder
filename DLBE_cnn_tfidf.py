@@ -205,7 +205,7 @@ def run_cnn(exp_name, tfidf_dataset,
     
     """
     start_time = timeit.default_timer()
-    rng = np.random.RandomState(1234)
+    rng = np.random.RandomState()
    
     input_height = len(dataset[0][0][0][0])
     num_sens = len(dataset[0][0][0])
@@ -316,7 +316,6 @@ def run_cnn(exp_name, tfidf_dataset,
     # Construct Dataset #
     #####################
     print "Copy data to GPU and constrct train/valid/test func"
-    np.random.seed(1234)
     
     train_x, train_pop_y, train_type_y = shared_dataset(dataset[0])
     test_x, test_pop_y, test_type_y = shared_dataset(dataset[1])

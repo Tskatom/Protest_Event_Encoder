@@ -1,0 +1,15 @@
+Epoch 5 test perf 0.500000 train perf 0.500000 train_cost 0.696202
+Epoch 10 test perf 0.500000 train perf 0.500000 train_cost 0.696573
+Epoch 15 test perf 0.500000 train perf 0.500000 train_cost 0.696945
+Epoch 20 test perf 0.500000 train perf 0.500000 train_cost 0.696918
+Epoch 25 test perf 0.500000 train perf 0.500000 train_cost 0.698149
+Epoch 30 test perf 0.500000 train perf 0.500000 train_cost 0.698649
+Epoch 35 test perf 0.500000 train perf 0.500000 train_cost 0.698975
+Epoch 40 test perf 0.500000 train perf 0.500000 train_cost 0.699319
+Epoch 45 test perf 0.500000 train perf 0.500000 train_cost 0.699631
+Epoch 50 test perf 0.500000 train perf 0.500000 train_cost 0.699835
+Epoch 55 test perf 0.500000 train perf 0.500000 train_cost 0.700294
+Epoch 60 test perf 0.500000 train perf 0.500000 train_cost 0.698804
+Epoch 65 test perf 0.500000 train perf 0.500000 train_cost 0.700579
+Epoch 70 test perf 0.500000 train perf 0.500000 train_cost 0.699467
+Epoch 75 test perf 0.500000 train perf 0.500000 train_cost 0.696709
