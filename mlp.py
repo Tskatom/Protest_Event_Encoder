@@ -35,6 +35,10 @@ from logistic_sgd import LogisticRegression
 import argparse
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
+import nn_layers as nn
+
+def ReLU(x):
+    return T.maximum(0.0, x)
 
 # start-snippet-1
 class HiddenLayer(object):
@@ -233,7 +237,7 @@ def load_dataset(prefix, sufix, dic_fn, vocab_fn='./data/spanish_protest.trn-100
     return [(train_shared_x, train_shared_y), (test_shared_x, test_shared_y)]
     
 
-def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=1000, batch_size=50, n_hidden=500, n_out=11):
+def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.01, L1_reg=0.001, L2_reg=0.001, n_epochs=1000, batch_size=50, n_hidden=500, n_out=11):
     """
     Demonstrate stochastic gradient descent optimization for a multilayer
     perceptron
@@ -284,6 +288,14 @@ def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.01, L1_reg=0.00, L
     rng = numpy.random.RandomState(1234)
 
     # construct the MLP class
+    classifier = nn.MLPDropout(
+            rng,
+            input=x,
+            layer_sizes=[20612, 500, n_out],
+            dropout_rates=[0.5, 0.3],
+            activations=[ReLU]
+            )
+    """
     classifier = MLP(
         rng=rng,
         input=x,
@@ -291,15 +303,15 @@ def test_mlp(log_name, prefix, sufix, dic_fn, learning_rate=0.01, L1_reg=0.00, L
         n_hidden=n_hidden,
         n_out=n_out
     )
-
+    """
     # start-snippet-4
     # the cost we minimize during training is the negative log likelihood of
     # the model plus the regularization terms (L1 and L2); cost is expressed
     # here symbolically
     cost = (
-        classifier.negative_log_likelihood(y)
+        classifier.dropout_negative_log_likelihood(y)
         + L1_reg * classifier.L1
-        + L2_reg * classifier.L2_sqr
+        + L2_reg * classifier.L2
     )
     # end-snippet-4
 
