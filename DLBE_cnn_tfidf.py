@@ -98,7 +98,7 @@ def load_dataset(prefix, sufix_1, sufix_2):
 def load_tfidf(prefix):
     tfidfs = []
     for group in ["train", "test"]:
-        fn = "%s_%s.sens_tfidf"
+        fn = "%s_%s.sens_tfidf" % (prefix, group)
         tfidf = cPickle.load(open(fn)).toarray()
         tfidfs.append(tfidf)
     return tfidfs
@@ -261,7 +261,7 @@ def run_cnn(exp_name, tfidf_dataset,
     doc_vec = T.max(weighted_sen_vecs, axis=2)
     # add tfidf feature into layer1 input
     sen_feature = doc_vec.flatten(2)
-    layer1_input = T.concatenate(sen_feature, x_tfidf, axis=1)
+    layer1_input = T.concatenate([sen_feature, x_tfidf], axis=1)
 
     final_sen_score = sen_score.flatten(2)
 
@@ -349,14 +349,12 @@ def run_cnn(exp_name, tfidf_dataset,
     
     test_sentence_est = function([index], final_sen_score,
             givens={
-                x: test_x[index*batch_size:(index+1)*batch_size],
-                x_tfidf: test_tfidf[index*batch_size:(index+1)*batch_size]
+                x: test_x[index*batch_size:(index+1)*batch_size]
                 })
     
     train_sentence_est = function([index], final_sen_score,
             givens={
-                x: train_x[index*batch_size:(index+1)*batch_size],
-                x_tfidf: train_tfidf[index*batch_size:(index+1)*batch_size]
+                x: train_x[index*batch_size:(index+1)*batch_size]
                 })
 
 
