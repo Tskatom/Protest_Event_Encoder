@@ -14,3 +14,11 @@ Epoch 65 test pop perf 0.825845, type perf 0.736963
 Epoch 70 test pop perf 0.823549, type perf 0.725156
 Epoch 75 test pop perf 0.828140, type perf 0.723188
 Epoch 80 test pop perf 0.815677, type perf 0.735651
+Epoch 85 test pop perf 0.825845, type perf 0.723844
+Epoch 90 test pop perf 0.804854, type perf 0.716628
+Epoch 95 test pop perf 0.781568, type perf 0.705477
+Epoch 100 test pop perf 0.754018, type perf 0.681863
+Epoch 105 test pop perf 0.773696, type perf 0.698918
+Epoch 110 test pop perf 0.714333, type perf 0.663168
+Epoch 115 test pop perf 0.707445, type perf 0.639554
+Epoch 120 test pop perf 0.709085, type perf 0.652017
