@@ -65,7 +65,7 @@ def load_dataset(prefix, sufix):
         sufix eg: pop_cat
     """
     dataset = []
-    for group in ["train", "valid", "test"]:
+    for group in ["train", "test"]:
         x_fn = "%s_%s.txt.tok" % (prefix, group)
         y_fn = "%s_%s.%s" % (prefix, group, sufix)
         xs = [l.strip() for l in open(x_fn)]
@@ -74,7 +74,7 @@ def load_dataset(prefix, sufix):
         print "Load %d %s records" % (len(ys), group)
     return dataset
 
-def doc_to_id(doc, word2id, max_len=2000, padding=5):
+def doc_to_id(doc, word2id, max_len=700, padding=5):
     pad = padding - 1
     tokens = doc.split(" ")
     doc_ids = [0] * pad
@@ -85,25 +85,22 @@ def doc_to_id(doc, word2id, max_len=2000, padding=5):
     doc_ids += [0] * num_suff
     return doc_ids
 
-def transform_dataset(dataset, word2id, class2id, max_len=2000, padding=5):
+def transform_dataset(dataset, word2id, class2id, max_len=700, padding=5):
     """Transform the dataset into digits"""
-    train_set, valid_set, test_set = dataset
+    train_set, test_set = dataset
     train_doc, train_class = train_set
-    valid_doc, valid_class = valid_set
     test_doc, test_class = test_set
     
     train_doc_ids = [doc_to_id(doc, word2id, max_len, padding) for doc in train_doc]
-    valid_doc_ids = [doc_to_id(doc, word2id, max_len, padding) for doc in valid_doc]
     test_doc_ids = [doc_to_id(doc, word2id, max_len, padding) for doc in test_doc]
 
     train_y = [class2id[c] for c in train_class]
-    valid_y = [class2id[c] for c in valid_class]
     test_y = [class2id[c] for c in test_class]
 
-    return [(train_doc_ids, train_y), (valid_doc_ids, valid_y), (test_doc_ids, test_y)]
+    return [(train_doc_ids, train_y), (test_doc_ids, test_y)]
 
 def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
-        norm_lim=9, word_vec_name='embedding'):
+        norm_lim=3, word_vec_name='embedding'):
     updates = OrderedDict({})
     exp_sqr_grads = OrderedDict({})
     exp_sqr_ups = OrderedDict({})
@@ -145,7 +142,7 @@ def run_cnn(exp_name,
         n_epochs=300,
         lr_decay=0.95,
         activation=ReLU,
-        sqr_norm_lim=9,
+        sqr_norm_lim=3,
         non_static=True):
     """
     Train and Evaluate CNN event encoder model
@@ -235,12 +232,10 @@ def run_cnn(exp_name,
     np.random.seed(1234)
     
     train_x, train_y = shared_dataset(dataset[0])
-    valid_x, valid_y = shared_dataset(dataset[1])
-    test_x, test_y = shared_dataset(dataset[2])
+    test_x, test_y = shared_dataset(dataset[1])
 
     n_train_batches = int(np.ceil(1.0 * len(dataset[0][0]) / batch_size))
-    n_valid_batches = int(np.ceil(1.0 * len(dataset[1][0]) / batch_size))
-    n_test_batches = int(np.ceil(1.0 * len(dataset[2][0]) / batch_size))
+    n_test_batches = int(np.ceil(1.0 * len(dataset[1][0]) / batch_size))
 
     #####################
     # Train model func #
@@ -252,15 +247,6 @@ def run_cnn(exp_name,
                 y: train_y[index*batch_size:(index+1)*batch_size]
                 })
     
-    train_pred = function([index], model.preds, 
-            givens={
-                x: train_x[index*batch_size:(index+1)*batch_size]
-                })
-
-    valid_pred = function([index], model.preds,
-            givens={
-                x: valid_x[index*batch_size:(index+1)*batch_size],
-                })
 
     test_pred = function([index], model.preds,
             givens={
@@ -273,8 +259,7 @@ def run_cnn(exp_name,
     patience_increase = 2
     improvement_threshold = 1.005
     
-    n_valid = len(dataset[1][0])
-    n_test = len(dataset[2][0])
+    n_test = len(dataset[1][0])
 
     epoch = 0
     best_params = None
@@ -287,8 +272,7 @@ def run_cnn(exp_name,
 
     print "Start to train the model....."
     cpu_trn_y = np.asarray(dataset[0][1])
-    cpu_val_y = np.asarray(dataset[1][1])
-    cpu_tst_y = np.asarray(dataset[2][1])
+    cpu_tst_y = np.asarray(dataset[1][1])
 
     def compute_score(true_list, pred_list):
         mat = np.equal(true_list, pred_list)
@@ -304,36 +288,23 @@ def run_cnn(exp_name,
             costs.append(cost_epoch)
             set_zero(zero_vec)
 
-        # do validation
-        valid_preds = np.concatenate([valid_pred(i) for i in xrange(n_valid_batches)])
-        valid_score = compute_score(cpu_val_y, valid_preds)
 
-
-        mess = "Epoch %d with Train cost %f , valid perf %f" % (epoch, 
-                np.mean(costs), valid_score)
+        mess = "Epoch %d with Train cost %f " % (epoch, np.mean(costs))
         print mess
         log_file.write(mess + "\n")
 
-        if (valid_score > best_validation_score) or (epoch % 20 == 0):
+        if (epoch % 5 == 0):
             # do test
             test_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
             test_score = compute_score(cpu_tst_y, test_preds)
-            s5 = timeit.default_timer()
-            with open("./experiments/results/%s_%d.pred" % (exp_name, epoch), 'w') as epf:
+            
+            with open("./results/%s_%d.pred" % (exp_name, epoch), 'w') as epf:
                 for p in test_preds:
                     epf.write("%d\n" % int(p))
-            if valid_score > best_validation_score:
-                message = "Epoch %d test perf %f under best valid perf %f" % (epoch, test_score, valid_score)
-                best_validation_score = valid_score
-            else:
                 message = "Epoch %d test perf %f" % (epoch, test_perf)
             print message
             log_file.write(message + "\n")
-            if valid_score >= improvement_threshold * best_validation_score:
-                patience = max(patience, epoch + patience_increase)
 
-        if epoch > patience:
-            done_loop = True
         end_time = timeit.default_timer()
         print "Finish one iteration using %f m" % ((end_time - start_time)/60.)
 
@@ -378,17 +349,22 @@ def main():
     non_static = not args.static
     exp_name = args.exp_name
     n_epochs = args.max_iter
+    # load local parameter
+    loc_params = json.load(open(args.param_fn))
+    filter_hs = loc_params["filter_hs"]
+    hidden_units = loc_params["hidden_units"]
+
     run_cnn(exp_name, digit_dataset, embedding,
         emb_dm=embedding.shape[1],
         batch_size=batch_size,
-        filter_hs=[1, 2, 3],
-        hidden_units=[100, 11],
+        filter_hs=filter_hs,
+        hidden_units=hidden_units,
         dropout_rate=0.5,
         shuffle_batch=True,
         n_epochs=n_epochs,
         lr_decay=0.95,
         activation=ReLU,
-        sqr_norm_lim=9,
+        sqr_norm_lim=3,
         non_static=True)
      
     
