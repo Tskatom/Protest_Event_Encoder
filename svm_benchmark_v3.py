@@ -12,8 +12,10 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 import numpy as np
 import argparse
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
 
-def svm_experiment(train_set, test_set): 
+def svm_experiment(train_set, test_set, class_names): 
     train_set_x, train_set_y = train_set 
     test_set_x, test_set_y = test_set
     
@@ -22,6 +24,10 @@ def svm_experiment(train_set, test_set):
 
     test_pred = model.predict(test_set_x)
     test_score = 1 - np.mean(np.not_equal(test_set_y, test_pred))
+
+    #print confusion_matrix(test_set_y, test_pred)
+    print classification_report(test_set_y, test_pred, target_names=class_names)
+
     return test_score
 
 
@@ -38,6 +44,8 @@ def svm_tfidf(prefix, sufix, dic_fn):
     test_y_file = prefix + "_test." + sufix
     
     dic_cn = {k.strip(): i for i, k in enumerate(open(dic_fn))}
+    class_names = [k.strip() for k in open(dic_fn)]
+    print class_names
 
 
     word_train_set = [l.strip().lower() for l in open(train_file)]
@@ -57,7 +65,7 @@ def svm_tfidf(prefix, sufix, dic_fn):
     test_set_x = tfidf_transformer.transform(test_set_count)
 
     print "start the model"
-    test_score = svm_experiment([train_set_x, train_y], [test_set_x, test_y])
+    test_score = svm_experiment([train_set_x, train_y], [test_set_x, test_y], class_names)
     return test_score
 
 def parse_args():
@@ -74,6 +82,7 @@ def main():
     exp = args.exp
 
     for i in range(5):
+        #prefix = "./data/%s/%d/spanish_protest" % (exp, i)
         prefix = "./data/%s/%d/spanish_protest" % (exp, i)
         sufix = "pop_cat"
         dic_fn = "./data/pop_cat.dic"
