@@ -8,7 +8,7 @@ text_tool=../../util/tools.py
 model_exe=../../DLBE_cnn.py
 options="LowerCase UTF8 RemoveNumbers"
 max_num=100000
-min_word_count=10
+min_word_count=5
 word_dm=50
 k=$1
 d=$2
@@ -26,9 +26,9 @@ python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_rando
 echo Start Training the model
 for i in `seq 0 4`;
 do
-    exp_name=DLBE_MLT_w${word_dm}_k${k}_d${d}_fold_${i}_b101
+    exp_name=DLBE_MLT_w${word_dm}_k${k}_d${d}_fold_${i}_b100_s15
     log_fn=./log/${exp_name}.log
     perf_fn=./results/
     param_fn=./DLBE_param_d${d}.json
-    python $model_exe --prefix ../../data/single_label/${i}/spanish_protest --sufix_pop pop_cat --sufix_type type_cat --word2vec $vec_trained_fn --dict_pop_fn ../../data/pop_cat.dic --dict_type_fn ../../data/type_cat.dic --max_sens 30 --max_words 70 --padding 2 --exp_name $exp_name --max_iter 120 --batch_size 100 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn --top_k $k 
+    python $model_exe --prefix ../../data/single_label/${i}/spanish_protest --sufix_pop pop_cat --sufix_type type_cat --word2vec $vec_trained_fn --dict_pop_fn ../../data/pop_cat.dic --dict_type_fn ../../data/type_cat.dic --max_sens 30 --max_words 70 --padding 2 --exp_name $exp_name --max_iter 120 --batch_size 64 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn --top_k $k 
 done

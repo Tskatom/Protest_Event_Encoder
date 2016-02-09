@@ -23,13 +23,13 @@ def parse_args():
     ap.add_argument("--pretrained_fn", type=str, help="pretrained word2vec")
     ap.add_argument("--emb_dm", type=int, help="the dimention of the word embedding")
     ap.add_argument("--es_file", type=str, help="spanish article file",
-            default="../data/single_label/spanish_protest.txt.tok")
+            default="../data/single_label_nog/spanish_protest.txt.tok")
     ap.add_argument("--en_file", type=str, help="english article file",
-            default="../data/single_label/english_protest.txt.tok")
+            default="../data/single_label_nog/english_protest.txt.tok")
     ap.add_argument("--pop_label_file", type=str, help="population label file",
-            default="../data/single_label/pop_label.txt")
+            default="../data/single_label_nog/pop_label.txt")
     ap.add_argument("--eventType_file", type=str, help="event type label file",
-            default="../data/single_label/eventType_label.txt")
+            default="../data/single_label_nog/eventType_label.txt")
     ap.add_argument("--outfolder", type=str, help="output folder")
     ap.add_argument("--keywords_file", type=str, help="keywords file")
     ap.add_argument("--infolder", type=str)

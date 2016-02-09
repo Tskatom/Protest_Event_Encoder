@@ -355,7 +355,7 @@ class MLPDropout(object):
         # reuse the parameters again
         output_layer = LogisticRegressionLayer(
             input=next_layer_input,
-            W=dropout_output_layer.W * (1 - dropout_rates[-1]),
+            W=dropout_output_layer.W,
             b=dropout_output_layer.b,
             n_in=n_in, n_out=n_out)
         self.layers.append(output_layer)

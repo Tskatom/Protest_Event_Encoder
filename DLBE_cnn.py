@@ -295,6 +295,7 @@ def run_cnn(exp_name,
     total_dropout_cost = dropout_cost  + type_dropout_cost
     # using adagrad
     lr = 0.01
+    """
     total_grad_updates = nn.optimizer(total_dropout_cost,
             params,
             lr,
@@ -306,7 +307,7 @@ def run_cnn(exp_name,
             lr_decay,
             1e-6,
             sqr_norm_lim)
-    """
+    
     total_preds = [model.preds, type_model.preds]
 
     #####################

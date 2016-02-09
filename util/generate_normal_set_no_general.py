@@ -79,7 +79,7 @@ with open(infile) as itf, open(es_file, 'w') as esf, open(en_file, 'w') as enf, 
         tf.write('|'.join(type_s) + "\n")
 
         # write to single label
-        if len(pop_s) == 1 and len(type_s) == 1 and type_s[0] != "016" and pop_s[0] != "General Populaiton":
+        if len(pop_s) == 1 and len(type_s) == 1 and type_s[0] != "016" and pop_s[0] != "General Population":
             s_esf.write(value["spanish"] + "\n")
             s_enf.write(value["english"] + "\n")
             s_pop_f.write(pop_s[0] + "\n")

@@ -20,7 +20,8 @@ $prep_exe gen_vocab input_fn=./data/tokens.lst vocab_fn=$vocab_fn max_vocab_size
 echo Construct two set of vocabulary embedding: ramdom and pretrained \n
 vec_trained_fn=./data/trained_w2v_${word_dm}.pkl
 vec_random_fn=./data/random_w2v_${word_dm}.pkl
-pretrained_fn=../../data/${word_dm}d_vectors.txt
+#pretrained_fn=../../data/${word_dm}d_vectors.txt
+pretrained_fn=../../data/glove.6B.${word_dm}d.txt
 python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_random_fn --vec_trained_fn $vec_trained_fn --pretrained_fn $pretrained_fn --emb_dm $word_dm
 
 echo Start Training the model
@@ -30,5 +31,5 @@ do
     log_fn=./log/${exp_name}.log
     perf_fn=./results/
     param_fn=./DLBE_param_d${d}.json
-    python $model_exe --prefix ../../data/noRats/${i}/Imdb_review --sufix sent_cat  --word2vec $vec_random_fn --dict_fn ../../data/sent_cat.dic  --max_sens 40 --max_words 70 --padding 2 --exp_name $exp_name --max_iter 120 --batch_size 20 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn --top_k $k --static 
+    python $model_exe --prefix ../../data/noRats/${i}/Imdb_review --sufix sent_cat  --word2vec $vec_trained_fn --dict_fn ../../data/sent_cat.dic  --max_sens 40 --max_words 70 --padding 2 --exp_name $exp_name --max_iter 120 --batch_size 20 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn --top_k $k --static 
 done
