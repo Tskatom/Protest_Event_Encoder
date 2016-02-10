@@ -1,0 +1,4 @@
+{
+    "filter_hs": [1],
+    "hidden_units": [1000, 11]
+}

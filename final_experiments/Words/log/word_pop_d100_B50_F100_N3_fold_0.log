@@ -1,0 +1,10 @@
+Epoch 5 test perf 0.784520 with train cost 0.888894
+Epoch 10 test perf 0.822893 with train cost 0.618715
+Epoch 15 test perf 0.833716 with train cost 0.478443
+Epoch 20 test perf 0.839620 with train cost 0.362942
+Epoch 25 test perf 0.836668 with train cost 0.277765
+Epoch 30 test perf 0.838636 with train cost 0.205772
+Epoch 35 test perf 0.837980 with train cost 0.149427
+Epoch 40 test perf 0.834700 with train cost 0.111571
+Epoch 45 test perf 0.830108 with train cost 0.078083
+Epoch 50 test perf 0.832404 with train cost 0.055150

@@ -3,6 +3,8 @@
 
 """
 Convolution Neural Network for Event Encoding
+Encoding token position, and frequency information
+
 """
 
 __author__ = "Wei Wang"
@@ -20,7 +22,8 @@ import argparse
 import nn_layers as nn
 import logging
 import timeit
-from collections import OrderedDict
+from collections import OrderedDict, Counter
+import re
 
 #theano.config.profile = True
 #theano.config.profile_memory = True
@@ -81,15 +84,41 @@ def load_dataset(prefix, sufix):
     return dataset
 
 def doc_to_id(doc, word2id, max_len=700, padding=5):
+    # clean the doc first, remove those sentence with less than 5
+    sens = re.split("\.|\?|\|", doc.lower())
+    sens = [sen.strip() for sen in sens if len(sen.strip().split(" ")) > 5]
+    # construct the word sentence mapping
+    wid = 0
+    word2sid = []
+    for sid, sen in enumerate(sens):
+        for token in sen.split(" "):
+            if wid >= max_len:
+                break
+            word2sid.append((token, min(sid+1, 30)))
+            wid += 1
+    
     pad = padding - 1
-    tokens = doc.split(" ")
     doc_ids = [0] * pad
-    for w in tokens[:max_len]:
-        doc_ids.append(word2id.get(w, 1))
+    doc_sids = [0] * pad
+    for w, sid in word2sid[:max_len]:
+        doc_ids.append(word2id.get(w, 0))
+        doc_sids.append(sid)
         
-    num_suff = max([0, max_len - len(tokens)]) + pad
+    num_suff = max([0, max_len - len(word2sid)]) + pad
     doc_ids += [0] * num_suff
-    return doc_ids
+    doc_sids += [0] * num_suff
+
+    # compute the word frequency for each words
+    word_count = Counter(doc_ids)
+    doc_freqs = []
+    for id in doc_ids:
+        if id == 0:
+            doc_freqs.append(0) # padding
+        else:
+            doc_freqs.append(word_count[id] if word_count[id] <= 20 else 20)
+
+
+    return doc_ids, doc_freqs, doc_sids
 
 def transform_dataset(dataset, word2id, class2id, max_len=700, padding=5):
     """Transform the dataset into digits"""
@@ -97,13 +126,13 @@ def transform_dataset(dataset, word2id, class2id, max_len=700, padding=5):
     train_doc, train_class = train_set
     test_doc, test_class = test_set
     
-    train_doc_ids = [doc_to_id(doc, word2id, max_len, padding) for doc in train_doc]
-    test_doc_ids = [doc_to_id(doc, word2id, max_len, padding) for doc in test_doc]
+    train_doc_ids, train_doc_freqs, train_doc_sids = zip(*[doc_to_id(doc, word2id, max_len, padding) for doc in train_doc])
+    test_doc_ids, test_doc_freqs, test_doc_sids = zip(*[doc_to_id(doc, word2id, max_len, padding) for doc in test_doc])
 
     train_y = [class2id[c] for c in train_class]
     test_y = [class2id[c] for c in test_class]
 
-    return [(train_doc_ids, train_y), (test_doc_ids, test_y)]
+    return [(train_doc_ids, train_doc_freqs, train_doc_sids, train_y), (test_doc_ids, test_doc_freqs, test_doc_sids, test_y)]
 
 def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
         norm_lim=3, word_vec_name='embedding'):
@@ -162,7 +191,6 @@ def run_cnn(exp_name,
     
     """
     start_time = timeit.default_timer()
-    rng = np.random.RandomState(1234)
    
     input_height = len(dataset[0][0][0]) 
     print "--input height ", input_height 
@@ -173,28 +201,51 @@ def run_cnn(exp_name,
     # start snippet 1 #
     ###################
     print "start to construct the model ...."
-    x = T.matrix("x")
+    word_x = T.matrix("word_x")
+    freq_x = T.matrix("freq_x")
+    pos_x = T.matrix("pos_x")
+
     y = T.ivector("y")
 
     words = shared(value=np.asarray(embedding,
         dtype=theano.config.floatX), 
         name="embedding", borrow=True)
+    
+    sym_dim = 20
+    # the frequency embedding is 21 * 50 matrix
+    freq_val = np.random.random((21, sym_dim))
+    freqs = shared(value=np.asarray(freq_val, dtype=theano.config.floatX), borrow=True, name="freqs")
+
+    # the position embedding is 31 * 50 matrix
+    poss_val = np.random.random((31, sym_dim))
+    poss = shared(value=np.asarray(poss_val, dtype=theano.config.floatX), borrow=True, name="poss")
+    
 
     # define function to keep padding vector as zero
     zero_vector_tensor = T.vector()
     zero_vec = np.zeros(input_width, dtype=theano.config.floatX)
-    set_zero = function([zero_vector_tensor],
-            updates=[(words, T.set_subtensor(words[0,:], zero_vector_tensor))])
+    set_zero = function([zero_vector_tensor], updates=[(words, T.set_subtensor(words[0,:], zero_vector_tensor))])
 
-    layer0_input = words[T.cast(x.flatten(), dtype="int32")].reshape((
-        x.shape[0], 1, x.shape[1], emb_dm
-        ))
+    freq_zero_tensor = T.vector()
+    freq_zero_vec = np.zeros(sym_dim, dtype=theano.config.floatX)
+    freq_set_zero = function([freq_zero_tensor], updates=[(freqs, T.set_subtensor(freqs[0,:], freq_zero_tensor))])
+
+    pos_zero_tensor = T.vector()
+    pos_zero_vec = np.zeros(sym_dim, dtype=theano.config.floatX)
+    pos_set_zero = function([pos_zero_tensor], updates=[(poss, T.set_subtensor(poss[0,:], pos_zero_tensor))])
+
+
+    word_x_emb = words[T.cast(word_x.flatten(), dtype="int32")].reshape((word_x.shape[0], 1, word_x.shape[1], emb_dm))
+    freq_x_emb = freqs[T.cast(freq_x.flatten(), dtype="int32")].reshape((freq_x.shape[0], 1, freq_x.shape[1], sym_dim))
+    pos_x_emb = poss[T.cast(pos_x.flatten(), dtype="int32")].reshape((pos_x.shape[0], 1, pos_x.shape[1], sym_dim))
+
+    layer0_input = T.concatenate([word_x_emb, freq_x_emb, pos_x_emb], axis=3)
 
     conv_layers = []
     layer1_inputs = []
     
     for i in xrange(len(filter_hs)):
-        filter_shape = (num_maps, 1, filter_hs[i], emb_dm)
+        filter_shape = (num_maps, 1, filter_hs[i], emb_dm + sym_dim + sym_dim)
         pool_size = (input_height - filter_hs[i] + 1, 1)
         conv_layer = nn.ConvPoolLayer(rng, input=layer0_input, 
                 input_shape=None,
@@ -221,8 +272,9 @@ def run_cnn(exp_name,
     for conv_layer in conv_layers:
         params += conv_layer.params
 
-    if non_static:
-        params.append(words)
+    params.append(words)
+    params.append(freqs)
+    params.append(poss)
 
     cost = model.negative_log_likelihood(y)
     dropout_cost = model.dropout_negative_log_likelihood(y)
@@ -236,10 +288,9 @@ def run_cnn(exp_name,
     # Construct Dataset #
     #####################
     print "Copy data to GPU and constrct train/valid/test func"
-    np.random.seed(1234)
     
-    train_x, train_y = shared_dataset(dataset[0])
-    test_x, test_y = shared_dataset(dataset[1])
+    train_word_x, train_freq_x, train_pos_x, train_y = shared_dataset(dataset[0])
+    test_word_x, test_freq_x, test_pos_x, test_y = shared_dataset(dataset[1])
 
     n_train_batches = int(np.ceil(1.0 * len(dataset[0][0]) / batch_size))
     n_test_batches = int(np.ceil(1.0 * len(dataset[1][0]) / batch_size))
@@ -250,13 +301,17 @@ def run_cnn(exp_name,
     index = T.iscalar()
     train_func = function([index], cost, updates=grad_updates,
             givens={
-                x: train_x[index*batch_size:(index+1)*batch_size],
+                word_x: train_word_x[index*batch_size:(index+1)*batch_size],
+                freq_x: train_freq_x[index*batch_size:(index+1)*batch_size],
+                pos_x: train_pos_x[index*batch_size:(index+1)*batch_size],
                 y: train_y[index*batch_size:(index+1)*batch_size]
                 })
     
     test_pred = function([index], model.preds,
             givens={
-                x:test_x[index*batch_size:(index+1)*batch_size],
+                word_x:test_word_x[index*batch_size:(index+1)*batch_size],
+                freq_x:test_freq_x[index*batch_size:(index+1)*batch_size],
+                pos_x:test_pos_x[index*batch_size:(index+1)*batch_size]
                 })
 
     
@@ -277,8 +332,8 @@ def run_cnn(exp_name,
     log_file = open(log_fn, 'a')
 
     print "Start to train the model....."
-    cpu_trn_y = np.asarray(dataset[0][1])
-    cpu_tst_y = np.asarray(dataset[1][1])
+    cpu_trn_y = np.asarray(dataset[0][3])
+    cpu_tst_y = np.asarray(dataset[1][3])
 
     def compute_score(true_list, pred_list):
         mat = np.equal(true_list, pred_list)
@@ -293,7 +348,9 @@ def run_cnn(exp_name,
             cost_epoch = train_func(minibatch_index)
             costs.append(cost_epoch)
             set_zero(zero_vec)
-
+            freq_set_zero(freq_zero_vec)
+            pos_set_zero(pos_zero_vec)
+            
 
         if epoch % 5 == 0:
             # do test
@@ -316,13 +373,16 @@ def run_cnn(exp_name,
 
 
 def shared_dataset(data_xy, borrow=True):
-    data_x, data_y = data_xy
-    shared_x = theano.shared(np.asarray(data_x,
+    data_word_x, data_freq_x, data_pos_x, data_y = data_xy
+    shared_word_x = theano.shared(np.asarray(data_word_x,
         dtype=theano.config.floatX), borrow=borrow)
+    shared_freq_x = theano.shared(np.asarray(data_freq_x,
+        dtype=theano.config.floatX), borrow=borrow)
+    shared_pos_x = theano.shared(np.asarray(data_pos_x, dtype=theano.config.floatX), borrow=borrow)
 
     shared_y = theano.shared(np.asarray(data_y,
         dtype=theano.config.floatX), borrow=borrow)
-    return shared_x, T.cast(shared_y, 'int32')
+    return shared_word_x, shared_freq_x, shared_pos_x, T.cast(shared_y, 'int32')
 
 
 def main():
