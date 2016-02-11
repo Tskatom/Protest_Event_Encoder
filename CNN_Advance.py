@@ -179,7 +179,8 @@ def run_cnn(exp_name,
         lr_decay=0.95,
         activation=ReLU,
         sqr_norm_lim=9,
-        non_static=True):
+        non_static=True,
+        alpha=0.0001):
     """
     Train and Evaluate CNN event encoder model
     :dataset: list containing three elements[(train_x, train_y), 
@@ -276,8 +277,9 @@ def run_cnn(exp_name,
     params.append(freqs)
     params.append(poss)
 
-    cost = model.negative_log_likelihood(y)
-    dropout_cost = model.dropout_negative_log_likelihood(y)
+    cost = model.negative_log_likelihood(y) + alpha * model.L2
+    dropout_cost = model.dropout_negative_log_likelihood(y) + alpha * model.L2
+
     grad_updates = sgd_updates_adadelta(params, 
             dropout_cost, 
             lr_decay, 

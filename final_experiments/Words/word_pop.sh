@@ -5,7 +5,7 @@
 # generate vocab from training dataset
 prep_exe=../../util/prepText
 text_tool=../../util/tools.py
-model_exe=../../CNN_no_validation.py
+model_exe=../../CNN_Advance.py
 options="LowerCase UTF8 RemoveNumbers"
 max_num=100000
 min_word_count=5
@@ -23,9 +23,9 @@ pretrained_fn=/home/ubuntu/workspace/ssd/data/${word_dm}d_vectors_w2v.txt
 python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_random_fn --vec_trained_fn $vec_trained_fn --pretrained_fn $pretrained_fn --emb_dm $word_dm
 
 echo Start Training the model
-for i in `seq 0 4`;
+for i in `seq 1 4`;
 do
-exp_name=word_pop_d100_B50_F200_N23_fold_${i}
+exp_name=word_pop_d100_B50_F200_N23_fold_${i}_Advance
 log_fn=./log/${exp_name}.log
 perf_fn=./results/
 param_fn=./pop_param.json

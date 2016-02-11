@@ -25,7 +25,7 @@ python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_rando
 echo Start Training the model
 for dim in 100 200 300 500 1000 2000;
 do
-exp_name=word_pop_d100_B50_F${dim}_N23_fold_0_Advance
+exp_name=word_pop_d100_B50_F${dim}_N23_fold_0_Advance_L2
 log_fn=./log/${exp_name}.log
 perf_fn=./results/
 param_fn=./pop_param_d${dim}.json
