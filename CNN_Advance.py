@@ -243,7 +243,7 @@ def run_cnn(exp_name,
 
     conv_layers = []
     layer1_inputs = []
-    
+    rng = np.random.RandomState() 
     for i in xrange(len(filter_hs)):
         filter_shape = (num_maps, 1, filter_hs[i], emb_dm + sym_dim + sym_dim)
         pool_size = (input_height - filter_hs[i] + 1, 1)

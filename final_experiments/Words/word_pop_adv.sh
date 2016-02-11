@@ -23,9 +23,9 @@ pretrained_fn=/home/ubuntu/workspace/ssd/data/${word_dm}d_vectors_w2v.txt
 python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_random_fn --vec_trained_fn $vec_trained_fn --pretrained_fn $pretrained_fn --emb_dm $word_dm
 
 echo Start Training the model
-for dim in 200;
+for dim in 100 200 300 500 1000 2000;
 do
-exp_name=word_pop_d100_B50_F${dim}_N3_fold_0_Advance
+exp_name=word_pop_d100_B50_F${dim}_N23_fold_0_Advance
 log_fn=./log/${exp_name}.log
 perf_fn=./results/
 param_fn=./pop_param_d${dim}.json
