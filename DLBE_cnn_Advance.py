@@ -21,7 +21,9 @@ import nn_layers as nn
 import logging
 import timeit
 from collections import OrderedDict
-from CNN_Sen import split_doc2sen
+import re
+
+#from CNN_Sen import split_doc2sen
 
 #theano.config.profile = True
 #theano.config.profile_memory = True
@@ -95,6 +97,50 @@ def load_dataset(prefix, sufix_1, sufix_2):
         print "Load %d %s records" % (len(y1s), group)
     return dataset
 
+def split_doc2sen(doc, word2id, max_sens, max_words, padding):
+    sens = re.split("\.|\?|\|", doc.lower())
+    sens = [sen for sen in sens if len(sen.strip().split(" ")) > 5]
+    pad = padding
+    sens_pad = []
+    word_count = {}
+    doc_sids = []
+    for j, sen in enumerate(sens[:max_sens]):
+        sen_ids = [0] * pad
+        sid = [j + 1] * pad
+        tokens = sen.strip().split(" ")
+        for w in tokens[:max_words]:
+            sen_ids.append(word2id.get(w, 1))
+            sid.append(j + 1)
+        num_suff = max(0, max_words - len(tokens)) + pad
+        sen_ids += [0] * num_suff
+        sid += [j+1] * num_suff
+        sens_pad.append(sen_ids)
+        doc_sids.append(sid)
+    # add more padding sentence
+    num_suff = max(0, max_sens - len(sens))
+    for i in range(0, num_suff):
+        sid = [0] * len(sens_pad[0])
+        sen_ids = [0] * len(sens_pad[0])
+        sens_pad.append(sen_ids)
+        doc_sids.append(sid)
+
+    # compute the frequency
+    for sen in sens_pad:
+        for wid in sen:
+            if wid not in word_count:
+                word_count[wid] = 0
+            word_count[wid] += 1
+    doc_freqs = []
+    for sen in sens_pad:
+        doc_freq = []
+        for wid in sen:
+            if wid == 0:
+                doc_freq.append(0)
+            else:
+                doc_freq.append(word_count[wid] if word_count[wid] <= 20 else 20)
+        doc_freqs.append(doc_freq)
+
+    return sens_pad, doc_freqs, doc_sids
 
 def transform_dataset(dataset, word2id, class2id, max_sens=40, max_words=80, padding=5):
     """Transform the dataset into digits"""
@@ -102,8 +148,8 @@ def transform_dataset(dataset, word2id, class2id, max_sens=40, max_words=80, pad
     train_doc, train_pop_class, train_type_class = train_set
     test_doc, test_pop_class, test_type_class = test_set
     
-    train_doc_ids = [split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in train_doc]
-    test_doc_ids = [split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in test_doc]
+    train_doc_ids, train_doc_freqs, train_doc_sids = zip(*[split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in train_doc])
+    test_doc_ids, test_doc_freqs, test_doc_sids = zip(*[split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in test_doc])
 
     train_pop_y = [class2id["pop"][c] for c in train_pop_class]
     test_pop_y = [class2id["pop"][c] for c in test_pop_class]
@@ -111,7 +157,7 @@ def transform_dataset(dataset, word2id, class2id, max_sens=40, max_words=80, pad
     train_type_y = [class2id["type"][c] for c in train_type_class]
     test_type_y = [class2id["type"][c] for c in test_type_class]
 
-    return [(train_doc_ids, train_pop_y, train_type_y), (test_doc_ids, test_pop_y, test_type_y)]
+    return [(train_doc_ids, train_doc_freqs, train_doc_sids, train_pop_y, train_type_y), (test_doc_ids, test_doc_freqs, test_doc_sids, test_pop_y, test_type_y)]
 
 
 def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
@@ -203,7 +249,6 @@ def run_cnn(exp_name,
     input_height = len(dataset[0][0][0][0])
     num_sens = len(dataset[0][0][0])
     print "--input height ", input_height 
-    input_width = emb_dm
     num_maps = hidden_units[0]
 
     ###################
@@ -228,7 +273,7 @@ def run_cnn(exp_name,
 
     # define function to keep padding vector as zero
     zero_vector_tensor = T.vector()
-    zero_vec = np.zeros(input_width, dtype=theano.config.floatX)
+    zero_vec = np.zeros(emb_dm, dtype=theano.config.floatX)
     set_zero = function([zero_vector_tensor],
             updates=[(words, T.set_subtensor(words[0,:], zero_vector_tensor))])
 
@@ -254,7 +299,7 @@ def run_cnn(exp_name,
     layer1_inputs = []
 
     for i in xrange(len(filter_hs)):
-        filter_shape = (num_maps, 1, filter_hs[i], emb_dm)
+        filter_shape = (num_maps, 1, filter_hs[i], emb_dm + sym_dim + sym_dim)
         pool_size = (input_height - filter_hs[i] + 1, 1)
         conv_layer = nn.ConvPoolLayer(rng, input=layer0_input, 
                 input_shape=None,
@@ -338,7 +383,6 @@ def run_cnn(exp_name,
     # Construct Dataset #
     #####################
     print "Copy data to GPU and constrct train/valid/test func"
-    np.random.seed(1234)
     
     train_word_x, train_freq_x, train_pos_x, train_pop_y, train_type_y = shared_dataset(dataset[0])
     test_word_x, test_freq_x, test_pos_x, test_pop_y, test_type_y = shared_dataset(dataset[1])
@@ -368,15 +412,15 @@ def run_cnn(exp_name,
     
     test_sentence_est = function([index], final_sen_score,
             givens={
-                word_x: test_word_x[index*batch_size:(index+1)*batch_size]
-                freq_x: test_freq_x[index*batch_size:(index+1)*batch_size]
+                word_x: test_word_x[index*batch_size:(index+1)*batch_size],
+                freq_x: test_freq_x[index*batch_size:(index+1)*batch_size],
                 pos_x: test_pos_x[index*batch_size:(index+1)*batch_size]
                 })
     
     train_sentence_est = function([index], final_sen_score,
             givens={
-                word_x: train_word_x[index*batch_size:(index+1)*batch_size]
-                freq_x: train_freq_x[index*batch_size:(index+1)*batch_size]
+                word_x: train_word_x[index*batch_size:(index+1)*batch_size],
+                freq_x: train_freq_x[index*batch_size:(index+1)*batch_size],
                 pos_x: train_pos_x[index*batch_size:(index+1)*batch_size]
                 })
 
