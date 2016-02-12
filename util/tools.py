@@ -12,7 +12,10 @@ import numpy as np
 import cPickle
 import re
 import shutil
-from sklearn.feature_extraction.text import TfidfVectorizer
+try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+except:
+    print "Not install sklearn"
 
 def parse_args():
     ap = argparse.ArgumentParser()
