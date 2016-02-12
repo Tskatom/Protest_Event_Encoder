@@ -255,7 +255,9 @@ def run_cnn(exp_name,
     # start snippet 1 #
     ###################
     print "start to construct the model ...."
-    x = T.tensor3("x")
+    word_x = T.tensor3("x")
+    freq_x = T.tensor3("x")
+    pos_x = T.tensor3("x")
     y_type = T.ivector("y_type")
     y_pop = T.ivector("y_pop")
 
@@ -305,7 +307,7 @@ def run_cnn(exp_name,
                 input_shape=None,
                 filter_shape=filter_shape,
                 pool_size=pool_size, activation=activation)
-        sen_vecs = conv_layer.output.reshape((x.shape[0], 1, x.shape[1], num_maps))
+        sen_vecs = conv_layer.output.reshape((word_x.shape[0], 1, word_x.shape[1], num_maps))
         # construct multi-layer sentence vectors
 
         conv_layers.append(conv_layer)
@@ -459,6 +461,8 @@ def run_cnn(exp_name,
             cost_epoch = train_func(minibatch_index)
             costs.append(cost_epoch)
             set_zero(zero_vec)
+            freq_set_zero(freq_zero_vec)
+            pos_set_zero(pos_zero_vec)
         
 
         if epoch % print_freq == 0:
@@ -575,7 +579,7 @@ def main():
             n_epochs=n_epochs,
             lr_decay=0.95,
             activation=ReLU,
-            sqr_norm_lim=9,
+            sqr_norm_lim=3,
             non_static=non_static,
             print_freq=print_freq)
      
