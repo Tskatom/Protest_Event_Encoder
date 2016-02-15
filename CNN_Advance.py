@@ -102,7 +102,7 @@ def doc_to_id(doc, word2id, data_type, max_len=700, padding=5):
         for token in tokens:
             if wid >= max_len:
                 break
-            word2sid.append((token, min(sid+1, 30)))
+            word2sid.append((token.encode('utf-8'), min(sid+1, 30)))
             wid += 1
     
     pad = padding - 1
