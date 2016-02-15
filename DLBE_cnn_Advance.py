@@ -262,9 +262,9 @@ def run_cnn(exp_name,
     # start snippet 1 #
     ###################
     print "start to construct the model ...."
-    word_x = T.tensor3("x")
-    freq_x = T.tensor3("x")
-    pos_x = T.tensor3("x")
+    word_x = T.tensor3("word_x")
+    freq_x = T.tensor3("freq_x")
+    pos_x = T.tensor3("pos_x")
     y_type = T.ivector("y_type")
     y_pop = T.ivector("y_pop")
 
@@ -326,6 +326,7 @@ def run_cnn(exp_name,
     theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
             name="theta", borrow=True)
     weighted_sen_vecs, sen_score = keep_max(sen_vec, theta, k)
+    sen_score_cost = T.mean(T.sum(sen_score, axis=2).flatten(1))
     doc_vec = T.sum(weighted_sen_vecs, axis=2)
     layer1_input = doc_vec.flatten(2) 
     final_sen_score = sen_score.flatten(2)
@@ -369,8 +370,9 @@ def run_cnn(exp_name,
     type_cost = type_model.negative_log_likelihood(y_type)
     type_dropout_cost = type_model.dropout_negative_log_likelihood(y_type)
 
-    total_cost = cost + type_cost
-    total_dropout_cost = dropout_cost  + type_dropout_cost
+    gamma = as_floatX(0.01)
+    total_cost = cost + type_cost + gamma * sen_score_cost
+    total_dropout_cost = dropout_cost  + type_dropout_cost + gamma * sen_score_cost
     # using adagrad
     lr = 0.01
     """
