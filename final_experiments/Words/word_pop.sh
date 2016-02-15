@@ -25,10 +25,10 @@ python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_rando
 echo Start Training the model
 for i in `seq 1 4`;
 do
-exp_name=word_pop_d100_B50_F200_N23_fold_${i}_Advance
+exp_name=word_pop_d100_B50_F200_N23_fold_${i}_Advance_Auto
 log_fn=./log/${exp_name}.log
 perf_fn=./results/
 param_fn=./pop_param.json
-python $model_exe --prefix ../../data/single_label/${i}/spanish_protest --sufix pop_cat --word2vec $vec_trained_fn --dict_fn ../../data/pop_cat.dic --max_len 700 --padding 2 --exp_name $exp_name --max_iter 100 --batch_size 50 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn
+python $model_exe --prefix ../../data/new_single_label/${i}/spanish_protest --sufix pop_cat --word2vec $vec_trained_fn --dict_fn ../../data/pop_cat.dic --max_len 700 --padding 2 --exp_name $exp_name --max_iter 100 --batch_size 50 --log_fn $log_fn --perf_fn $perf_fn --param_fn $param_fn --data_type json
 done
 
