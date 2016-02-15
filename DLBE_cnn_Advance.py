@@ -22,7 +22,7 @@ import logging
 import timeit
 from collections import OrderedDict
 import re
-import from nltk import word_tokenize
+from nltk import word_tokenize
 
 #from CNN_Sen import split_doc2sen
 
@@ -79,6 +79,7 @@ def parse_args():
             help="the maximum of sentence to choose")
     ap.add_argument("--print_freq", type=int, default=5,
             help="the frequency of print frequency") 
+    ap.add_argument("--data_type", type=str, help="data input format")
     return ap.parse_args()
 
 def load_dataset(prefix, sufix_1, sufix_2):
@@ -103,8 +104,7 @@ def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
         sens = re.split("\.|\?|\|", doc.lower())
         sens = [sen for sen in sens if len(sen.strip().split(" ")) > 5]
     elif data_type == "json":
-        print "-----> Using Json"
-        sens = [sen.lower().encode('utf-8') for sen in json.loads(doc)]
+        sens = [sen.lower() for sen in json.loads(doc)]
         
     pad = padding
     sens_pad = []
@@ -116,7 +116,7 @@ def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
         #tokens = sen.strip().split(" ")
         tokens = word_tokenize(sen)
         for w in tokens[:max_words]:
-            sen_ids.append(word2id.get(w, 1))
+            sen_ids.append(word2id.get(w.encode('utf-8'), 1))
             sid.append(j + 1)
         num_suff = max(0, max_words - len(tokens)) + pad
         sen_ids += [0] * num_suff
@@ -155,8 +155,8 @@ def transform_dataset(dataset, word2id, class2id, data_type, max_sens=40, max_wo
     train_doc, train_pop_class, train_type_class = train_set
     test_doc, test_pop_class, test_type_class = test_set
     
-    train_doc_ids, train_doc_freqs, train_doc_sids = zip(*[split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in train_doc])
-    test_doc_ids, test_doc_freqs, test_doc_sids = zip(*[split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in test_doc])
+    train_doc_ids, train_doc_freqs, train_doc_sids = zip(*[split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding) for doc in train_doc])
+    test_doc_ids, test_doc_freqs, test_doc_sids = zip(*[split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding) for doc in test_doc])
 
     train_pop_y = [class2id["pop"][c] for c in train_pop_class]
     test_pop_y = [class2id["pop"][c] for c in test_pop_class]
@@ -499,10 +499,10 @@ def run_cnn(exp_name,
                 with open(score_file, "wb") as sm:
                     cPickle.dump(test_sen_score, sm)
                 
-                train_sen_score = [train_sentence_est(i) for i in xrange(n_train_batches)]
-                score_file = "./results/%s_%d_train.score" % (exp_name, epoch)
-                with open(score_file, "wb") as sm:
-                    cPickle.dump(train_sen_score, sm)
+                #train_sen_score = [train_sentence_est(i) for i in xrange(n_train_batches)]
+                #score_file = "./results/%s_%d_train.score" % (exp_name, epoch)
+                #with open(score_file, "wb") as sm:
+                    #cPickle.dump(train_sen_score, sm)
 
         end_time = timeit.default_timer()
         print "Finish one iteration using %f m" % ((end_time - start_time)/60.)
