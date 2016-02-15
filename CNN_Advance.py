@@ -24,6 +24,7 @@ import logging
 import timeit
 from collections import OrderedDict, Counter
 import re
+from nltk import word_tokenize
 
 #theano.config.profile = True
 #theano.config.profile_memory = True
@@ -66,6 +67,8 @@ def parse_args():
             help="folder to store predictions")
     ap.add_argument("--param_fn", type=str,
             help="sepcific local params")
+    ap.add_argument("--data_type", type=str, default="str",
+            help="the input data formart: String or Json")
     return ap.parse_args()
 
 def load_dataset(prefix, sufix):
@@ -83,15 +86,20 @@ def load_dataset(prefix, sufix):
         print "Load %d %s records" % (len(ys), group)
     return dataset
 
-def doc_to_id(doc, word2id, max_len=700, padding=5):
-    # clean the doc first, remove those sentence with less than 5
-    sens = re.split("\.|\?|\|", doc.lower())
-    sens = [sen.strip() for sen in sens if len(sen.strip().split(" ")) > 5]
+def doc_to_id(doc, word2id, data_type, max_len=700, padding=5):
+    if data_type == "str":
+        # clean the doc first, remove those sentence with less than 5
+        sens = re.split("\.|\?|\|", doc.lower())
+        sens = [sen.strip() for sen in sens if len(sen.strip().split(" ")) > 5]
+    elif data_type == "json":
+        sens = json.loads(doc)
+        sens = [sen.lower() for sen in sens]
     # construct the word sentence mapping
     wid = 0
     word2sid = []
     for sid, sen in enumerate(sens):
-        for token in sen.split(" "):
+        tokens = word_tokenize(sen)
+        for token in tokens:
             if wid >= max_len:
                 break
             word2sid.append((token, min(sid+1, 30)))
@@ -120,14 +128,14 @@ def doc_to_id(doc, word2id, max_len=700, padding=5):
 
     return doc_ids, doc_freqs, doc_sids
 
-def transform_dataset(dataset, word2id, class2id, max_len=700, padding=5):
+def transform_dataset(dataset, word2id, class2id, data_type="str",max_len=700, padding=5):
     """Transform the dataset into digits"""
     train_set, test_set = dataset
     train_doc, train_class = train_set
     test_doc, test_class = test_set
     
-    train_doc_ids, train_doc_freqs, train_doc_sids = zip(*[doc_to_id(doc, word2id, max_len, padding) for doc in train_doc])
-    test_doc_ids, test_doc_freqs, test_doc_sids = zip(*[doc_to_id(doc, word2id, max_len, padding) for doc in test_doc])
+    train_doc_ids, train_doc_freqs, train_doc_sids = zip(*[doc_to_id(doc, word2id, data_type, max_len, padding) for doc in train_doc])
+    test_doc_ids, test_doc_freqs, test_doc_sids = zip(*[doc_to_id(doc, word2id, data_type, max_len, padding) for doc in test_doc])
 
     train_y = [class2id[c] for c in train_class]
     test_y = [class2id[c] for c in test_class]
@@ -396,6 +404,7 @@ def main():
     batch_size = args.batch_size
     log_fn = args.log_fn
     perf_fn = args.perf_fn
+    data_type = args.data_type
 
     # load the dataset
     print 'Start loading the dataset ...'
@@ -411,7 +420,7 @@ def main():
     print 'Start to transform doc to digits'
     max_len = args.max_len
     padding = args.padding
-    digit_dataset = transform_dataset(dataset, word2id, class2id, max_len, padding)
+    digit_dataset = transform_dataset(dataset, word2id, class2id, data_type, max_len, padding)
 
     non_static = not args.static
     exp_name = args.exp_name
