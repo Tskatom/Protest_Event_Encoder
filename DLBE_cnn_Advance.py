@@ -22,6 +22,7 @@ import logging
 import timeit
 from collections import OrderedDict
 import re
+import from nltk import word_tokenize
 
 #from CNN_Sen import split_doc2sen
 
@@ -97,9 +98,14 @@ def load_dataset(prefix, sufix_1, sufix_2):
         print "Load %d %s records" % (len(y1s), group)
     return dataset
 
-def split_doc2sen(doc, word2id, max_sens, max_words, padding):
-    sens = re.split("\.|\?|\|", doc.lower())
-    sens = [sen for sen in sens if len(sen.strip().split(" ")) > 5]
+def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
+    if data_type == "str":
+        sens = re.split("\.|\?|\|", doc.lower())
+        sens = [sen for sen in sens if len(sen.strip().split(" ")) > 5]
+    elif data_type == "json":
+        print "-----> Using Json"
+        sens = [sen.lower().encode('utf-8') for sen in json.loads(doc)]
+        
     pad = padding
     sens_pad = []
     word_count = {}
@@ -107,7 +113,8 @@ def split_doc2sen(doc, word2id, max_sens, max_words, padding):
     for j, sen in enumerate(sens[:max_sens]):
         sen_ids = [0] * pad
         sid = [j + 1] * pad
-        tokens = sen.strip().split(" ")
+        #tokens = sen.strip().split(" ")
+        tokens = word_tokenize(sen)
         for w in tokens[:max_words]:
             sen_ids.append(word2id.get(w, 1))
             sid.append(j + 1)
@@ -142,7 +149,7 @@ def split_doc2sen(doc, word2id, max_sens, max_words, padding):
 
     return sens_pad, doc_freqs, doc_sids
 
-def transform_dataset(dataset, word2id, class2id, max_sens=40, max_words=80, padding=5):
+def transform_dataset(dataset, word2id, class2id, data_type, max_sens=40, max_words=80, padding=5):
     """Transform the dataset into digits"""
     train_set, test_set = dataset
     train_doc, train_pop_class, train_type_class = train_set
@@ -270,7 +277,7 @@ def run_cnn(exp_name,
     freq_val = np.random.random((21, sym_dim)).astype(theano.config.floatX)
     freqs = shared(value=freq_val, borrow=True, name="freqs")
 
-    pos_val = np.random.random((31, sym_dim)).astype(theano.config.floatX)
+    pos_val = np.random.random((21, sym_dim)).astype(theano.config.floatX)
     poss = shared(value=pos_val, borrow=True, name="poss")
 
     # define function to keep padding vector as zero
@@ -319,7 +326,7 @@ def run_cnn(exp_name,
     theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
             name="theta", borrow=True)
     weighted_sen_vecs, sen_score = keep_max(sen_vec, theta, k)
-    doc_vec = T.max(weighted_sen_vecs, axis=2)
+    doc_vec = T.sum(weighted_sen_vecs, axis=2)
     layer1_input = doc_vec.flatten(2) 
     final_sen_score = sen_score.flatten(2)
 
@@ -536,6 +543,7 @@ def main():
     perf_fn = args.perf_fn
     top_k = args.top_k
     print_freq = args.print_freq
+    data_type = args.data_type
 
     # load the dataset
     print 'Start loading the dataset ...'
@@ -556,7 +564,7 @@ def main():
     max_sens = args.max_sens
     max_words = args.max_words
     padding = args.padding
-    digit_dataset = transform_dataset(dataset, word2id, class2id, max_sens, max_words, padding)
+    digit_dataset = transform_dataset(dataset, word2id, class2id, data_type, max_sens, max_words, padding)
 
     non_static = not args.static
     exp_name = args.exp_name
