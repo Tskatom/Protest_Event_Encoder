@@ -25,7 +25,7 @@ pretrained_fn=/home/ubuntu/workspace/ssd/data/${word_dm}d_vectors_w2v.txt
 python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_random_fn --vec_trained_fn $vec_trained_fn --pretrained_fn $pretrained_fn --emb_dm $word_dm
 
 echo Start Training the model
-for i in `seq 0 4`;
+for i in `seq 1 4`;
 do
     exp_name=DLBE_MLT_w${word_dm}_k${k}_d${d}_fold_${i}_b100_N23_Advance_Auto_Sencost
     log_fn=./log/${exp_name}.log

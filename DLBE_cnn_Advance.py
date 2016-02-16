@@ -80,6 +80,8 @@ def parse_args():
     ap.add_argument("--print_freq", type=int, default=5,
             help="the frequency of print frequency") 
     ap.add_argument("--data_type", type=str, help="data input format")
+    ap.add_argument("--pop", action='store_true', help='population task')
+    ap.add_argument("--type", action='store_true', help='event type task')
     return ap.parse_args()
 
 def load_dataset(prefix, sufix_1, sufix_2):
@@ -110,6 +112,7 @@ def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
     sens_pad = []
     word_count = {}
     doc_sids = []
+    sent_mask = []
     for j, sen in enumerate(sens[:max_sens]):
         sen_ids = [0] * pad
         sid = [j + 1] * pad
@@ -123,6 +126,7 @@ def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
         sid += [j+1] * num_suff
         sens_pad.append(sen_ids)
         doc_sids.append(sid)
+        sent_mask.append(1)
     # add more padding sentence
     num_suff = max(0, max_sens - len(sens))
     for i in range(0, num_suff):
@@ -130,6 +134,7 @@ def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
         sen_ids = [0] * len(sens_pad[0])
         sens_pad.append(sen_ids)
         doc_sids.append(sid)
+        sent_mask.append(0)
 
     # compute the frequency
     for sen in sens_pad:
@@ -147,7 +152,7 @@ def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
                 doc_freq.append(word_count[wid] if word_count[wid] <= 20 else 20)
         doc_freqs.append(doc_freq)
 
-    return sens_pad, doc_freqs, doc_sids
+    return sens_pad, doc_freqs, doc_sids, sent_mask
 
 def transform_dataset(dataset, word2id, class2id, data_type, max_sens=40, max_words=80, padding=5):
     """Transform the dataset into digits"""
@@ -155,8 +160,8 @@ def transform_dataset(dataset, word2id, class2id, data_type, max_sens=40, max_wo
     train_doc, train_pop_class, train_type_class = train_set
     test_doc, test_pop_class, test_type_class = test_set
     
-    train_doc_ids, train_doc_freqs, train_doc_sids = zip(*[split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding) for doc in train_doc])
-    test_doc_ids, test_doc_freqs, test_doc_sids = zip(*[split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding) for doc in test_doc])
+    train_doc_ids, train_doc_freqs, train_doc_sids, train_sent_mask = zip(*[split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding) for doc in train_doc])
+    test_doc_ids, test_doc_freqs, test_doc_sids, test_sent_mask = zip(*[split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding) for doc in test_doc])
 
     train_pop_y = [class2id["pop"][c] for c in train_pop_class]
     test_pop_y = [class2id["pop"][c] for c in test_pop_class]
@@ -164,7 +169,7 @@ def transform_dataset(dataset, word2id, class2id, data_type, max_sens=40, max_wo
     train_type_y = [class2id["type"][c] for c in train_type_class]
     test_type_y = [class2id["type"][c] for c in test_type_class]
 
-    return [(train_doc_ids, train_doc_freqs, train_doc_sids, train_pop_y, train_type_y), (test_doc_ids, test_doc_freqs, test_doc_sids, test_pop_y, test_type_y)]
+    return [(train_doc_ids, train_doc_freqs, train_doc_sids, train_sent_mask, train_pop_y, train_type_y), (test_doc_ids, test_doc_freqs, test_doc_sids, test_sent_mask, test_pop_y, test_type_y)]
 
 
 def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
@@ -199,8 +204,10 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
     return updates
 
 
-def keep_max(input, theta, k):
+def keep_max(input, theta, k, sent_mask):
     sig_input = T.nnet.sigmoid(T.dot(input, theta))
+    sent_mask = sent_mask.dimshuffle(0, 'x', 1, 'x')
+    sig_input = sig_input * sent_mask
     #sig_input = T.dot(input, theta)
     if k == 0:
         result = input * T.addbroadcast(sig_input, 3)
@@ -239,7 +246,9 @@ def run_cnn(exp_name,
         activation=ReLU,
         sqr_norm_lim=9,
         non_static=True,
-        print_freq=5):
+        print_freq=5,
+        pop_flag=True,
+        type_flag=True):
     """
     Train and Evaluate CNN event encoder model
     :dataset: list containing three elements[(train_x, train_y), 
@@ -265,6 +274,7 @@ def run_cnn(exp_name,
     word_x = T.tensor3("word_x")
     freq_x = T.tensor3("freq_x")
     pos_x = T.tensor3("pos_x")
+    sent_x = T.matrix("sent_x")
     y_type = T.ivector("y_type")
     y_pop = T.ivector("y_pop")
 
@@ -325,7 +335,7 @@ def run_cnn(exp_name,
     theta_value = np.random.random((len(filter_hs) * num_maps, 1))
     theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
             name="theta", borrow=True)
-    weighted_sen_vecs, sen_score = keep_max(sen_vec, theta, k)
+    weighted_sen_vecs, sen_score = keep_max(sen_vec, theta, k, sent_x)
     sen_score_cost = T.mean(T.sum(sen_score, axis=2).flatten(1))
     doc_vec = T.sum(weighted_sen_vecs, axis=2)
     layer1_input = doc_vec.flatten(2) 
@@ -334,45 +344,58 @@ def run_cnn(exp_name,
     ##############
     # classifier pop#
     ##############
-    print "Construct classifier ...."
-    hidden_units[0] = num_maps * len(filter_hs)
-    model = nn.MLPDropout(rng,
-            input=layer1_input,
-            layer_sizes=hidden_units,
-            dropout_rates=[dropout_rate],
-            activations=[activation])
-
-    params = model.params
+    params = []
     for conv_layer in conv_layers:
         params += conv_layer.params
-
     params.append(theta)
+    params.append(words)
+    params.append(freqs)
+    params.append(poss)
+    
+    gamma = as_floatX(0.001)
+    beta1 = as_floatX(0.000)
+    beta2 = as_floatX(0.000)
+    total_cost = gamma * sen_score_cost 
+    total_dropout_cost = gamma * sen_score_cost
 
-    cost = model.negative_log_likelihood(y_pop)
-    dropout_cost = model.dropout_negative_log_likelihood(y_pop)
+    if pop_flag:
+        print "Construct classifier ...."
+        hidden_units[0] = num_maps * len(filter_hs)
+        model = nn.MLPDropout(rng,
+                input=layer1_input,
+                layer_sizes=hidden_units,
+                dropout_rates=[dropout_rate],
+                activations=[activation])
+
+        params += model.params
+
+        cost = model.negative_log_likelihood(y_pop)
+        dropout_cost = model.dropout_negative_log_likelihood(y_pop)
+
+        total_cost += cost + beta1 * model.L1
+        total_dropout_cost += dropout_cost + beta1 * model.L1
 
     #######################
     # classifier Type #####
     #######################
-    type_hidden_units = [num for num in hidden_units]
-    type_hidden_units[-1] = 5
-    type_model = nn.MLPDropout(rng,
-            input=layer1_input,
-            layer_sizes=type_hidden_units,
-            dropout_rates=[dropout_rate],
-            activations=[activation])
-    params += type_model.params
+    if type_flag:
+        type_hidden_units = [num for num in hidden_units]
+        type_hidden_units[0] = num_maps * len(filter_hs)     
+        type_hidden_units[-1] = 5
+        type_model = nn.MLPDropout(rng,
+                input=layer1_input,
+                layer_sizes=type_hidden_units,
+                dropout_rates=[dropout_rate],
+                activations=[activation])
+        params += type_model.params
 
-    params.append(words)
-    params.append(freqs)
-    params.append(poss)
+        type_cost = type_model.negative_log_likelihood(y_type)
+        type_dropout_cost = type_model.dropout_negative_log_likelihood(y_type)
+        
+        total_cost += type_cost + beta2 * type_model.L1
+        total_dropout_cost += type_dropout_cost + beta2 * type_model.L1
 
-    type_cost = type_model.negative_log_likelihood(y_type)
-    type_dropout_cost = type_model.dropout_negative_log_likelihood(y_type)
 
-    gamma = as_floatX(0.001)
-    total_cost = cost + type_cost + gamma * sen_score_cost
-    total_dropout_cost = dropout_cost  + type_dropout_cost + gamma * sen_score_cost
     # using adagrad
     lr = 0.01
     """
@@ -387,16 +410,21 @@ def run_cnn(exp_name,
             lr_decay,
             1e-6,
             sqr_norm_lim)
-    
-    total_preds = [model.preds, type_model.preds]
+   
+    if pop_flag and type_flag:
+        total_preds = [model.preds, type_model.preds]
+    elif pop_flag:
+        total_preds = model.preds
+    elif type_flag:
+        total_preds = type_model.preds
 
     #####################
     # Construct Dataset #
     #####################
     print "Copy data to GPU and constrct train/valid/test func"
     
-    train_word_x, train_freq_x, train_pos_x, train_pop_y, train_type_y = shared_dataset(dataset[0])
-    test_word_x, test_freq_x, test_pos_x, test_pop_y, test_type_y = shared_dataset(dataset[1])
+    train_word_x, train_freq_x, train_pos_x, train_sent_x, train_pop_y, train_type_y = shared_dataset(dataset[0])
+    test_word_x, test_freq_x, test_pos_x, test_sent_x, test_pop_y, test_type_y = shared_dataset(dataset[1])
 
     n_train_batches = int(np.ceil(1.0 * len(dataset[0][0]) / batch_size))
     n_test_batches = int(np.ceil(1.0 * len(dataset[1][0]) / batch_size))
@@ -410,6 +438,7 @@ def run_cnn(exp_name,
                 word_x: train_word_x[index*batch_size:(index+1)*batch_size],
                 freq_x: train_freq_x[index*batch_size:(index+1)*batch_size],
                 pos_x: train_pos_x[index*batch_size:(index+1)*batch_size],
+                sent_x:train_sent_x[index*batch_size:(index+1)*batch_size],
                 y_pop: train_pop_y[index*batch_size:(index+1)*batch_size],
                 y_type:train_type_y[index*batch_size:(index+1)*batch_size]
                 })
@@ -419,20 +448,23 @@ def run_cnn(exp_name,
                 word_x:test_word_x[index*batch_size:(index+1)*batch_size],
                 freq_x:test_freq_x[index*batch_size:(index+1)*batch_size],
                 pos_x:test_pos_x[index*batch_size:(index+1)*batch_size],
+                sent_x:test_sent_x[index*batch_size:(index+1)*batch_size]
                 })
     
     test_sentence_est = function([index], final_sen_score,
             givens={
                 word_x: test_word_x[index*batch_size:(index+1)*batch_size],
                 freq_x: test_freq_x[index*batch_size:(index+1)*batch_size],
-                pos_x: test_pos_x[index*batch_size:(index+1)*batch_size]
+                pos_x: test_pos_x[index*batch_size:(index+1)*batch_size],
+                sent_x:test_sent_x[index*batch_size:(index+1)*batch_size]
                 })
     
     train_sentence_est = function([index], final_sen_score,
             givens={
                 word_x: train_word_x[index*batch_size:(index+1)*batch_size],
                 freq_x: train_freq_x[index*batch_size:(index+1)*batch_size],
-                pos_x: train_pos_x[index*batch_size:(index+1)*batch_size]
+                pos_x: train_pos_x[index*batch_size:(index+1)*batch_size],
+                sent_x:train_sent_x[index*batch_size:(index+1)*batch_size]
                 })
 
 
@@ -476,25 +508,46 @@ def run_cnn(exp_name,
 
         if epoch % print_freq == 0:
             # do test
-            test_pop_preds, test_type_preds = map(np.concatenate, zip(*[test_pred(i) for i in xrange(n_test_batches)]))
-            test_pop_score = compute_score(cpu_tst_pop_y, test_pop_preds)
-            test_type_score = compute_score(cpu_tst_type_y, test_type_preds)
-            
-            with open(os.path.join(perf_fn, "%s_%d.pop_pred" % (exp_name, epoch)), 'w') as epf:
-                for p in test_pop_preds:
-                    epf.write("%d\n" % int(p))
+            if pop_flag and type_flag:
+                test_pop_preds, test_type_preds = map(np.concatenate, zip(*[test_pred(i) for i in xrange(n_test_batches)]))
+                test_pop_score = compute_score(cpu_tst_pop_y, test_pop_preds)
+                test_type_score = compute_score(cpu_tst_type_y, test_type_preds)
+                with open(os.path.join(perf_fn, "%s_%d.pop_pred" % (exp_name, epoch)), 'w') as epf:
+                    for p in test_pop_preds:
+                        epf.write("%d\n" % int(p))
 
-            with open(os.path.join(perf_fn, "%s_%d.type_pred" % (exp_name, epoch)), 'w') as epf:
-                for p in test_type_preds:
-                    epf.write("%d\n" % int(p))
-            
-            message = "Epoch %d test pop perf %f, type perf %f, with train cost %f" % (epoch, test_pop_score, test_type_score, np.mean(costs))
+                with open(os.path.join(perf_fn, "%s_%d.type_pred" % (exp_name, epoch)), 'w') as epf:
+                    for p in test_type_preds:
+                        epf.write("%d\n" % int(p))
+
+                message = "Epoch %d test pop perf %f, type perf %f, with train cost %f" % (epoch, test_pop_score, test_type_score, np.mean(costs))
+                evl_score = test_pop_score + test_type_score
+
+            elif pop_flag:
+                test_pop_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
+                test_pop_score = compute_score(cpu_tst_pop_y, test_pop_preds)
+                with open(os.path.join(perf_fn, "%s_%d.pop_pred" % (exp_name, epoch)), 'w') as epf:
+                    for p in test_pop_preds:
+                        epf.write("%d\n" % int(p))
+                message = "Epoch %d test pop perf %f, with train cost %f" % (epoch, test_pop_score,  np.mean(costs))
+                evl_score = test_pop_score
+
+            elif type_flag:
+                test_type_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
+                test_type_score = compute_score(cpu_tst_type_y, test_type_preds)
+                with open(os.path.join(perf_fn, "%s_%d.type_pred" % (exp_name, epoch)), 'w') as epf:
+                    for p in test_type_preds:
+                        epf.write("%d\n" % int(p))
+
+                message = "Epoch %d test Type perf %f, with train cost %f" % (epoch, test_type_score,  np.mean(costs))
+                evl_score = test_type_score
+
             print message
             log_file.write(message + "\n")
             log_file.flush()
 
-            if ((test_pop_score + test_type_score) > total_score) or (epoch % 15 == 0):
-                total_score = test_pop_score + test_type_score
+            if (evl_score > total_score) or (epoch % 15 == 0):
+                total_score = evl_score
                 # save the sentence score
                 test_sen_score = [test_sentence_est(i) for i in xrange(n_test_batches)]
                 score_file = "./results/%s_%d_test.score" % (exp_name, epoch)
@@ -514,7 +567,7 @@ def run_cnn(exp_name,
 
 
 def shared_dataset(data_xyz, borrow=True):
-    data_word_x, data_freq_x, data_pos_x, data_y, data_z = data_xyz
+    data_word_x, data_freq_x, data_pos_x, data_sent_x, data_y, data_z = data_xyz
     shared_word_x = theano.shared(np.asarray(data_word_x,
         dtype=theano.config.floatX), borrow=borrow)
 
@@ -523,6 +576,9 @@ def shared_dataset(data_xyz, borrow=True):
 
     shared_pos_x = theano.shared(np.asarray(data_pos_x,
         dtype=theano.config.floatX), borrow=borrow)
+
+    shared_sent_x = theano.shared(np.asarray(data_sent_x, dtype=theano.config.floatX),
+            borrow=True)
 
     shared_y = theano.shared(np.asarray(data_y,
         dtype=theano.config.floatX), borrow=borrow)
