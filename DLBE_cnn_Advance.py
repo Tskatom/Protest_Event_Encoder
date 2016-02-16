@@ -370,7 +370,7 @@ def run_cnn(exp_name,
     type_cost = type_model.negative_log_likelihood(y_type)
     type_dropout_cost = type_model.dropout_negative_log_likelihood(y_type)
 
-    gamma = as_floatX(0.01)
+    gamma = as_floatX(5.00)
     total_cost = cost + type_cost + gamma * sen_score_cost
     total_dropout_cost = dropout_cost  + type_dropout_cost + gamma * sen_score_cost
     # using adagrad
@@ -488,7 +488,7 @@ def run_cnn(exp_name,
                 for p in test_type_preds:
                     epf.write("%d\n" % int(p))
             
-            message = "Epoch %d test pop perf %f, type perf %f" % (epoch, test_pop_score, test_type_score)
+            message = "Epoch %d test pop perf %f, type perf %f, with train cost %f" % (epoch, test_pop_score, test_type_score, np.mean(costs))
             print message
             log_file.write(message + "\n")
             log_file.flush()

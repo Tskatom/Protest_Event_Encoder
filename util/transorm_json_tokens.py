@@ -9,8 +9,8 @@ import os
 import json
 from nltk import word_tokenize
 
-infile = "../data/new_single_label/spanish_protest.txt.tok"
-outfile = "../data/new_single_label/spanish_protest.tokens"
+infile = "/home/ubuntu/workspace/Protest_Event_Encoder/data/new_single_label/spanish_protest.txt.tok"
+outfile = "/home/ubuntu/workspace/Protest_Event_Encoder/data/new_single_label/spanish_protest.tokens"
 
 with open(infile) as in_file, open(outfile, 'w') as otf:
     for line in in_file:
