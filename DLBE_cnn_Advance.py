@@ -370,7 +370,7 @@ def run_cnn(exp_name,
     type_cost = type_model.negative_log_likelihood(y_type)
     type_dropout_cost = type_model.dropout_negative_log_likelihood(y_type)
 
-    gamma = as_floatX(5.00)
+    gamma = as_floatX(0.001)
     total_cost = cost + type_cost + gamma * sen_score_cost
     total_dropout_cost = dropout_cost  + type_dropout_cost + gamma * sen_score_cost
     # using adagrad
