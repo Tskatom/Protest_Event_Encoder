@@ -133,7 +133,7 @@ def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
         sen_ids = [0] * len(sens_pad[0])
         sens_pad.append(sen_ids)
         doc_sids.append(sid)
-        sent_mask.append(1)
+        sent_mask.append(0)
 
     # compute the frequency
     for sen in sens_pad:
@@ -350,7 +350,7 @@ def run_cnn(exp_name,
     params.append(freqs)
     params.append(poss)
     
-    gamma = as_floatX(0.005)
+    gamma = as_floatX(0.0005)
     beta1 = as_floatX(0.000)
     total_cost = gamma * sen_score_cost 
     total_dropout_cost = gamma * sen_score_cost
