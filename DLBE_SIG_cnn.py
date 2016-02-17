@@ -22,8 +22,9 @@ import logging
 import timeit
 from collections import OrderedDict
 import re
-from theano.tensor.signal.downsample import DownsampleFactorMax
-from theano.tensor.signal.downsample import DownsampleFactorMaxGrad
+from nltk import word_tokenize
+
+#from CNN_Sen import split_doc2sen
 
 #theano.config.profile = True
 #theano.config.profile_memory = True
@@ -45,21 +46,21 @@ def parse_args():
             help="the prefix for input data such as spanish_protest")
     ap.add_argument('--word2vec', type=str,
             help="word vector pickle file")
-    ap.add_argument('--sufix', type=str,
+    ap.add_argument('--sufix_pop', type=str,
             help="the sufix for the target file")
-    ap.add_argument('--dict_fn', type=str,
-            help='class dictionary')
+    ap.add_argument('--sufix_type', type=str,
+            help="the sufix for the target file")
+    ap.add_argument('--dict_pop_fn', type=str,
+            help='population class dictionary')
+    ap.add_argument('--dict_type_fn', type=str,
+            help='event type class dictionary')
     ap.add_argument('--max_len', type=int,
             help='the max length for doc used for mini-batch')
-    ap.add_argument('--max_sens', type=int, default=40,
-            help='the max number of sentences for each doc')
-    ap.add_argument('--max_words', type=int, default=80,
-            help='the max number of words for each sentence')
     ap.add_argument("--padding", type=int,
             help="the number of padding used to add begin and end doc")
     ap.add_argument("--exp_name", type=str,
             help="experiment name")
-    ap.add_argument("--static", action="store_true",
+    ap.add_argument("--static", action="store_true", 
             help="whether update word2vec")
     ap.add_argument("--max_iter", type=int,
             help="max iterations")
@@ -70,13 +71,19 @@ def parse_args():
             help="folder to store predictions")
     ap.add_argument("--param_fn", type=str,
             help="sepcific local params")
+    ap.add_argument("--max_sens", type=int, default=40,
+            help="the max number of sens in a document")
+    ap.add_argument("--max_words", type=int, default=80,
+            help="the max number of sentences for each sentence")
     ap.add_argument("--top_k", type=int, default=0,
             help="the maximum of sentence to choose")
     ap.add_argument("--print_freq", type=int, default=5,
-            help="the frequency of print frequency")
+            help="the frequency of print frequency") 
+    ap.add_argument("--data_type", type=str, help="data input format")
+    ap.add_argument("--flag", type=str, help="prediction type")
     return ap.parse_args()
 
-def load_dataset(prefix, sufix):
+def load_dataset(prefix, sufix_1, sufix_2):
     """Load the train/valid/test set
         prefix eg: ../data/spanish_protest
         sufix eg: pop_cat
@@ -84,55 +91,84 @@ def load_dataset(prefix, sufix):
     dataset = []
     for group in ["train", "test"]:
         x_fn = "%s_%s.txt.tok" % (prefix, group)
-        y_fn = "%s_%s.%s" % (prefix, group, sufix)
+        y1_fn = "%s_%s.%s" % (prefix, group, sufix_1)
+        y2_fn = "%s_%s.%s" % (prefix, group, sufix_2)
         xs = [l.strip() for l in open(x_fn)]
-        ys = [l.strip() for l in open(y_fn)]
-        dataset.append((xs, ys))
-        print "Load %d %s records" % (len(ys), group)
+        y1s = [l.strip() for l in open(y1_fn)]
+        y2s = [l.strip() for l in open(y2_fn)]
+        dataset.append((xs, y1s, y2s))
+        print "Load %d %s records" % (len(y1s), group)
     return dataset
 
-def split_doc2sen(doc, word2id, max_sens=40, max_words=80, padding=5):
-    """
-        doc is the raw text where words are seperated by space
-    """
-    sens = re.split("\.", doc.lower())
-    # reduce those sens which has length less than 5
-    sens = [sen for sen in sens if len(sen.strip().split(" ")) > 5]
-    pad = padding - 1
+def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
+    if data_type == "str":
+        sens = re.split("\.|\?|\|", doc.lower())
+        sens = [sen for sen in sens if len(sen.strip().split(" ")) > 5]
+    elif data_type == "json":
+        sens = [sen.lower() for sen in json.loads(doc)]
+        
+    pad = padding
     sens_pad = []
-    for sen in sens[:max_sens]:
-        tokens = sen.strip().split(" ")
+    word_count = {}
+    doc_sids = []
+    sent_mask = []
+    for j, sen in enumerate(sens[:max_sens]):
         sen_ids = [0] * pad
+        sid = [j + 1] * pad
+        #tokens = sen.strip().split(" ")
+        tokens = word_tokenize(sen)
         for w in tokens[:max_words]:
-            sen_ids.append(word2id.get(w, 1))
+            sen_ids.append(word2id.get(w.encode('utf-8'), 1))
+            sid.append(j + 1)
         num_suff = max(0, max_words - len(tokens)) + pad
         sen_ids += [0] * num_suff
+        sid += [j+1] * num_suff
         sens_pad.append(sen_ids)
-    
+        doc_sids.append(sid)
+        sent_mask.append(1)
     # add more padding sentence
     num_suff = max(0, max_sens - len(sens))
     for i in range(0, num_suff):
+        sid = [0] * len(sens_pad[0])
         sen_ids = [0] * len(sens_pad[0])
         sens_pad.append(sen_ids)
+        doc_sids.append(sid)
+        sent_mask.append(1)
 
-    return sens_pad
+    # compute the frequency
+    for sen in sens_pad:
+        for wid in sen:
+            if wid not in word_count:
+                word_count[wid] = 0
+            word_count[wid] += 1
+    doc_freqs = []
+    for sen in sens_pad:
+        doc_freq = []
+        for wid in sen:
+            if wid == 0:
+                doc_freq.append(0)
+            else:
+                doc_freq.append(word_count[wid] if word_count[wid] <= 20 else 20)
+        doc_freqs.append(doc_freq)
 
+    return sens_pad, doc_freqs, doc_sids, sent_mask
 
-def transform_dataset(dataset, word2id, class2id, max_sens=40, max_words=80, padding=5):
-    """Transform the dataset into digits
-    the final doc is a list of list(list of sentence which is a list of word)
-    """
+def transform_dataset(dataset, word2id, class2id, data_type, max_sens=40, max_words=80, padding=5):
+    """Transform the dataset into digits"""
     train_set, test_set = dataset
-    train_doc, train_class = train_set
-    test_doc, test_class = test_set
+    train_doc, train_pop_class, train_type_class = train_set
+    test_doc, test_pop_class, test_type_class = test_set
     
-    train_doc_ids = [split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in train_doc]
-    test_doc_ids = [split_doc2sen(doc, word2id, max_sens, max_words, padding) for doc in test_doc]
+    train_doc_ids, train_doc_freqs, train_doc_sids, train_sent_mask = zip(*[split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding) for doc in train_doc])
+    test_doc_ids, test_doc_freqs, test_doc_sids, test_sent_mask = zip(*[split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding) for doc in test_doc])
 
-    train_y = [class2id[c] for c in train_class]
-    test_y = [class2id[c] for c in test_class]
+    train_pop_y = [class2id["pop"][c] for c in train_pop_class]
+    test_pop_y = [class2id["pop"][c] for c in test_pop_class]
+    
+    train_type_y = [class2id["type"][c] for c in train_type_class]
+    test_type_y = [class2id["type"][c] for c in test_type_class]
 
-    return [(train_doc_ids, train_y), (test_doc_ids, test_y)]
+    return [(train_doc_ids, train_doc_freqs, train_doc_sids, train_sent_mask, train_pop_y, train_type_y), (test_doc_ids, test_doc_freqs, test_doc_sids, test_sent_mask, test_pop_y, test_type_y)]
 
 
 def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
@@ -143,9 +179,9 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
     gparams = [] 
     for param in params:
         empty = np.zeros_like(param.get_value())
-        exp_sqr_grads[param] = theano.shared(value=as_floatX(empty),name="exp_grad_%s" % param.name, borrow=True)
+        exp_sqr_grads[param] = theano.shared(value=as_floatX(empty),name="exp_grad_%s" % param.name)
         gp = T.grad(cost, param)
-        exp_sqr_ups[param] = theano.shared(value=as_floatX(empty), name="exp_grad_%s" % param.name, borrow=True)
+        exp_sqr_ups[param] = theano.shared(value=as_floatX(empty), name="exp_grad_%s" % param.name)
         gparams.append(gp)
 
     for param, gp in zip(params, gparams):
@@ -166,24 +202,13 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
             updates[param] = stepped_param
     return updates
 
-def max_pool_2d_same_size(input, patch_size):
-    output = DownsampleFactorMax(patch_size, True)(input)
-    outs = DownsampleFactorMaxGrad(patch_size, True)(input, output, output)
-    return outs
 
-def keep_max(input, theta, k):
-    """
-    :type input: theano.tensor.tensor4
-    :param input: the input data
-                
-    :type theta: theano.tensor.matrix
-    :param theta: the parameter for sigmoid function
-                            
-    :type k: int 
-    :param k: the number k used to define top k sentence to remain
-    """
+def keep_max(input, theta, k, sent_mask):
     sig_input = T.nnet.sigmoid(T.dot(input, theta))
-    if k == 0: # using all the sentences
+    sent_mask = sent_mask.dimshuffle(0, 'x', 1, 'x')
+    sig_input = sig_input * sent_mask
+    #sig_input = T.dot(input, theta)
+    if k == 0:
         result = input * T.addbroadcast(sig_input, 3)
         return result, sig_input
 
@@ -197,14 +222,13 @@ def keep_max(input, theta, k):
     rowids = k_max_ids.flatten()
     colids = T.arange(dim3).reshape((1, dim3))
     colids = T.repeat(colids, dim0*dim1*dim2, axis=0).flatten()
-    # construct masked data
     sig_mask = T.zeros_like(sig_input)
     choosed = sig_input[batchids, mapids, rowids, colids]
     sig_mask = T.set_subtensor(sig_mask[batchids, mapids, rowids, colids], 1)
-
     input_mask = sig_mask * sig_input
     result = input * T.addbroadcast(input_mask, 3)
     return result, sig_input
+
 
 def run_cnn(exp_name,
         dataset, embedding,
@@ -221,7 +245,9 @@ def run_cnn(exp_name,
         activation=ReLU,
         sqr_norm_lim=9,
         non_static=True,
-        print_freq=5):
+        print_freq=5,
+        flag="pop"
+        ):
     """
     Train and Evaluate CNN event encoder model
     :dataset: list containing three elements[(train_x, train_y), 
@@ -235,86 +261,101 @@ def run_cnn(exp_name,
     start_time = timeit.default_timer()
     rng = np.random.RandomState(1234)
    
-    input_height = len(dataset[0][0][0][0]) # number of words in the sentences
-    num_sens = len(dataset[0][0][0]) # number of sentences
+    input_height = len(dataset[0][0][0][0])
+    num_sens = len(dataset[0][0][0])
     print "--input height ", input_height 
-    input_width = emb_dm
     num_maps = hidden_units[0]
 
     ###################
     # start snippet 1 #
     ###################
     print "start to construct the model ...."
-    x = T.tensor3("x")
+    word_x = T.tensor3("word_x")
+    freq_x = T.tensor3("freq_x")
+    pos_x = T.tensor3("pos_x")
+    sent_x = T.matrix("sent_x")
     y = T.ivector("y")
 
     words = shared(value=np.asarray(embedding,
         dtype=theano.config.floatX), 
         name="embedding", borrow=True)
 
+    sym_dim = 20
+    # the frequency embedding is 21 * sym_dim matrix
+    freq_val = np.random.random((21, sym_dim)).astype(theano.config.floatX)
+    freqs = shared(value=freq_val, borrow=True, name="freqs")
+
+    pos_val = np.random.random((21, sym_dim)).astype(theano.config.floatX)
+    poss = shared(value=pos_val, borrow=True, name="poss")
+
     # define function to keep padding vector as zero
     zero_vector_tensor = T.vector()
-    zero_vec = np.zeros(input_width, dtype=theano.config.floatX)
+    zero_vec = np.zeros(emb_dm, dtype=theano.config.floatX)
     set_zero = function([zero_vector_tensor],
             updates=[(words, T.set_subtensor(words[0,:], zero_vector_tensor))])
 
-    # the input for the sentence level conv layers
+    freq_zero_tensor = T.vector()
+    freq_zero_vec = np.zeros(sym_dim, dtype=theano.config.floatX)
+    freq_set_zero = function([freq_zero_tensor], updates=[(freqs, T.set_subtensor(freqs[0,:], freq_zero_tensor))])
+
+    pos_zero_tensor = T.vector()
+    pos_zero_vec = np.zeros(sym_dim, dtype=theano.config.floatX)
+    pos_set_zero = function([pos_zero_tensor], updates=[(poss, T.set_subtensor(poss[0,:], pos_zero_tensor))])
+    
+    word_x_emb = words[T.cast(word_x.flatten(), dtype="int32")].reshape((word_x.shape[0] * word_x.shape[1], 1, word_x.shape[2], emb_dm))
+    freq_x_emb = freqs[T.cast(freq_x.flatten(), dtype="int32")].reshape((freq_x.shape[0] * freq_x.shape[1], 1, freq_x.shape[2], sym_dim))
+    pos_x_emb = poss[T.cast(pos_x.flatten(), dtype="int32")].reshape((pos_x.shape[0]*pos_x.shape[1], 1, pos_x.shape[2], sym_dim))
+    
+    """
     layer0_input = words[T.cast(x.flatten(), dtype="int32")].reshape((
         x.shape[0] * x.shape[1], 1, x.shape[2], emb_dm
         ))
-
+    """
+    layer0_input = T.concatenate([word_x_emb, freq_x_emb, pos_x_emb], axis=3)
     conv_layers = []
     layer1_inputs = []
-    
-    thetas = [] # the gate function parameters
-    sentence_scores = []
 
     for i in xrange(len(filter_hs)):
-        filter_shape = (num_maps, 1, filter_hs[i], emb_dm)
+        filter_shape = (num_maps, 1, filter_hs[i], emb_dm + sym_dim + sym_dim)
         pool_size = (input_height - filter_hs[i] + 1, 1)
         conv_layer = nn.ConvPoolLayer(rng, input=layer0_input, 
                 input_shape=None,
                 filter_shape=filter_shape,
                 pool_size=pool_size, activation=activation)
-        
-        sen_vecs = conv_layer.output.reshape((x.shape[0], 1, x.shape[1], num_maps))
-        
-        # construct gate parameters
-        theta_value = np.random.random((num_maps, 1))
-        theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
-                name="theta", borrow=True)
+        sen_vecs = conv_layer.output.reshape((word_x.shape[0], 1, word_x.shape[1], num_maps))
+        # construct multi-layer sentence vectors
 
-        # keep the top k score and set all others to 0
-        weighted_sen_vecs, sen_score = keep_max(sen_vecs, theta, k)
-        # reduce sentence score to 2 dim
-        sentence_scores.append(sen_score.flatten(2))
-        # sum all sentences together to get document vector
-        doc_vec = T.sum(weighted_sen_vecs, axis=2)
-        layer1_input = doc_vec.flatten(2)
         conv_layers.append(conv_layer)
-        layer1_inputs.append(layer1_input)
-        thetas.append(theta)
-
-        """
-        doc_filter_shape = (num_maps, 1, 2, num_maps)
-        doc_pool_size = (num_sens - 2 + 1, 1)
-        doc_conv_layer = nn.ConvPoolLayer(rng, input=sen_vecs, 
-                input_shape=None,
-                filter_shape=doc_filter_shape,
-                pool_size=doc_pool_size,
-                activation=activation)
-        layer1_input = doc_conv_layer.output.flatten(2)
-        conv_layers.append(conv_layer)
-        conv_layers.append(doc_conv_layer)
-
-        layer1_inputs.append(layer1_input)
-        """
+        layer1_inputs.append(sen_vecs)
     
-    layer1_input = T.concatenate(layer1_inputs, 1)
-    final_sen_score = T.concatenate(sentence_scores, 1)
+    sen_vec = T.concatenate(layer1_inputs, 3)
+    # score the sentences
+    theta_value = np.random.random((len(filter_hs) * num_maps, 1))
+    theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
+            name="theta", borrow=True)
+    weighted_sen_vecs, sen_score = keep_max(sen_vec, theta, k, sent_x)
+    sen_score_cost = T.mean(T.sum(sen_score, axis=2).flatten(1))
+    doc_vec = T.sum(weighted_sen_vecs, axis=2)
+    layer1_input = doc_vec.flatten(2) 
+    final_sen_score = sen_score.flatten(2)
+
     ##############
-    # classifier #
+    # classifier pop#
     ##############
+    params = []
+    for conv_layer in conv_layers:
+        params += conv_layer.params
+    params.append(theta)
+    params.append(words)
+    params.append(freqs)
+    params.append(poss)
+    
+    gamma = as_floatX(0.005)
+    beta1 = as_floatX(0.000)
+    total_cost = gamma * sen_score_cost 
+    total_dropout_cost = gamma * sen_score_cost
+
+
     print "Construct classifier ...."
     hidden_units[0] = num_maps * len(filter_hs)
     model = nn.MLPDropout(rng,
@@ -323,32 +364,44 @@ def run_cnn(exp_name,
             dropout_rates=[dropout_rate],
             activations=[activation])
 
-    params = model.params
-    for conv_layer in conv_layers:
-        params += conv_layer.params
-    
-    params += thetas
-
-    if non_static:
-        params.append(words)
+    params += model.params
 
     cost = model.negative_log_likelihood(y)
     dropout_cost = model.dropout_negative_log_likelihood(y)
-    grad_updates = sgd_updates_adadelta(params, 
-            dropout_cost, 
-            lr_decay, 
-            1e-6, 
+
+    total_cost += cost + beta1 * model.L1
+    total_dropout_cost += dropout_cost + beta1 * model.L1
+
+
+
+    # using adagrad
+    lr = 0.01
+    """
+    total_grad_updates = nn.optimizer(total_dropout_cost,
+            params,
+            lr,
+            method="adadelta"
+            )
+    """
+    total_grad_updates = sgd_updates_adadelta(params, 
+            total_dropout_cost,
+            lr_decay,
+            1e-6,
             sqr_norm_lim)
-    errors = model.errors(y)
+   
 
     #####################
     # Construct Dataset #
     #####################
     print "Copy data to GPU and constrct train/valid/test func"
-    np.random.seed(1234)
     
-    train_x, train_y = shared_dataset(dataset[0])
-    test_x, test_y = shared_dataset(dataset[1])
+    train_word_x, train_freq_x, train_pos_x, train_sent_x, train_pop_y, train_type_y = shared_dataset(dataset[0])
+    test_word_x, test_freq_x, test_pos_x, test_sent_x, test_pop_y, test_type_y = shared_dataset(dataset[1])
+
+    if flag == "pop":
+        train_y = train_pop_y
+    elif flag == "type":
+        train_y = train_type_y
 
     n_train_batches = int(np.ceil(1.0 * len(dataset[0][0]) / batch_size))
     n_test_batches = int(np.ceil(1.0 * len(dataset[1][0]) / batch_size))
@@ -357,34 +410,40 @@ def run_cnn(exp_name,
     # Train model func #
     #####################
     index = T.iscalar()
-    train_func = function([index], cost, updates=grad_updates,
+    train_func = function([index], total_cost, updates=total_grad_updates,
             givens={
-                x: train_x[index*batch_size:(index+1)*batch_size],
-                y: train_y[index*batch_size:(index+1)*batch_size]
-                })
-    train_error = function([index], errors,
-            givens={
-                x: train_x[index*batch_size:(index+1)*batch_size],
-                y: train_y[index*batch_size:(index+1)*batch_size]
+                word_x: train_word_x[index*batch_size:(index+1)*batch_size],
+                freq_x: train_freq_x[index*batch_size:(index+1)*batch_size],
+                pos_x: train_pos_x[index*batch_size:(index+1)*batch_size],
+                sent_x:train_sent_x[index*batch_size:(index+1)*batch_size],
+                y: train_y[index*batch_size:(index+1)*batch_size],
                 })
     
-
-    train_pred = function([index], model.preds, 
-            givens={
-                x: train_x[index*batch_size:(index+1)*batch_size]
-                })
-
-
     test_pred = function([index], model.preds,
             givens={
-                x:test_x[index*batch_size:(index+1)*batch_size],
+                word_x:test_word_x[index*batch_size:(index+1)*batch_size],
+                freq_x:test_freq_x[index*batch_size:(index+1)*batch_size],
+                pos_x:test_pos_x[index*batch_size:(index+1)*batch_size],
+                sent_x:test_sent_x[index*batch_size:(index+1)*batch_size]
                 })
     
     test_sentence_est = function([index], final_sen_score,
             givens={
-                x: test_x[index*batch_size:(index+1)*batch_size]
+                word_x: test_word_x[index*batch_size:(index+1)*batch_size],
+                freq_x: test_freq_x[index*batch_size:(index+1)*batch_size],
+                pos_x: test_pos_x[index*batch_size:(index+1)*batch_size],
+                sent_x:test_sent_x[index*batch_size:(index+1)*batch_size]
                 })
     
+    train_sentence_est = function([index], final_sen_score,
+            givens={
+                word_x: train_word_x[index*batch_size:(index+1)*batch_size],
+                freq_x: train_freq_x[index*batch_size:(index+1)*batch_size],
+                pos_x: train_pos_x[index*batch_size:(index+1)*batch_size],
+                sent_x:train_sent_x[index*batch_size:(index+1)*batch_size]
+                })
+
+
     # apply early stop strategy
     patience = 100
     patience_increase = 2
@@ -402,57 +461,58 @@ def run_cnn(exp_name,
     log_file = open(log_fn, 'w')
 
     print "Start to train the model....."
-    cpu_trn_y = np.asarray(dataset[0][1])
-    cpu_tst_y = np.asarray(dataset[1][1])
+    cpu_tst_pop_y = np.asarray(dataset[1][4])
+    cpu_tst_type_y = np.asarray(dataset[1][5])
+    if flag == "pop":
+        cpu_tst_y = cpu_tst_pop_y
+    elif flag == "type":
+        cpu_tst_y = cpu_tst_type_y
 
     def compute_score(true_list, pred_list):
         mat = np.equal(true_list, pred_list)
         score = np.mean(mat)
         return score
     
-    best_test_score = 0.
+    total_score = 0.0
     while (epoch < n_epochs) and not done_loop:
         start_time = timeit.default_timer()
         epoch += 1
         costs = []
-        
         for minibatch_index in np.random.permutation(range(n_train_batches)):
             cost_epoch = train_func(minibatch_index)
             costs.append(cost_epoch)
             set_zero(zero_vec)
+            freq_set_zero(freq_zero_vec)
+            pos_set_zero(pos_zero_vec)
+        
 
         if epoch % print_freq == 0:
             # do test
             test_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
             test_score = compute_score(cpu_tst_y, test_preds)
-            
-            train_errors = [train_error(i) for i in xrange(n_train_batches)]
-            train_score = 1 - np.mean(train_errors)
             with open(os.path.join(perf_fn, "%s_%d.pred" % (exp_name, epoch)), 'w') as epf:
                 for p in test_preds:
                     epf.write("%d\n" % int(p))
-                message = "Epoch %d test perf %f train perf %f train_cost %f" % (epoch, test_score, train_score, np.mean(costs))
 
+
+            message = "Epoch %d test perf %f, with train cost %f" % (epoch, test_score, np.mean(costs))
 
             print message
             log_file.write(message + "\n")
             log_file.flush()
 
-            # store the best model
-            if (test_score > best_test_score) or (epoch % 15 == 0):
-                best_test_score = test_score
-                """
-                # save the model
-                model_name = "%s_%d.model" % (exp_name, epoch)
-                with open(model_name, 'wb') as bm:
-                    for p in params:
-                        cPickle.dump(p.get_value(), bm)
-                """
-                # dumps the sentence score to local_file
+            if (test_score > total_score) or (epoch % 15 == 0):
+                total_score = test_score
+                # save the sentence score
                 test_sen_score = [test_sentence_est(i) for i in xrange(n_test_batches)]
-                score_file = "%s_%d.score" % (exp_name, epoch)
+                score_file = "./results/%s_%d_test.score" % (exp_name, epoch)
                 with open(score_file, "wb") as sm:
                     cPickle.dump(test_sen_score, sm)
+                
+                #train_sen_score = [train_sentence_est(i) for i in xrange(n_train_batches)]
+                #score_file = "./results/%s_%d_train.score" % (exp_name, epoch)
+                #with open(score_file, "wb") as sm:
+                    #cPickle.dump(train_sen_score, sm)
 
         end_time = timeit.default_timer()
         print "Finish one iteration using %f m" % ((end_time - start_time)/60.)
@@ -461,44 +521,64 @@ def run_cnn(exp_name,
     log_file.close()
 
 
-def shared_dataset(data_xy, borrow=True):
-    data_x, data_y = data_xy
-    shared_x = theano.shared(np.asarray(data_x,
+def shared_dataset(data_xyz, borrow=True):
+    data_word_x, data_freq_x, data_pos_x, data_sent_x, data_y, data_z = data_xyz
+    shared_word_x = theano.shared(np.asarray(data_word_x,
         dtype=theano.config.floatX), borrow=borrow)
+
+    shared_freq_x = theano.shared(np.asarray(data_freq_x,
+        dtype=theano.config.floatX), borrow=borrow)
+
+    shared_pos_x = theano.shared(np.asarray(data_pos_x,
+        dtype=theano.config.floatX), borrow=borrow)
+
+    shared_sent_x = theano.shared(np.asarray(data_sent_x, dtype=theano.config.floatX),
+            borrow=True)
 
     shared_y = theano.shared(np.asarray(data_y,
         dtype=theano.config.floatX), borrow=borrow)
-    return shared_x, T.cast(shared_y, 'int32')
+    
+    shared_z = theano.shared(np.asarray(data_z,
+        dtype=theano.config.floatX), borrow=borrow)
+
+    return shared_word_x, shared_freq_x, shared_pos_x, shared_sent_x, T.cast(shared_y, 'int32'), T.cast(shared_z, 'int32')
 
 
 def main():
     args = parse_args()
     prefix = args.prefix
     word2vec_file = args.word2vec
-    sufix = args.sufix
+    sufix_pop = args.sufix_pop
+    sufix_type = args.sufix_type
     expe_name = args.exp_name
     batch_size = args.batch_size
     log_fn = args.log_fn
     perf_fn = args.perf_fn
-    top_k = args.top_k # the limit of sentences to choose
+    top_k = args.top_k
     print_freq = args.print_freq
+    data_type = args.data_type
+    flag = args.flag
 
     # load the dataset
     print 'Start loading the dataset ...'
-    dataset = load_dataset(prefix, sufix)
+    dataset = load_dataset(prefix, sufix_pop, sufix_type)
     wf = open(word2vec_file)
     embedding = cPickle.load(wf)
     word2id = cPickle.load(wf)
 
-    dict_file = args.dict_fn
-    class2id = {k.strip(): i for i, k in enumerate(open(dict_file))}
+    class2id = {}
+    dict_pop_file = args.dict_pop_fn
+    class2id["pop"] = {k.strip(): i for i, k in enumerate(open(dict_pop_file))}
+    
+    dict_type_file = args.dict_type_fn
+    class2id["type"] = {k.strip(): i for i, k in enumerate(open(dict_type_file))}
     
     # transform doc to dig list and padding docs
     print 'Start to transform doc to digits'
     max_sens = args.max_sens
     max_words = args.max_words
     padding = args.padding
-    digit_dataset = transform_dataset(dataset, word2id, class2id, max_sens, max_words, padding)
+    digit_dataset = transform_dataset(dataset, word2id, class2id, data_type, max_sens, max_words, padding)
 
     non_static = not args.static
     exp_name = args.exp_name
@@ -521,9 +601,11 @@ def main():
             n_epochs=n_epochs,
             lr_decay=0.95,
             activation=ReLU,
-            sqr_norm_lim=9,
-            non_static=True,
-            print_freq=print_freq)
+            sqr_norm_lim=3,
+            non_static=non_static,
+            print_freq=print_freq,
+            flag=flag
+            )
      
     
 if __name__ == "__main__":

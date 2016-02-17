@@ -80,8 +80,6 @@ def parse_args():
     ap.add_argument("--print_freq", type=int, default=5,
             help="the frequency of print frequency") 
     ap.add_argument("--data_type", type=str, help="data input format")
-    ap.add_argument("--pop", action='store_true', help='population task')
-    ap.add_argument("--type", action='store_true', help='event type task')
     return ap.parse_args()
 
 def load_dataset(prefix, sufix_1, sufix_2):
@@ -246,9 +244,8 @@ def run_cnn(exp_name,
         activation=ReLU,
         sqr_norm_lim=9,
         non_static=True,
-        print_freq=5,
-        pop_flag=True,
-        type_flag=True):
+        print_freq=5
+        ):
     """
     Train and Evaluate CNN event encoder model
     :dataset: list containing three elements[(train_x, train_y), 
@@ -358,42 +355,40 @@ def run_cnn(exp_name,
     total_cost = gamma * sen_score_cost 
     total_dropout_cost = gamma * sen_score_cost
 
-    if pop_flag:
-        print "Construct classifier ...."
-        hidden_units[0] = num_maps * len(filter_hs)
-        model = nn.MLPDropout(rng,
-                input=layer1_input,
-                layer_sizes=hidden_units,
-                dropout_rates=[dropout_rate],
-                activations=[activation])
+    print "Construct classifier ...."
+    hidden_units[0] = num_maps * len(filter_hs)
+    model = nn.MLPDropout(rng,
+            input=layer1_input,
+            layer_sizes=hidden_units,
+            dropout_rates=[dropout_rate],
+            activations=[activation])
 
-        params += model.params
+    params += model.params
 
-        cost = model.negative_log_likelihood(y_pop)
-        dropout_cost = model.dropout_negative_log_likelihood(y_pop)
+    cost = model.negative_log_likelihood(y_pop)
+    dropout_cost = model.dropout_negative_log_likelihood(y_pop)
 
-        total_cost += cost + beta1 * model.L1
-        total_dropout_cost += dropout_cost + beta1 * model.L1
+    total_cost += cost + beta1 * model.L1
+    total_dropout_cost += dropout_cost + beta1 * model.L1
 
     #######################
     # classifier Type #####
     #######################
-    if type_flag:
-        type_hidden_units = [num for num in hidden_units]
-        type_hidden_units[0] = num_maps * len(filter_hs)     
-        type_hidden_units[-1] = 5
-        type_model = nn.MLPDropout(rng,
-                input=layer1_input,
-                layer_sizes=type_hidden_units,
-                dropout_rates=[dropout_rate],
-                activations=[activation])
-        params += type_model.params
+    type_hidden_units = [num for num in hidden_units]
+    type_hidden_units[0] = num_maps * len(filter_hs)     
+    type_hidden_units[-1] = 5
+    type_model = nn.MLPDropout(rng,
+            input=layer1_input,
+            layer_sizes=type_hidden_units,
+            dropout_rates=[dropout_rate],
+            activations=[activation])
+    params += type_model.params
 
-        type_cost = type_model.negative_log_likelihood(y_type)
-        type_dropout_cost = type_model.dropout_negative_log_likelihood(y_type)
+    type_cost = type_model.negative_log_likelihood(y_type)
+    type_dropout_cost = type_model.dropout_negative_log_likelihood(y_type)
         
-        total_cost += type_cost + beta2 * type_model.L1
-        total_dropout_cost += type_dropout_cost + beta2 * type_model.L1
+    total_cost += type_cost + beta2 * type_model.L1
+    total_dropout_cost += type_dropout_cost + beta2 * type_model.L1
 
 
     # using adagrad
@@ -411,12 +406,7 @@ def run_cnn(exp_name,
             1e-6,
             sqr_norm_lim)
    
-    if pop_flag and type_flag:
-        total_preds = [model.preds, type_model.preds]
-    elif pop_flag:
-        total_preds = model.preds
-    elif type_flag:
-        total_preds = type_model.preds
+    total_preds = [model.preds, type_model.preds]
 
     #####################
     # Construct Dataset #
@@ -485,8 +475,8 @@ def run_cnn(exp_name,
     log_file = open(log_fn, 'w')
 
     print "Start to train the model....."
-    cpu_tst_pop_y = np.asarray(dataset[1][3])
-    cpu_tst_type_y = np.asarray(dataset[1][4])
+    cpu_tst_pop_y = np.asarray(dataset[1][4])
+    cpu_tst_type_y = np.asarray(dataset[1][5])
 
     def compute_score(true_list, pred_list):
         mat = np.equal(true_list, pred_list)
@@ -508,39 +498,20 @@ def run_cnn(exp_name,
 
         if epoch % print_freq == 0:
             # do test
-            if pop_flag and type_flag:
-                test_pop_preds, test_type_preds = map(np.concatenate, zip(*[test_pred(i) for i in xrange(n_test_batches)]))
-                test_pop_score = compute_score(cpu_tst_pop_y, test_pop_preds)
-                test_type_score = compute_score(cpu_tst_type_y, test_type_preds)
-                with open(os.path.join(perf_fn, "%s_%d.pop_pred" % (exp_name, epoch)), 'w') as epf:
-                    for p in test_pop_preds:
-                        epf.write("%d\n" % int(p))
+            test_pop_preds, test_type_preds = map(np.concatenate, zip(*[test_pred(i) for i in xrange(n_test_batches)]))
+            test_pop_score = compute_score(cpu_tst_pop_y, test_pop_preds)
+            test_type_score = compute_score(cpu_tst_type_y, test_type_preds)
+            with open(os.path.join(perf_fn, "%s_%d.pop_pred" % (exp_name, epoch)), 'w') as epf:
+                for p in test_pop_preds:
+                    epf.write("%d\n" % int(p))
 
-                with open(os.path.join(perf_fn, "%s_%d.type_pred" % (exp_name, epoch)), 'w') as epf:
-                    for p in test_type_preds:
-                        epf.write("%d\n" % int(p))
+            with open(os.path.join(perf_fn, "%s_%d.type_pred" % (exp_name, epoch)), 'w') as epf:
+                for p in test_type_preds:
+                    epf.write("%d\n" % int(p))
 
-                message = "Epoch %d test pop perf %f, type perf %f, with train cost %f" % (epoch, test_pop_score, test_type_score, np.mean(costs))
-                evl_score = test_pop_score + test_type_score
+            message = "Epoch %d test pop perf %f, type perf %f, with train cost %f" % (epoch, test_pop_score, test_type_score, np.mean(costs))
+            evl_score = test_pop_score + test_type_score
 
-            elif pop_flag:
-                test_pop_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
-                test_pop_score = compute_score(cpu_tst_pop_y, test_pop_preds)
-                with open(os.path.join(perf_fn, "%s_%d.pop_pred" % (exp_name, epoch)), 'w') as epf:
-                    for p in test_pop_preds:
-                        epf.write("%d\n" % int(p))
-                message = "Epoch %d test pop perf %f, with train cost %f" % (epoch, test_pop_score,  np.mean(costs))
-                evl_score = test_pop_score
-
-            elif type_flag:
-                test_type_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
-                test_type_score = compute_score(cpu_tst_type_y, test_type_preds)
-                with open(os.path.join(perf_fn, "%s_%d.type_pred" % (exp_name, epoch)), 'w') as epf:
-                    for p in test_type_preds:
-                        epf.write("%d\n" % int(p))
-
-                message = "Epoch %d test Type perf %f, with train cost %f" % (epoch, test_type_score,  np.mean(costs))
-                evl_score = test_type_score
 
             print message
             log_file.write(message + "\n")
@@ -586,7 +557,7 @@ def shared_dataset(data_xyz, borrow=True):
     shared_z = theano.shared(np.asarray(data_z,
         dtype=theano.config.floatX), borrow=borrow)
 
-    return shared_word_x, shared_freq_x, shared_pos_x, T.cast(shared_y, 'int32'), T.cast(shared_z, 'int32')
+    return shared_word_x, shared_freq_x, shared_pos_x, shared_sent_x, T.cast(shared_y, 'int32'), T.cast(shared_z, 'int32')
 
 
 def main():
@@ -647,7 +618,8 @@ def main():
             activation=ReLU,
             sqr_norm_lim=3,
             non_static=non_static,
-            print_freq=print_freq)
+            print_freq=print_freq
+            )
      
     
 if __name__ == "__main__":
