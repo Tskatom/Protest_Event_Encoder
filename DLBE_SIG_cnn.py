@@ -203,8 +203,9 @@ def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
     return updates
 
 
-def keep_max(input, theta, k, sent_mask):
-    sig_input = T.nnet.sigmoid(T.dot(input, theta))
+def keep_max(input, theta, score_b, k, sent_mask):
+    score_b = score_b.dimshuffle('x','x',0,'x')
+    sig_input = T.nnet.sigmoid(T.dot(input, theta) + score_b)
     sent_mask = sent_mask.dimshuffle(0, 'x', 1, 'x')
     sig_input = sig_input * sent_mask
     #sig_input = T.dot(input, theta)
@@ -331,9 +332,12 @@ def run_cnn(exp_name,
     sen_vec = T.concatenate(layer1_inputs, 3)
     # score the sentences
     theta_value = np.random.random((len(filter_hs) * num_maps, 1))
+    score_b_value = np.zeros((20,), dtype=theano.config.floatX) # number of sentences
+
     theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX),
             name="theta", borrow=True)
-    weighted_sen_vecs, sen_score = keep_max(sen_vec, theta, k, sent_x)
+    score_b = shared(value=score_b_value, borrow=True, name='score_b')
+    weighted_sen_vecs, sen_score = keep_max(sen_vec, theta, score_b, k, sent_x)
     sen_score_cost = T.mean(T.sum(sen_score, axis=2).flatten(1))
     doc_vec = T.sum(weighted_sen_vecs, axis=2)
     layer1_input = doc_vec.flatten(2) 
@@ -346,11 +350,12 @@ def run_cnn(exp_name,
     for conv_layer in conv_layers:
         params += conv_layer.params
     params.append(theta)
+    params.append(score_b)
     params.append(words)
     params.append(freqs)
     params.append(poss)
     
-    gamma = as_floatX(0.0005)
+    gamma = as_floatX(0.0007)
     beta1 = as_floatX(0.000)
     total_cost = gamma * sen_score_cost 
     total_dropout_cost = gamma * sen_score_cost
