@@ -114,7 +114,7 @@ def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
     sent_mask = []
     for j, sen in enumerate(sens[:max_sens]):
         sen_ids = [0] * pad
-        sid = [j + 1] * pad
+        sid = [0] * pad
         #tokens = sen.strip().split(" ")
         tokens = word_tokenize(sen)
         for w in tokens[:max_words]:
@@ -122,7 +122,7 @@ def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
             sid.append(j + 1)
         num_suff = max(0, max_words - len(tokens)) + pad
         sen_ids += [0] * num_suff
-        sid += [j+1] * num_suff
+        sid += [0] * num_suff
         sens_pad.append(sen_ids)
         doc_sids.append(sid)
         sent_mask.append(1)
@@ -133,7 +133,7 @@ def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
         sen_ids = [0] * len(sens_pad[0])
         sens_pad.append(sen_ids)
         doc_sids.append(sid)
-        sent_mask.append(0)
+        sent_mask.append(1)
 
     # compute the frequency
     for sen in sens_pad:
