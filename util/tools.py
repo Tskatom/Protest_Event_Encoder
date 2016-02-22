@@ -37,6 +37,7 @@ def parse_args():
     ap.add_argument("--keywords_file", type=str, help="keywords file")
     ap.add_argument("--infolder", type=str)
     ap.add_argument("--vocab_file", type=str, default="../data/spanish_protest.trn-100000.vocab")
+    ap.add_argument("--non_file", type=str, help="non protest file")
     return ap.parse_args()
 
 def generate_k_sentence(keyword_file, infolder="../data/single_label", 
@@ -221,6 +222,7 @@ def split_dataset(dataset, ratio=[.7,.1,.2], rand=False):
         new_dataset.append([train, valid, test])
     return new_dataset
 
+"""
 def split_dataset_train_test(dataset):
     size = len(dataset[0])
     batches = 5
@@ -245,6 +247,29 @@ def split_dataset_train_test(dataset):
         new_dataset.append(tmp_d)
 
     return new_dataset
+"""
+
+def split_dataset_train_test(dataset):
+    new_dataset = []
+    for d in dataset:
+        tmp_d = []
+        size = len(d)
+        batches = 5
+        batch_size = size / batches
+        print "---size", size
+        idx = range(size)
+        for i in range(batches):
+            test_ids = idx[i*(batch_size):(i+1)*batch_size]
+            train_ids = idx[:i*(batch_size)] + idx[(i+1)*batch_size:]
+
+            train = [d[j] for j in train_ids]
+            test = [d[j] for j in test_ids]
+            print "---train", len(train), "---test", len(test)
+            tmp_d.append([train, test])
+
+        new_dataset.append(tmp_d)
+    return new_dataset
+
 
 def split_text_set_train_test(es_file, en_file, pop_label_file, eventType_file):
     
@@ -271,7 +296,27 @@ def split_text_set_train_test(es_file, en_file, pop_label_file, eventType_file):
                 with open(file_name, 'w') as df:
                     for line in data[j]:
                         df.write(line)
-            
+
+def split_autogsr_data_train_test(es_file, non_file, pop_file, type_file):
+    protest = [l for l in open(es_file)]
+    non_protest = [l for l in open(non_file)]
+    pops = [l for l in open(pop_file)]
+    types = [l for l in open(type_file)]
+
+    folder = os.path.dirname(es_file)
+    dataset = split_dataset_train_test([protest, non_protest, pops, types])
+    names = ["spanish_protest_%s.txt.tok", "spanish_nonprotest_%s.txt.tok", "spanish_protest_%s.pop_cat", "spanish_protest_%s.type_cat"]
+    for name, data_item in zip(names, dataset):
+        for fid, data in enumerate(data_item):
+            cross_folder = os.path.join(folder, "%d" % fid)
+            phases = ["train", "test"]
+        
+            for j in range(len(phases)):
+                file_name = os.path.join(cross_folder, name % phases[j])
+                with open(file_name, 'w') as df:
+                    for line in data[j]:
+                        df.write(line)
+
 
 def split_text_set(es_file, en_file, pop_label_file, eventType_file):
     
@@ -383,6 +428,14 @@ def main():
         for i in range(5):
             fold_folder = os.path.join(infolder, "%s" % i)
             generate_sen_tfidf(vocab, fold_folder)
+    elif task == "split_autogsr":
+        es_file = args.es_file
+        non_file = args.non_file
+        en_file = args.en_file
+        pop_file = args.pop_label_file
+        type_file = args.eventType_file
+
+        split_autogsr_data_train_test(es_file, non_file, pop_file, type_file)
 
 
 if __name__ == "__main__":
