@@ -1,4 +1,4 @@
 {
-    "filter_hs": [2, 3],
+    "filter_hs": [2,3],
     "hidden_units": [200, 11]
 }

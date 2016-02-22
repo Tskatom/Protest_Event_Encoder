@@ -1,0 +1,8 @@
+Epoch 5 test pop perf 0.569567, type perf 0.463343, with train cost 2.875817
+Epoch 10 test pop perf 0.732486, type perf 0.668622, with train cost 2.156883
+Epoch 15 test pop perf 0.784620, type perf 0.706419, with train cost 1.638946
+Epoch 20 test pop perf 0.832519, type perf 0.737048, with train cost 1.293570
+Epoch 25 test pop perf 0.841968, type perf 0.753992, with train cost 1.029075
+Epoch 30 test pop perf 0.842946, type perf 0.748778, with train cost 0.825568
+Epoch 35 test pop perf 0.829586, type perf 0.751059, with train cost 0.639194
+Epoch 40 test pop perf 0.835125, type perf 0.734767, with train cost 0.480871
