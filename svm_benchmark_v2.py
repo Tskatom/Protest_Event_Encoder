@@ -20,7 +20,7 @@ def svm_experiment(train_set, valid_set, test_set):
     c_range = np.logspace(-2, 1, 4)
     best_score = 0.0
     best_model = None
-
+    """
     for c in c_range:
         model = svm.LinearSVC(C=c)
         model.fit(train_set_x, train_set_y)
@@ -30,11 +30,15 @@ def svm_experiment(train_set, valid_set, test_set):
             best_score = score
             best_param = {"kernel": 'linear', "C": c}
             best_model = model
+    """
+    best_model = svm.LinearSVC(C=1)
+    best_model.fit(train_set_x, train_set_y)
 
     test_pred = best_model.predict(test_set_x)
     test_score = 1 - np.mean(np.not_equal(test_set_y, test_pred))
-    print "Test Performance %f under Best valid Score: %f" % (test_score, best_score), " Best Params:", best_param
-    return test_score, best_param
+    #print "Test Performance %f under Best valid Score: %f" % (test_score, best_score), " Best Params:", best_param
+    print "Test Performance %f " % (test_score)
+    return test_score, {}
 
 
 def svm_tfidf(prefix, sufix, dic_fn):

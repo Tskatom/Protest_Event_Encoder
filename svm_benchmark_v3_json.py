@@ -14,6 +14,7 @@ import numpy as np
 import argparse
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
+import json
 
 def svm_experiment(train_set, test_set, class_names): 
     train_set_x, train_set_y = train_set 
@@ -26,9 +27,9 @@ def svm_experiment(train_set, test_set, class_names):
     test_score = 1 - np.mean(np.not_equal(test_set_y, test_pred))
 
     #print confusion_matrix(test_set_y, test_pred)
-    #print classification_report(test_set_y, test_pred, target_names=class_names)
+    print classification_report(test_set_y, test_pred, target_names=class_names)
 
-    return test_score
+    return test_score, test_pred, test_set_y
 
 
 def svm_tfidf(prefix, sufix, dic_fn):
@@ -44,12 +45,13 @@ def svm_tfidf(prefix, sufix, dic_fn):
     test_y_file = prefix + "_test." + sufix
     
     dic_cn = {k.strip(): i for i, k in enumerate(open(dic_fn))}
+    id2class = {v:k for k,v in dic_cn.items()}
     class_names = [k.strip() for k in open(dic_fn)]
     print class_names
 
 
-    word_train_set = [l.strip().lower() for l in open(train_file)]
-    word_test_set = [l.strip().lower() for l in open(test_file)]
+    word_train_set = [' '.join(json.loads(l)).lower() for l in open(train_file)]
+    word_test_set = [' '.join(json.loads(l)).lower() for l in open(test_file)]
 
     train_y = [dic_cn[l.strip()] for l in open(train_y_file)]
     test_y = [dic_cn[l.strip()] for l in open(test_y_file)]
@@ -65,7 +67,23 @@ def svm_tfidf(prefix, sufix, dic_fn):
     test_set_x = tfidf_transformer.transform(test_set_count)
 
     print "start the model"
-    test_score = svm_experiment([train_set_x, train_y], [test_set_x, test_y], class_names)
+    test_score, test_pred, test_true = svm_experiment([train_set_x, train_y], [test_set_x, test_y], class_names)
+    
+    outfile = open(os.path.join(os.path.dirname(train_y_file), "%s_error.json" % sufix), 'w')
+    for i in range(len(test_pred)):
+        if test_pred[i] != test_true[i]:
+            pred_label = id2class[test_pred[i]]
+            true_label = id2class[test_true[i]]
+            text = word_test_set[i]
+            data = {"true": true_label, "pred": pred_label, "text": text}
+            dump = json.dumps(data, ensure_ascii=False, encoding='utf-8')
+            if isinstance(dump, unicode):
+                dump = dump.encode('utf-8')
+            outfile.write(dump + "\n")
+    outfile.flush()
+    outfile.close()
+
+
     return test_score
 
 def parse_args():
