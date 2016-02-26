@@ -12,6 +12,10 @@ from nltk import word_tokenize
 infile = "/home/ubuntu/workspace/Protest_Event_Encoder/data/new_single_label/spanish_protest.txt.tok"
 outfile = "/home/ubuntu/workspace/Protest_Event_Encoder/data/new_single_label/spanish_protest.tokens"
 
+infile = sys.argv[1]
+outfile = sys.argv[2]
+
+
 with open(infile) as in_file, open(outfile, 'w') as otf:
     for line in in_file:
         sens = json.loads(line)

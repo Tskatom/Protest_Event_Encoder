@@ -382,6 +382,35 @@ def generate_sen_tfidf(vocab, folder):
         cPickle.dump(train_tfidf, trof)
         cPickle.dump(test_tfidf, teof)
 
+
+def generate_protest_event_label():
+    """
+    Merge the non_protest/protest to one file
+    Generate Label for text
+    """
+    infolder = "../data/new_multi_label"
+    for i in range(5):
+        sub_folder = os.path.join(infolder, "%d" % i)
+        phases = ["train", "test"]
+        for phase in phases:
+            # combine files
+            non_pro_file = os.path.join(sub_folder, "spanish_nonprotest_%s.txt.tok" % phase)
+            pro_file = os.path.join(sub_folder, "spanish_protest_%s.txt.tok" % phase)
+
+            out_txt_file = os.path.join(sub_folder, "event_%s.txt.tok" % phase)
+            out_label_file = os.path.join(sub_folder, "event_%s.event_cat" % phase)
+
+            with open(non_pro_file) as nonf, open(pro_file) as prof, open(out_txt_file, 'w') as otf, open(out_label_file, 'w') as olf:
+                non_pros = [l for l in nonf]
+                pros = [l for l in prof]
+
+                txts = non_pros + pros
+                labels = ["non_protest"] * len(non_pros) + ["protest"] * len(pros)
+
+                for txt, label in zip(txts, labels):
+                    otf.write(txt)
+                    olf.write(label + "\n")
+
 def main():
     args = parse_args()
     task = args.task
@@ -436,6 +465,8 @@ def main():
         type_file = args.eventType_file
 
         split_autogsr_data_train_test(es_file, non_file, pop_file, type_file)
+    elif task == "generate_protest":
+        generate_protest_event_label()
 
 
 if __name__ == "__main__":

@@ -4,16 +4,114 @@
 import numpy as np
 import theano
 import theano.tensor as T
+import theano
 from theano import shared
 from theano.tensor.nnet import conv
 from theano.tensor.signal import downsample
 from collections import OrderedDict
+import json
+from nltk import word_tokenize
 
 """
 Implement the Neural Network Layers
 """
 __author__ = "Wei Wang"
 __email__ = "tskatom@vt.edu"
+
+def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
+        norm_lim=9, word_vec_name='embedding'):
+    updates = OrderedDict({})
+    exp_sqr_grads = OrderedDict({})
+    exp_sqr_ups = OrderedDict({})
+    gparams = []
+
+    for param in params:
+        empty = np.zeros_like(param.get_value())
+        exp_sqr_grads[param] = theano.shared(value=as_floatX(empty),name="exp_grad_%s" % param.name, borrow=True)
+        gp = T.grad(cost, param)
+        exp_sqr_ups[param] = theano.shared(value=as_floatX(empty), name="exp_grad_%s" % param.name, borrow=True)
+        gparams.append(gp)
+
+    for param, gp in zip(params, gparams):
+        exp_sg = exp_sqr_grads[param]
+        exp_su = exp_sqr_ups[param]
+        up_exp_sg = rho * exp_sg + (1 - rho) * T.sqr(gp)
+        updates[exp_sg] = up_exp_sg
+        step =  -(T.sqrt(exp_su + epsilon) / T.sqrt(up_exp_sg + epsilon)) * gp
+        updates[exp_su] = rho * exp_su + (1 - rho) * T.sqr(step)
+        stepped_param = param + step
+        if (param.get_value(borrow=True).ndim == 2) and (param.name!='embedding'):
+            col_norms = T.sqrt(T.sum(T.sqr(stepped_param), axis=0))
+            desired_norms = T.clip(col_norms, 0, T.sqrt(norm_lim))
+            scale = desired_norms / (1e-7 + col_norms)
+            updates[param] = stepped_param * scale
+        else:
+            updates[param] = stepped_param
+    return updates
+
+def shared_dataset(data_xy, borrow=True):
+    data_x, data_y = data_xy
+    shared_x = shared(np.asarray(data_x, dtype=theano.config.floatX),borrow=borrow)
+    shared_y = shared(np.asarray(data_y, dtype=theano.config.floatX),borrow=borrow)
+
+    return shared_x, T.cast(shared_y, "int32")
+
+def load_event_dataset(prefix, sufix):
+    """Load the event dataset for binary classification"""
+    dataset = []
+    for group in ["train", "test"]:
+        x_fn = "%s_%s.txt.tok" % (prefix, group)
+        y_fn = "%s_%s.%s" % (prefix, group, sufix)
+
+        xs = [l.strip() for l in open(x_fn)]
+        ys = [l.strip() for l in open(y_fn)]
+
+        dataset.append((xs, ys))
+    return dataset
+
+def split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding):
+    """
+        split the document into sentences
+        replace the word by id
+    """
+    if data_type == "json":
+        sens = [sen.lower() for sen in json.loads(doc)]
+    elif data_type == "str":
+        sens = re.split("\.|\?|\|", doc.lower()) 
+        sens = [sen for sen in sens if len(sen.strip().split(" ")) > 5]
+
+    pad = padding
+    sens_pad = []
+    for j, sen in enumerate(sens[:max_sens]):
+        sen_ids = [0] * pad
+        tokens = word_tokenize(sen)
+        for w in tokens[:max_words]:
+            sen_ids.append(word2id.get(w.encode('utf-8'), 1))
+        num_suff = max(0, max_words - len(tokens)) + pad
+        sen_ids += [0] * num_suff
+        sens_pad.append(sen_ids)
+
+    # add more padding sentences
+    num_suff = max(0, max_sens - len(sens))
+    for i in range(0, num_suff):
+        sen_ids = [0] * len(sens_pad[0])
+        sens_pad.append(sen_ids)
+
+    return sens_pad
+
+def transform_event_dataset(dataset, word2id, class2id, data_type, max_sens, max_words, padding):
+    train_set, test_set = dataset
+    train_docs, train_labels = train_set
+    test_docs, test_labels = test_set
+
+    train_doc_ids = [split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding) for doc in train_docs]
+
+    test_doc_ids = [split_doc2sen(doc, word2id, data_type, max_sens, max_words, padding) for doc in test_docs]
+    
+    train_y = [class2id[c] for c in train_labels]
+    test_y = [class2id[c] for c in test_labels]
+
+    return [(train_doc_ids, train_y), (test_doc_ids, test_y)]
 
 
 class HiddenLayer(object):
@@ -176,12 +274,26 @@ class LogisticRegressionLayer(object):
         """
         return T.mean(T.neq(self.y_pred, y))
 
+def k_max(x, k):
+    sort_idx = T.argsort(x, axis=2)
+    k_max_ids = sort_idx[:,:,-k:,:]
+    dim0, dim1, dim2, dim3 = k_max_ids.shape
+    batchids = T.repeat(T.arange(dim0), dim1*dim2*dim3)
+    mapids = T.repeat(T.arange(dim1), dim2*dim3).reshape((1, dim2*dim3))
+    mapids = T.repeat(mapids, dim0, axis=0).flatten()
+    rowids = k_max_ids.flatten()
+    colids = T.arange(dim3).reshape((1, dim3))
+    colids = T.repeat(colids, dim0*dim1*dim2, axis=0).flatten()
+    sig_mask = T.zeros_like(x)
+    sig_mask = T.set_subtensor(sig_mask[batchids, mapids, rowids, colids], 1)
+    result = sig_mask * x
+    return result
 
 
 class ConvPoolLayer(object):
     """Convolution and Max Pool Layer"""
     def __init__(self, rng, input, filter_shape, input_shape,
-                 pool_size, activation, W=None, b=None):
+                 pool_size, activation, k=1, W=None, b=None):
         """
         :type rng: numpy.random.randomstate
         :param rng: the random number generator
@@ -240,9 +352,14 @@ class ConvPoolLayer(object):
                                image_shape=self.input_shape)
         act_conv_out = self.activation(conv_out +
                                        self.b.dimshuffle('x', 0, 'x', 'x'))
-        pool_out = downsample.max_pool_2d(input=act_conv_out,
-                                          ds=self.pool_size,
-                                          ignore_border=True)
+        if k == 1: # normal max pooling
+            pool_out = downsample.max_pool_2d(input=act_conv_out,
+                                            ds=self.pool_size,
+                                            ignore_border=True)
+        elif k > 1: # get top k value for each featue map
+            pool_out = k_max(act_conv_out, k)
+            
+
         self.output = pool_out
         self.output_index = T.argmax(act_conv_out)
         self.params = [self.W, self.b]
