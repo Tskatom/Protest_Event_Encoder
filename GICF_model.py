@@ -28,7 +28,7 @@ class GICF(object):
         self.options = options
         self.params = []
 
-    def run_experiment(self, dataset, word_embedding):
+    def run_experiment(self, dataset, word_embedding, exp_name):
         
         # load parameters
         num_maps_word = self.options["num_maps_word"]
@@ -200,6 +200,8 @@ class GICF(object):
                     sen_num += 1
             number_test_sens.append(sen_num)
 
+        log_file = open("./log/%s.log" % exp_name, 'w')
+
         while epoch <= max_iteration:
             start_time = timeit.default_timer()
             epoch += 1
@@ -210,7 +212,7 @@ class GICF(object):
                 costs.append(cost_epoch)
                 set_zero(zero_vec)
 
-            if epoch % 1 == 0:
+            if epoch % 5 == 0:
                 test_preds = []
                 for i in xrange(n_test_batches):
                     test_y_pred = test_func(i)
@@ -229,8 +231,8 @@ class GICF(object):
                     train_sens = np.concatenate(train_sens, axis=0)
                     test_sens = np.concatenate(test_sens, axis=0)
 
-                    out_train_sent_file = "./results/train_sent.vec"
-                    out_test_sent_file = "./results/test_sent.vec"
+                    out_train_sent_file = "./results/%s_train_sent.vec" % exp_name
+                    out_test_sent_file = "./results/%s_test_sent.vec" % exp_name
 
                     with open(out_train_sent_file, 'w') as train_f, open(out_test_sent_file, 'w') as test_f:
                         for i in range(len(train_sens)):
@@ -241,11 +243,19 @@ class GICF(object):
                             te_doc_vect = test_sens[i][0][:number_test_sens[i]]
                             test_f.write(json.dumps(te_doc_vect.tolist()) + "\n")
                     print "Get best performace at %d iteration" % epoch
+                    log_file.write("Get best performance at %d iteration\n" % epoch)
 
                 end_time = timeit.default_timer()
                 print "Iteration %d , precision, recall, support" % epoch, precision, recall, support
+                log_file.write("Iteration %d, neg precision %f, pos precision %f, neg recall %f pos recall %f \n" % (epoch, precision[0], precision[1], recall[0], recall[1]))
                 print "Using time %f m" % ((end_time -start_time)/60.)
-        
+                log_file.write("Uing time %f m\n" % ((end_time - start_time)/60.))
+            end_time = timeit.default_timer()
+            print "Iteration %d Using time %f m" % ( epoch, (end_time -start_time)/60.)
+            log_file.write("Uing time %f m\n" % ((end_time - start_time)/60.))
+            log_file.flush()
+
+        log_file.close()
 def parse_args():
     ap = argparse.ArgumentParser()
     ap.add_argument("--option", type=str, help="the configuration file")
