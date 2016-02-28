@@ -266,6 +266,7 @@ def parse_args():
             help="the data type for text file: json or str")
     ap.add_argument("--event_fn", type=str, help="the event category dictionary file")
     ap.add_argument("--word2vec", type=str, help="word2vec file")
+    ap.add_argument("--exp_name", type=str, help="the name of the experiment")
     return ap.parse_args()
 
 
@@ -277,6 +278,7 @@ def main():
     data_type = args.data_type
     event_fn = args.event_fn
     word2vec_file = args.word2vec
+    exp_name = args.exp_name
 
     max_sens = option["max_sens"]
     max_words = option["max_words"]
@@ -292,7 +294,7 @@ def main():
     digit_dataset = nn.transform_event_dataset(dataset, word2id, class2id, data_type, max_sens, max_words, padding)
 
     model = GICF(option)
-    model.run_experiment(digit_dataset, embedding)
+    model.run_experiment(digit_dataset, embedding, exp_name)
 
 
 if __name__ == "__main__":
