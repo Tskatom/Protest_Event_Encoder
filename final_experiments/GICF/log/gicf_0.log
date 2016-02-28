@@ -1,0 +1,74 @@
+Uing time 5.780784 m
+Uing time 5.763947 m
+Uing time 5.740330 m
+Uing time 5.739229 m
+Get best performance at 5 iteration
+Iteration 5, neg precision 0.913344, pos precision 0.744722, neg recall 0.966406 pos recall 0.516644 
+Uing time 14.208118 m
+Uing time 14.208139 m
+Uing time 5.764872 m
+Uing time 5.760622 m
+Uing time 5.762559 m
+Uing time 5.773284 m
+Get best performance at 10 iteration
+Iteration 10, neg precision 0.955730, pos precision 0.760898, neg recall 0.954281 pos recall 0.766977 
+Uing time 14.259175 m
+Uing time 14.259196 m
+Uing time 5.746734 m
+Uing time 5.748621 m
+Uing time 5.747888 m
+Uing time 5.750041 m
+Get best performance at 15 iteration
+Iteration 15, neg precision 0.941220, pos precision 0.836066, neg recall 0.974741 pos recall 0.679095 
+Uing time 14.236696 m
+Uing time 14.236715 m
+Uing time 5.755070 m
+Uing time 5.755859 m
+Uing time 5.754588 m
+Uing time 5.755066 m
+Iteration 20, neg precision 0.944747, pos precision 0.783383, neg recall 0.963122 pos recall 0.703063 
+Uing time 7.067239 m
+Uing time 7.067257 m
+Uing time 5.756180 m
+Uing time 5.754767 m
+Uing time 5.757625 m
+Uing time 5.766680 m
+Iteration 25, neg precision 0.931774, pos precision 0.832740, neg recall 0.976257 pos recall 0.623169 
+Uing time 7.090814 m
+Uing time 7.090832 m
+Uing time 5.763070 m
+Uing time 5.759862 m
+Uing time 5.759030 m
+Uing time 5.761757 m
+Iteration 30, neg precision 0.929682, pos precision 0.863894, neg recall 0.981814 pos recall 0.608522 
+Uing time 7.073194 m
+Uing time 7.073213 m
+Uing time 5.761893 m
+Uing time 5.761817 m
+Uing time 5.760681 m
+Uing time 5.759478 m
+Iteration 35, neg precision 0.918531, pos precision 0.874730, neg recall 0.985350 pos recall 0.539281 
+Uing time 7.069678 m
+Uing time 7.069695 m
+Uing time 5.760786 m
+Uing time 5.760865 m
+Uing time 5.761034 m
+Uing time 5.760750 m
+Iteration 40, neg precision 0.937758, pos precision 0.829146, neg recall 0.974236 pos recall 0.659121 
+Uing time 7.072372 m
+Uing time 7.072390 m
+Uing time 5.761557 m
+Uing time 5.761922 m
+Uing time 5.762154 m
+Uing time 5.762665 m
+Iteration 45, neg precision 0.935897, pos precision 0.843750, neg recall 0.977267 pos recall 0.647137 
+Uing time 7.071232 m
+Uing time 7.071250 m
+Uing time 5.759793 m
+Uing time 5.760817 m
+Uing time 5.762134 m
+Uing time 5.760199 m
+Iteration 50, neg precision 0.932836, pos precision 0.848921, neg recall 0.978783 pos recall 0.628495 
+Uing time 7.073773 m
+Uing time 7.073791 m
+Uing time 5.761464 m
