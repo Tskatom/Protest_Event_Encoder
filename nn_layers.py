@@ -8,7 +8,7 @@ import theano
 from theano import shared
 from theano.tensor.nnet import conv
 from theano.tensor.signal import downsample
-from collections import OrderedDict
+from theano.compat.python2x import OrderedDict
 import json
 from nltk import word_tokenize
 
@@ -17,6 +17,13 @@ Implement the Neural Network Layers
 """
 __author__ = "Wei Wang"
 __email__ = "tskatom@vt.edu"
+
+def as_floatX(variable):
+    if isinstance(variable, float):
+        return np.cast[theano.config.floatX](variable)
+    elif isinstance(variable, np.ndarray):
+        return np.cast[theano.config.floatX](variable)
+    return theano.tensor.cast(variable, theano.config.floatX)
 
 def sgd_updates_adadelta(params, cost, rho=0.95, epsilon=1e-6,
         norm_lim=9, word_vec_name='embedding'):
@@ -276,17 +283,17 @@ class LogisticRegressionLayer(object):
 
 def k_max(x, k):
     sort_idx = T.argsort(x, axis=2)
-    k_max_ids = sort_idx[:,:,-k:,:]
+    k_max_ids = T.sort(sort_idx[:,:,-k:,:], axis=2)
     dim0, dim1, dim2, dim3 = k_max_ids.shape
     batchids = T.repeat(T.arange(dim0), dim1*dim2*dim3)
-    mapids = T.repeat(T.arange(dim1), dim2*dim3).reshape((1, dim2*dim3))
+    mapids = T.repeat(T.arange(dim1), dim2*dim3).reshape((1, dim1*dim2*dim3))
     mapids = T.repeat(mapids, dim0, axis=0).flatten()
     rowids = k_max_ids.flatten()
     colids = T.arange(dim3).reshape((1, dim3))
     colids = T.repeat(colids, dim0*dim1*dim2, axis=0).flatten()
-    sig_mask = T.zeros_like(x)
-    sig_mask = T.set_subtensor(sig_mask[batchids, mapids, rowids, colids], 1)
-    result = sig_mask * x
+    #sig_mask = T.zeros_like(x)
+    #sig_mask = T.set_subtensor(sig_mask[batchids, mapids, rowids, colids], 1)
+    result = x[batchids, mapids, rowids, colids].reshape(k_max_ids.shape)
     return result
 
 
@@ -365,6 +372,7 @@ class ConvPoolLayer(object):
         self.params = [self.W, self.b]
         self.L2 = T.sum(self.W ** 2)
         self.L1 = T.sum(abs(self.W))
+        self.act_conv_out = act_conv_out
 
     def predict(self, new_data, batch_size):
         image_shape = (batch_size, 1, self.input_shape[2], self.input_shape[3])

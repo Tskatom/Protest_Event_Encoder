@@ -14,6 +14,7 @@ import timeit
 import argparse
 import json
 import cPickle
+import numpy as np
 
 
 def ReLU(x):
@@ -45,25 +46,28 @@ class GICF(object):
         norm_lim = self.options["norm_lim"]
         max_iteration = self.options["max_iteration"]
 
+        sentence_len = len(dataset[0][0][0][0])
+        sentence_num = len(dataset[0][0][0])
+        
         # define the parameters
         x = T.tensor3("x")
-        y = T.vector("y")
+        y = T.ivector("y")
         rng = np.random.RandomState(1234)
         
         words = theano.shared(value=np.asarray(word_embedding,
             dtype=theano.config.floatX),
             name="embedding", borrow=True)
         zero_vector_tensor = T.vector() 
-        zero_vec = np.zeros(input_width, dtype=theano.config.floatX)
-        set_zero = function([zero_vector_tensor], updates=[(words, T.set_subtensor(words[0,:], zero_vector_tensor))])
+        zero_vec = np.zeros(word_dim, dtype=theano.config.floatX)
+        set_zero = theano.function([zero_vector_tensor], updates=[(words, T.set_subtensor(words[0,:], zero_vector_tensor))])
 
         x_emb = words[T.cast(x.flatten(), dtype="int32")].reshape((x.shape[0]*x.shape[1], 1, x.shape[2], words.shape[1]))
 
         dropout_x_emb = nn.dropout_from_layer(rng, x_emb, drop_rate_word)
 
         # compute convolution on words layer
-        word_filter_shape = (num_maps_word, 1, word_window, words.shape[1])
-        word_pool_size = (x.shape[2] - word_window + 1, 1)
+        word_filter_shape = (num_maps_word, 1, word_window, word_dim)
+        word_pool_size = (sentence_len - word_window + 1, 1)
         dropout_word_conv = nn.ConvPoolLayer(rng, 
                 input=dropout_x_emb,
                 input_shape=None,
@@ -72,7 +76,7 @@ class GICF(object):
                 activation=Tanh,
                 k=k_max_word)
         sent_vec_dim = num_maps_word*k_max_word
-        dropout_sent_vec = dropout_word_conv.output.reshape(x.shape[0], 1, x.shape[1], sent_vec_dim)
+        dropout_sent_vec = dropout_word_conv.output.reshape((x.shape[0], 1, x.shape[1], sent_vec_dim))
         dropout_sent_vec = nn.dropout_from_layer(rng, dropout_sent_vec, drop_rate_sentence)
 
         word_conv = nn.ConvPoolLayer(rng, 
@@ -84,11 +88,11 @@ class GICF(object):
                 k=k_max_word,
                 W=dropout_word_conv.W,
                 b=dropout_word_conv.b)
-        sent_vec = word_conv.output.reshape(x.shape[0], 1, x.shape[1], sent_vec_dim)
+        sent_vec = word_conv.output.reshape((x.shape[0], 1, x.shape[1], sent_vec_dim))
 
         # construct the convolution layer on sentences
         sent_filter_shape = (num_maps_sentence, 1, sentence_window, sent_vec_dim)
-        sent_pool_size = (x.shape[1] - sentence_window + 1, 1)
+        sent_pool_size = (sentence_num - sentence_window + 1, 1)
         dropout_sent_conv = nn.ConvPoolLayer(rng,
                 input=dropout_sent_vec,
                 input_shape=None,
@@ -187,15 +191,14 @@ class GICF(object):
             for sen in doc:
                 if np.any(sen):
                     sen_num += 1
-            nunmber_train_sens.append(sen_num)
+            number_train_sens.append(sen_num)
         
         for doc in raw_test_x:
             sen_num = 0
             for sen in doc:
                 if np.any(sen):
                     sen_num += 1
-            nunmber_test_sens.append(sen_num)
-
+            number_test_sens.append(sen_num)
 
         while epoch <= max_iteration:
             start_time = timeit.default_timer()
@@ -207,43 +210,42 @@ class GICF(object):
                 costs.append(cost_epoch)
                 set_zero(zero_vec)
 
-                if epoch % 1 == 0:
-                    test_preds = []
-                    for i in xrange(n_test_batches):
-                        test_y_pred = test_func(i)
-                        test_preds.append(test_y_pred)
-                    test_preds = np.concatenate(test_preds)
-                    test_score = 1 - np.mean(np.not_equal(test_cpu_y, test_preds))
+            if epoch % 1 == 0:
+                test_preds = []
+                for i in xrange(n_test_batches):
+                    test_y_pred = test_func(i)
+                    test_preds.append(test_y_pred)
+                test_preds = np.concatenate(test_preds)
+                test_score = 1 - np.mean(np.not_equal(test_cpu_y, test_preds))
 
-                    precision, recall, beta, support = precision_recall_fscore_support(test_cpu_y, test_preds, pos_label=1)
+                precision, recall, beta, support = precision_recall_fscore_support(test_cpu_y, test_preds, pos_label=1)
 
-                    if test_score > best_score:
-                        best_score = test_score
-                        # save the sentence vectors
-                        train_sens = [get_train_sentvec(i) for i in range(n_train_batches)]
-                        test_sens = [get_test_sentvec(i) for i in range(n_test_batches)]
+                if test_score > best_score:
+                    best_score = test_score
+                    # save the sentence vectors
+                    train_sens = [get_train_sentvec(i) for i in range(n_train_batches)]
+                    test_sens = [get_test_sentvec(i) for i in range(n_test_batches)]
 
-                        train_sens = np.concatenate(train_sens, axis=0)
-                        test_sens = np.concatenate(test_sens, axis=0)
+                    train_sens = np.concatenate(train_sens, axis=0)
+                    test_sens = np.concatenate(test_sens, axis=0)
 
-                        out_train_sent_file = "./results/train_sent.vec"
-                        out_test_sent_file = "./results/test_sent.vec"
+                    out_train_sent_file = "./results/train_sent.vec"
+                    out_test_sent_file = "./results/test_sent.vec"
 
-                        with open(out_train_sent_file, 'w') as train_f, open(out_test_sent_file, 'w') as test_f:
-                            for i in range(len(train_sens)):
-                                tr_doc_vect = train_sens[i][0][:nunmber_train_sens[i]]
-                                train_f.write(json.dumps(tr_doc_vect.tolist()) + "\n")
+                    with open(out_train_sent_file, 'w') as train_f, open(out_test_sent_file, 'w') as test_f:
+                        for i in range(len(train_sens)):
+                            tr_doc_vect = train_sens[i][0][:number_train_sens[i]]
+                            train_f.write(json.dumps(tr_doc_vect.tolist()) + "\n")
 
-                            for i in range(len(test_sens)):
-                                te_doc_vect = test_sens[i][0][:nunmber_test_sens[i]]
-                                test_f.write(json.dumps(te_doc_vect.tolist()) + "\n")
-                        print "Get best performace at %d iteration" % epoch
+                        for i in range(len(test_sens)):
+                            te_doc_vect = test_sens[i][0][:number_test_sens[i]]
+                            test_f.write(json.dumps(te_doc_vect.tolist()) + "\n")
+                    print "Get best performace at %d iteration" % epoch
 
-                    end_time = timeit.default_timer()
-                    print "Iteration %d , precision, recall, support" % epoch, precision, recall, support
-                    print "Using time %f m" % ((end_time -start_time)/60.)
-
-
+                end_time = timeit.default_timer()
+                print "Iteration %d , precision, recall, support" % epoch, precision, recall, support
+                print "Using time %f m" % ((end_time -start_time)/60.)
+        
 def parse_args():
     ap = argparse.ArgumentParser()
     ap.add_argument("--option", type=str, help="the configuration file")
@@ -280,7 +282,7 @@ def main():
     digit_dataset = nn.transform_event_dataset(dataset, word2id, class2id, data_type, max_sens, max_words, padding)
 
     model = GICF(option)
-    #model.run_experiment(digit_dataset, embedding)
+    model.run_experiment(digit_dataset, embedding)
 
 
 if __name__ == "__main__":
