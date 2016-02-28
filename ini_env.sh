@@ -12,8 +12,9 @@ scp -r tskatom@embers4.cs.vt.edu:/home/tskatom/workspace/Protest_Event_Encoder/d
 
 # install ipython
 sudo apt-get install ipython
-sudo apt-get install nltk
+sudo pip install nltk
+sudo pip install sklearn
 python util/download_punkt.py
 
 # prepare the data
-python ./util/transorm_json_tokens.py
+#python ./util/transorm_json_tokens.py
