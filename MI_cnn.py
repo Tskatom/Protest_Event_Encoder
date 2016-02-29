@@ -36,6 +36,7 @@ class GICF(object):
         # load parameters
         num_maps_word = self.options["num_maps_word"]
         drop_rate_word = self.options["drop_rate_word"]
+        drop_rate_sentence = self.options["drop_rate_sentence"]
         word_window = self.options["word_window"]
         word_dim = self.options["word_dim"]
         k_max_word = self.options["k_max_word"]
@@ -93,9 +94,9 @@ class GICF(object):
         n_in = sent_vec_dim
         n_out = 2
         sen_W_values = np.zeros((n_in, n_out), dtype=theano.config.floatX)
-        sen_W = shared(value=sen_W_values, borrow=True, name="logis_W")
+        sen_W = theano.shared(value=sen_W_values, borrow=True, name="logis_W")
         sen_b_values = np.zeros((n_out,), dtype=theano.config.floatX)
-        sen_b = shared(value=sen_b_values, borrow=True, name="logis_b")
+        sen_b = theano.shared(value=sen_b_values, borrow=True, name="logis_b")
 
         drop_sent_prob = T.nnet.softmax(T.dot(dropout_sent_vec, sen_W) + sen_b)
         sent_prob = T.nnet.softmax(T.dot(sent_vec, sen_W*(1-drop_rate_sentence)) + sen_b)
@@ -120,8 +121,8 @@ class GICF(object):
         # collect parameters
         self.params.append(words)
         self.params += dropout_word_conv.params
-        self.params.append(sent_W)
-        self.params.append(sent_b)
+        self.params.append(sen_W)
+        self.params.append(sen_b)
         
         grad_updates = nn.sgd_updates_adadelta(self.params,
                 drop_cost,
@@ -139,7 +140,7 @@ class GICF(object):
 
         # construt the model
         index = T.iscalar()
-        train_func = theano.function([index], dropout_cost, updates=grad_updates,
+        train_func = theano.function([index], drop_cost, updates=grad_updates,
                 givens={
                     x: train_x[index*batch_size:(index+1)*batch_size],
                     y: train_y[index*batch_size:(index+1)*batch_size]

@@ -1,0 +1,19 @@
+{
+"max_sens": 15,
+"max_words": 70,
+"padding": 3,
+"num_maps_word": 50,
+"drop_rate_word": 0.2,
+"word_window": 5,
+"word_dim": 100,
+"k_max_word": 3,
+"num_maps_sentence": 100,
+"drop_rate_sentence": 0.5,
+"sentence_window": 3,
+"k_max_sentence": 2,
+"batch_size": 50,
+"rho": 0.95,
+"epsilon": 1e-6,
+"norm_lim": 9,
+"max_iteration": 50
+}
