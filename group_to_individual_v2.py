@@ -120,8 +120,15 @@ def _vstack(m):
 
 class GICF:
 
-    def SGD(self, data_X, data_Y):
+    def SGD(self, train_x, train_y, test_x, test_y):
 
+        train_X = np.array(train_x)
+        train_Y = np.array(train_y)
+        test_X = np.array(test_x)
+        test_Y = np.array(test_y)
+
+    
+        """
         data_X = np.array(data_X)
         data_Y = np.array(data_Y)
         train_idx, test_idx = [sp for sp in sklearn.cross_validation.StratifiedShuffleSplit(data_Y, 3)][0]
@@ -131,17 +138,18 @@ class GICF:
 
         test_X = data_X[test_idx]
         test_Y = data_Y[test_idx]
+        """
 
         lambd = 0.05; beta = 1.0;
         iteration = 2000 
-        x_dimension = 50
+        x_dimension = 150
         w = np.random.rand(x_dimension)
         for t in range(iteration):
             eta = 1./ ((t + 1) * lambd)#lambd#
-            kset = train_idx[random.sample(range(0, len(train_idx) - 1), 3)]
+            kset = random.sample(range(0, len(train_X) - 1), 3)
 
-            X = [data_X[k] for k in kset]
-            Y = [data_Y[k] for k in kset]
+            X = [train_X[k] for k in kset]
+            Y = [train_Y[k] for k in kset]
             delta_w = grad_func(X, Y, w)
             # print check_grad(X, Y, w)
             new_w = w - eta * delta_w
@@ -220,16 +228,17 @@ def load_event_dataset(fold=0):
     groups = ["train", "test"]
     dataset = []
     for group in groups:
-        train_x_file = "./final_experiments/GICF/results/gicf_%d_%s_sent.vec" % (fold, group)
-        train_y_file = "./data/new_multi_label/%d/event_%s.event_cat" % group
-        xs = [json.loads(l) for l in open(train_x_file)]
-        ys = [0 if l.strip()=="non_protest" else 1 for l in open(train_y_file)]
+        x_file = "./final_experiments/GICF/results/gicf_%d_%s_sent.vec" % (fold, group)
+        y_file = "./data/new_multi_label/%d/event_%s.event_cat" % (fold, group)
+        xs = [json.loads(l) for l in open(x_file)]
+        ys = [0 if l.strip()=="non_protest" else 1 for l in open(y_file)]
         dataset.append((xs, ys))
     return dataset
 
 def main(args):
     import json
     import os
+    """
     dataMap = {}
     # count = 0
     dataX, dataY = [], []
@@ -253,13 +262,21 @@ def main(args):
         model = GICF()
         model, perf1, perf2 = model.SGD(dataX, dataY)
         writer.write('F1-test:%f\tF1-Train:%f\n' % (perf1, perf2))
-
+    """
+    # code for event protest
+    dataset = load_event_dataset(args.fold)
+    train_set, test_set = dataset
+    train_x, train_y = train_set
+    test_x, test_y = test_set
+    with open("group2ind_result_%d.txt" % args.fold, 'w') as writer:
+        model = GICF()
+        model, perf1, perf2 = model.SGD(train_x, train_y, test_x, test_y)
+        writer.write("F1-Test:%f \t F1-Train: %f\n" % (perf1, perf2))
 
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("-f", "--inputfile", help="input file for training model")
-    ap.add_argument("-prefix", type=str, help="prefix file")
-    ap.add_argument("-sufix", type=str, help="sufix file")
+    ap.add_argument("-fold", type=int, help="fold name")
     args = ap.parse_args()
     main(args)
