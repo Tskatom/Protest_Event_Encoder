@@ -1,2 +1,55 @@
-Uing time 5.687703 m
-Uing time 5.705234 m
+Uing time 5.675579 m
+Uing time 5.703985 m
+Uing time 5.697718 m
+Uing time 5.644661 m
+Get best performance at 5 iteration 0.840764 
+Iteration 5, neg precision 0.840731, pos precision 1.000000, neg recall 1.000000 pos recall 0.001332 
+Uing time 13.330927 m
+Uing time 13.330949 m
+Uing time 5.650049 m
+Uing time 5.622065 m
+Uing time 5.632379 m
+Uing time 5.672701 m
+Iteration 10, neg precision 0.840731, pos precision 1.000000, neg recall 1.000000 pos recall 0.001332 
+Uing time 7.003534 m
+Uing time 7.003553 m
+Uing time 5.687566 m
+Uing time 5.675727 m
+Uing time 5.716217 m
+Uing time 5.712220 m
+Iteration 15, neg precision 0.840731, pos precision 1.000000, neg recall 1.000000 pos recall 0.001332 
+Uing time 6.969480 m
+Uing time 6.969500 m
+Uing time 5.635703 m
+Uing time 5.615541 m
+Uing time 5.613398 m
+Uing time 5.607856 m
+Get best performance at 20 iteration 0.844798 
+Iteration 20, neg precision 0.846948, pos precision 0.672414, neg recall 0.995201 pos recall 0.051931 
+Uing time 13.235083 m
+Uing time 13.235103 m
+Uing time 5.670569 m
+Uing time 5.668277 m
+Uing time 5.550906 m
+Uing time 5.515688 m
+Iteration 25, neg precision 0.840552, pos precision 0.000000, neg recall 1.000000 pos recall 0.000000 
+Uing time 6.744690 m
+Uing time 6.744708 m
+Uing time 5.521224 m
+Uing time 5.488747 m
+Uing time 5.503411 m
+Uing time 5.532781 m
+Iteration 30, neg precision 0.840552, pos precision 0.000000, neg recall 1.000000 pos recall 0.000000 
+Uing time 6.791072 m
+Uing time 6.791091 m
+Uing time 5.527811 m
+Uing time 5.494310 m
+Uing time 5.477470 m
+Uing time 5.511682 m
+Iteration 35, neg precision 0.840552, pos precision 0.000000, neg recall 1.000000 pos recall 0.000000 
+Uing time 6.785352 m
+Uing time 6.785371 m
+Uing time 5.538770 m
+Uing time 5.542864 m
+Uing time 5.496342 m
+Uing time 5.537133 m

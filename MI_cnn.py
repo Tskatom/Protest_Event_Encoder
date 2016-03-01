@@ -114,7 +114,14 @@ class GICF(object):
 
         drop_doc_preds = T.argmax(drop_doc_prob, axis=1)
         doc_preds = T.argmax(doc_prob, axis=1)
-        drop_cost = -T.mean(T.log(drop_doc_prob)[T.arange(y.shape[0]), y])
+
+        # instance level cost
+        drop_sent_cost = T.mean(T.maximum(0.0, nn.as_floatX(1.0) - T.sgn(drop_sent_prob - nn.as_floatX(0.5)) * T.dot(dropout_sent_vec, sen_W)))
+        
+        # bag level cost
+        cost_mask = theano.shared(np.asarray([1.,2.], dtype=theano.config.floatX))
+        drop_mask_log = T.log(drop_doc_prob) * cost_mask
+        drop_cost = -T.mean(drop_mask_log[T.arange(y.shape[0]), y]) * nn.as_floatX(3.0) + drop_sent_cost
         cost = -T.mean(T.log(doc_prob)[T.arange(y.shape[0]), y])
        
 
@@ -156,7 +163,7 @@ class GICF(object):
                     x:train_x[index*batch_size:(index+1)*batch_size]
                     })
 
-        get_test_sentvec_prob = theano.function([index], sent_prob,
+        get_test_sent_prob = theano.function([index], sent_prob,
                 givens={
                     x:test_x[index*batch_size:(index+1)*batch_size]
                     })
