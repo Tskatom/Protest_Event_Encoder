@@ -116,12 +116,19 @@ class GICF(object):
         doc_preds = T.argmax(doc_prob, axis=1)
 
         # instance level cost
-        drop_sent_cost = T.mean(T.maximum(0.0, nn.as_floatX(1.0) - T.sgn(drop_sent_prob - nn.as_floatX(0.5)) * T.dot(dropout_sent_vec, sen_W)))
-        
+        drop_sent_cost = T.mean(T.maximum(0.0, nn.as_floatX(1.0) - T.sgn(drop_sent_prob.reshape((x.shape[0]*x.shape[1], n_out)) - nn.as_floatX(0.5)) * T.dot(dropout_sent_vec, sen_W)))
+
+        # we need that the most positive instance at least 0.7 in pos bags
+        # and at most 0.1 in neg bags
+        most_positive_prob = T.max(drop_sent_prob[:,:,1], axis=1)
+        pos_cost = T.maximum(0.0, nn.as_floatX(0.7) - most_positive_prob)
+        neg_cost = T.maximum(0.0, most_positive_prob - nn.as_floatX(0.05))
+        penal_cost = T.mean(pos_cost * y + neg_cost * (nn.as_floatX(1.0) - y))
+
         # bag level cost
-        cost_mask = theano.shared(np.asarray([1.,2.], dtype=theano.config.floatX))
+        cost_mask = theano.shared(np.asarray([1., 3.], dtype=theano.config.floatX))
         drop_mask_log = T.log(drop_doc_prob) * cost_mask
-        drop_cost = -T.mean(drop_mask_log[T.arange(y.shape[0]), y]) * nn.as_floatX(3.0) + drop_sent_cost
+        drop_cost = -T.mean(drop_mask_log[T.arange(y.shape[0]), y]) * nn.as_floatX(3.0) + drop_sent_cost + nn.as_floatX(2.0) * penal_cost
         cost = -T.mean(T.log(doc_prob)[T.arange(y.shape[0]), y])
        
 
