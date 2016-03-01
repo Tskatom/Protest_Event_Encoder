@@ -104,19 +104,27 @@ class GICF(object):
         # reform the sent vec to doc level
         drop_sent_prob = drop_sent_prob.reshape((x.shape[0], x.shape[1], n_out))
         sent_prob = sent_prob.reshape((x.shape[0], x.shape[1], n_out))
-
+        
+        """
         # the pos probability bag label equals to 1 - all negative
         drop_doc_prob = T.prod(drop_sent_prob, axis=1)
         drop_doc_prob = T.set_subtensor(drop_doc_prob[:,1], 1 - drop_doc_prob[:,0])
-        
+
         doc_prob = T.prod(sent_prob, axis=1)
         doc_prob = T.set_subtensor(doc_prob[:,1], 1 - doc_prob[:,0])
+        
+        """
+        # the pos probability bag label is the most positive probability
+        drop_doc_prob = T.max(drop_sent_prob, axis=1)
+        drop_doc_prob = T.set_subtensor(drop_doc_prob[:,0], 1 - drop_doc_prob[:,1])
+        doc_prob = T.max(sent_prob, axis=1)
+        doc_prob = T.set_subtensor(doc_prob[:,0], 1 - doc_prob[:,1])
 
         drop_doc_preds = T.argmax(drop_doc_prob, axis=1)
         doc_preds = T.argmax(doc_prob, axis=1)
 
         # instance level cost
-        drop_sent_cost = T.mean(T.maximum(0.0, nn.as_floatX(1.0) - T.sgn(drop_sent_prob.reshape((x.shape[0]*x.shape[1], n_out)) - nn.as_floatX(0.5)) * T.dot(dropout_sent_vec, sen_W)))
+        drop_sent_cost = T.mean(T.maximum(0.0, nn.as_floatX(3.0) - T.sgn(drop_sent_prob.reshape((x.shape[0]*x.shape[1], n_out))[:,0] - nn.as_floatX(0.5)) * T.dot(dropout_sent_vec, sen_W)[:,0]))
 
         # we need that the most positive instance at least 0.7 in pos bags
         # and at most 0.1 in neg bags
@@ -128,7 +136,9 @@ class GICF(object):
         # bag level cost
         cost_mask = theano.shared(np.asarray([1., 3.], dtype=theano.config.floatX))
         drop_mask_log = T.log(drop_doc_prob) * cost_mask
-        drop_cost = -T.mean(drop_mask_log[T.arange(y.shape[0]), y]) * nn.as_floatX(3.0) + drop_sent_cost + nn.as_floatX(2.0) * penal_cost
+        drop_bag_cost = -T.mean(drop_mask_log[T.arange(y.shape[0]), y])
+        drop_cost = drop_bag_cost * nn.as_floatX(3.0) + drop_sent_cost #+ nn.as_floatX(2.0) * penal_cost
+
         cost = -T.mean(T.log(doc_prob)[T.arange(y.shape[0]), y])
        
 
@@ -154,7 +164,7 @@ class GICF(object):
 
         # construt the model
         index = T.iscalar()
-        train_func = theano.function([index], drop_cost, updates=grad_updates,
+        train_func = theano.function([index], [drop_cost, drop_bag_cost, drop_sent_cost, penal_cost], updates=grad_updates,
                 givens={
                     x: train_x[index*batch_size:(index+1)*batch_size],
                     y: train_y[index*batch_size:(index+1)*batch_size]
@@ -196,6 +206,9 @@ class GICF(object):
                 costs.append(cost_epoch)
                 set_zero(zero_vec)
 
+            total_train_cost, train_bag_cost, train_sent_cost, train_penal_cost = zip(*costs)
+            print "Iteration %d, total_cost %f bag_cost %f sent_cost %f penal_cost %f\n" %  (epoch, np.mean(total_train_cost), np.mean(train_bag_cost), np.mean(train_sent_cost), np.mean(train_penal_cost))
+
             if epoch % 5 == 0:
                 test_preds = []
                 for i in xrange(n_test_batches):
@@ -226,7 +239,7 @@ class GICF(object):
 
                 end_time = timeit.default_timer()
                 print "Iteration %d , precision, recall, support" % epoch, precision, recall, support
-                log_file.write("Iteration %d, neg precision %f, pos precision %f, neg recall %f pos recall %f \n" % (epoch, precision[0], precision[1], recall[0], recall[1]))
+                log_file.write("Iteration %d, neg precision %f, pos precision %f, neg recall %f pos recall %f , total_cost %f bag_cost %f sent_cost %f penal_cost %f\n" % (epoch, precision[0], precision[1], recall[0], recall[1], np.mean(total_train_cost), np.mean(train_bag_cost), np.mean(train_sent_cost), np.mean(train_penal_cost)))
                 print "Using time %f m" % ((end_time -start_time)/60.)
                 log_file.write("Uing time %f m\n" % ((end_time - start_time)/60.))
             end_time = timeit.default_timer()
