@@ -92,18 +92,18 @@ class GICF(object):
         
         # construct sentence level classifier
         n_in = sent_vec_dim
-        n_out = 2
+        n_out = 1
         sen_W_values = np.zeros((n_in, n_out), dtype=theano.config.floatX)
         sen_W = theano.shared(value=sen_W_values, borrow=True, name="logis_W")
-        sen_b_values = np.zeros((n_out,), dtype=theano.config.floatX)
-        sen_b = theano.shared(value=sen_b_values, borrow=True, name="logis_b")
+        sen_b_value = nn.as_floatX(0.0)
+        sen_b = theano.shared(value=sen_b_value, borrow=True, name="logis_b")
 
-        drop_sent_prob = T.nnet.softmax(T.dot(dropout_sent_vec, sen_W) + sen_b)
-        sent_prob = T.nnet.softmax(T.dot(sent_vec, sen_W*(1-drop_rate_sentence)) + sen_b)
+        drop_sent_prob = T.nnet.sigmoid(T.dot(dropout_sent_vec, sen_W) + sen_b)
+        sent_prob = T.nnet.sigmoid(T.dot(sent_vec, sen_W*(1-drop_rate_sentence)) + sen_b)
 
         # reform the sent vec to doc level
-        drop_sent_prob = drop_sent_prob.reshape((x.shape[0], x.shape[1], n_out))
-        sent_prob = sent_prob.reshape((x.shape[0], x.shape[1], n_out))
+        drop_sent_prob = drop_sent_prob.reshape((x.shape[0], x.shape[1]))
+        sent_prob = sent_prob.reshape((x.shape[0], x.shape[1]))
         
         """
         # the pos probability bag label equals to 1 - all negative
@@ -116,30 +116,29 @@ class GICF(object):
         """
         # the pos probability bag label is the most positive probability
         drop_doc_prob = T.max(drop_sent_prob, axis=1)
-        drop_doc_prob = T.set_subtensor(drop_doc_prob[:,0], 1 - drop_doc_prob[:,1])
+        drop_doc_prob = T.clip(drop_doc_prob, nn.as_floatX(1e-7), nn.as_floatX(1 - 1e-7 ))
         doc_prob = T.max(sent_prob, axis=1)
-        doc_prob = T.set_subtensor(doc_prob[:,0], 1 - doc_prob[:,1])
+        doc_prob = T.clip(doc_prob, nn.as_floatX(1e-7), nn.as_floatX(1 - 1e-7 ))
 
-        drop_doc_preds = T.argmax(drop_doc_prob, axis=1)
-        doc_preds = T.argmax(doc_prob, axis=1)
+        drop_doc_preds = drop_doc_prob > 0.5
+        doc_preds = doc_prob > 0.5
 
         # instance level cost
-        drop_sent_cost = T.mean(T.maximum(0.0, nn.as_floatX(3.0) - T.sgn(drop_sent_prob.reshape((x.shape[0]*x.shape[1], n_out))[:,0] - nn.as_floatX(0.5)) * T.dot(dropout_sent_vec, sen_W)[:,0]))
+        drop_sent_cost = T.mean(T.maximum(0.0, nn.as_floatX(3.0) - T.sgn(drop_sent_prob.reshape((x.shape[0]*x.shape[1], n_out)) - nn.as_floatX(0.6)) * T.dot(dropout_sent_vec, sen_W)))
 
         # we need that the most positive instance at least 0.7 in pos bags
         # and at most 0.1 in neg bags
-        most_positive_prob = T.max(drop_sent_prob[:,:,1], axis=1)
+        most_positive_prob = T.max(drop_sent_prob, axis=1)
         pos_cost = T.maximum(0.0, nn.as_floatX(0.7) - most_positive_prob)
         neg_cost = T.maximum(0.0, most_positive_prob - nn.as_floatX(0.05))
         penal_cost = T.mean(pos_cost * y + neg_cost * (nn.as_floatX(1.0) - y))
 
         # bag level cost
-        cost_mask = theano.shared(np.asarray([1., 3.], dtype=theano.config.floatX))
-        drop_mask_log = T.log(drop_doc_prob) * cost_mask
-        drop_bag_cost = -T.mean(drop_mask_log[T.arange(y.shape[0]), y])
-        drop_cost = drop_bag_cost * nn.as_floatX(3.0) + drop_sent_cost #+ nn.as_floatX(2.0) * penal_cost
+        drop_bag_cost = T.mean(-y * T.log(drop_doc_prob) * nn.as_floatX(4.) - (1 - y) * T.log(1 - drop_doc_prob))
+        #drop_cost = drop_bag_cost * nn.as_floatX(3.0) + drop_sent_cost + nn.as_floatX(2.0) * penal_cost
+        drop_cost = drop_bag_cost * nn.as_float(3.) + drop_sent_cost
 
-        cost = -T.mean(T.log(doc_prob)[T.arange(y.shape[0]), y])
+        cost = T.mean(-y * T.log(doc_prob) - (1 - y) * T.log(1 - doc_prob))
        
 
         # collect parameters
@@ -155,6 +154,7 @@ class GICF(object):
                 norm_lim)
 
         # construct the dataset
+        # random the 
         train_x, train_y = nn.shared_dataset(dataset[0])
         test_x, test_y = nn.shared_dataset(dataset[1])
         test_cpu_y = dataset[1][1]
@@ -222,17 +222,17 @@ class GICF(object):
                 if test_score > best_score:
                     best_score = test_score
                     # save the sentence vectors
-                    train_sens = [get_train_sent_prob(i) for i in range(n_train_batches)]
+                    #train_sens = [get_train_sent_prob(i) for i in range(n_train_batches)]
                     test_sens = [get_test_sent_prob(i) for i in range(n_test_batches)]
 
-                    train_sens = np.concatenate(train_sens, axis=0)
+                    #train_sens = np.concatenate(train_sens, axis=0)
                     test_sens = np.concatenate(test_sens, axis=0)
 
-                    out_train_sent_file = "./results/%s_train_sent.vec" % exp_name
+                    #out_train_sent_file = "./results/%s_train_sent.vec" % exp_name
                     out_test_sent_file = "./results/%s_test_sent.vec" % exp_name
 
                     with open(out_train_sent_file, 'w') as train_f, open(out_test_sent_file, 'w') as test_f:
-                        cPickle.dump(train_sens, train_f)
+                        #cPickle.dump(train_sens, train_f)
                         cPickle.dump(test_sens, test_f)
                     print "Get best performace at %d iteration %f" % (epoch, test_score)
                     log_file.write("Get best performance at %d iteration %f \n" % (epoch, test_score))
