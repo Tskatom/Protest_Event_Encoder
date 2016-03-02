@@ -21,7 +21,7 @@ vec_random_fn=./data/random_w2v_${word_dm}.pkl
 pretrained_fn=/home/ubuntu/workspace/ssd/data/100d_vectors_w2v.txt
 python $text_tool --task gen_emb --vocab_fn $vocab_fn --vec_random_fn $vec_random_fn --vec_trained_fn $vec_trained_fn --pretrained_fn $pretrained_fn --emb_dm $word_dm
 
-for i in `seq 0 4`;
+for i in `seq 2 4`;
 do
     echo Start Training the model
     exp_name=mi_${i}

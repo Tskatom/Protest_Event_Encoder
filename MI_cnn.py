@@ -136,7 +136,7 @@ class GICF(object):
         # bag level cost
         drop_bag_cost = T.mean(-y * T.log(drop_doc_prob) * nn.as_floatX(4.) - (1 - y) * T.log(1 - drop_doc_prob))
         #drop_cost = drop_bag_cost * nn.as_floatX(3.0) + drop_sent_cost + nn.as_floatX(2.0) * penal_cost
-        drop_cost = drop_bag_cost * nn.as_float(3.) + drop_sent_cost
+        drop_cost = drop_bag_cost * nn.as_floatX(3.) + drop_sent_cost
 
         cost = T.mean(-y * T.log(doc_prob) - (1 - y) * T.log(1 - doc_prob))
        
@@ -209,7 +209,7 @@ class GICF(object):
             total_train_cost, train_bag_cost, train_sent_cost, train_penal_cost = zip(*costs)
             print "Iteration %d, total_cost %f bag_cost %f sent_cost %f penal_cost %f\n" %  (epoch, np.mean(total_train_cost), np.mean(train_bag_cost), np.mean(train_sent_cost), np.mean(train_penal_cost))
 
-            if epoch % 5 == 0:
+            if epoch % 1 == 0:
                 test_preds = []
                 for i in xrange(n_test_batches):
                     test_y_pred = test_func(i)
@@ -219,8 +219,8 @@ class GICF(object):
 
                 precision, recall, beta, support = precision_recall_fscore_support(test_cpu_y, test_preds, pos_label=1)
 
-                if test_score > best_score:
-                    best_score = test_score
+                if beta[1] > best_score:
+                    best_score = beta[1]
                     # save the sentence vectors
                     #train_sens = [get_train_sent_prob(i) for i in range(n_train_batches)]
                     test_sens = [get_test_sent_prob(i) for i in range(n_test_batches)]
@@ -231,15 +231,15 @@ class GICF(object):
                     #out_train_sent_file = "./results/%s_train_sent.vec" % exp_name
                     out_test_sent_file = "./results/%s_test_sent.vec" % exp_name
 
-                    with open(out_train_sent_file, 'w') as train_f, open(out_test_sent_file, 'w') as test_f:
+                    with open(out_test_sent_file, 'w') as test_f:
                         #cPickle.dump(train_sens, train_f)
                         cPickle.dump(test_sens, test_f)
                     print "Get best performace at %d iteration %f" % (epoch, test_score)
                     log_file.write("Get best performance at %d iteration %f \n" % (epoch, test_score))
 
                 end_time = timeit.default_timer()
-                print "Iteration %d , precision, recall, support" % epoch, precision, recall, support
-                log_file.write("Iteration %d, neg precision %f, pos precision %f, neg recall %f pos recall %f , total_cost %f bag_cost %f sent_cost %f penal_cost %f\n" % (epoch, precision[0], precision[1], recall[0], recall[1], np.mean(total_train_cost), np.mean(train_bag_cost), np.mean(train_sent_cost), np.mean(train_penal_cost)))
+                print "Iteration %d , precision, recall, f1" % epoch, precision, recall, beta
+                log_file.write("Iteration %d, neg precision %f, pos precision %f, neg recall %f pos recall %f , neg f1 %f, pos f1 %f, total_cost %f bag_cost %f sent_cost %f penal_cost %f\n" % (epoch, precision[0], precision[1], recall[0], recall[1], beta[0], beta[1], np.mean(total_train_cost), np.mean(train_bag_cost), np.mean(train_sent_cost), np.mean(train_penal_cost)))
                 print "Using time %f m" % ((end_time -start_time)/60.)
                 log_file.write("Uing time %f m\n" % ((end_time - start_time)/60.))
             end_time = timeit.default_timer()

@@ -1,0 +1,56 @@
+Iteration 1, neg precision 0.840552, pos precision 0.000000, neg recall 1.000000 pos recall 0.000000 , neg f1 0.913369, pos f1 0.000000, total_cost 3.697338 bag_cost 1.019799 sent_cost 0.637942 penal_cost 0.266338
+Uing time 7.084425 m
+Uing time 7.084456 m
+Iteration 2, neg precision 0.840552, pos precision 0.000000, neg recall 1.000000 pos recall 0.000000 , neg f1 0.913369, pos f1 0.000000, total_cost 3.143889 bag_cost 0.944390 sent_cost 0.310719 penal_cost 0.272275
+Uing time 7.096288 m
+Uing time 7.096317 m
+Get best performance at 3 iteration 0.840764 
+Iteration 3, neg precision 0.840731, pos precision 1.000000, neg recall 1.000000 pos recall 0.001332 , neg f1 0.913475, pos f1 0.002660, total_cost 2.938214 bag_cost 0.917976 sent_cost 0.184286 penal_cost 0.279710
+Uing time 8.390359 m
+Uing time 8.390392 m
+Get best performance at 4 iteration 0.812314 
+Iteration 4, neg precision 0.914532, pos precision 0.433566, neg recall 0.856782 pos recall 0.577896 , neg f1 0.884716, pos f1 0.495434, total_cost 2.796781 bag_cost 0.888254 sent_cost 0.132019 penal_cost 0.278856
+Uing time 8.392416 m
+Uing time 8.392449 m
+Get best performance at 5 iteration 0.843312 
+Iteration 5, neg precision 0.948732, pos precision 0.505798, neg recall 0.860066 pos recall 0.754993 , neg f1 0.902226, pos f1 0.605769, total_cost 2.349106 bag_cost 0.751664 sent_cost 0.094114 penal_cost 0.236709
+Uing time 8.398794 m
+Uing time 8.398827 m
+Get best performance at 6 iteration 0.894268 
+Iteration 6, neg precision 0.931869, pos precision 0.679943, neg recall 0.943167 pos recall 0.636485 , neg f1 0.937484, pos f1 0.657497, total_cost 1.824322 bag_cost 0.575297 sent_cost 0.098432 penal_cost 0.173332
+Uing time 8.394472 m
+Uing time 8.394505 m
+Get best performance at 7 iteration 0.897877 
+Iteration 7, neg precision 0.946126, pos precision 0.666256, neg recall 0.931548 pos recall 0.720373 , neg f1 0.938781, pos f1 0.692258, total_cost 1.603182 bag_cost 0.502262 sent_cost 0.096397 penal_cost 0.140804
+Uing time 8.392502 m
+Uing time 8.392537 m
+Get best performance at 8 iteration 0.904034 
+Iteration 8, neg precision 0.949500, pos precision 0.684796, neg recall 0.935590 pos recall 0.737683 , neg f1 0.942494, pos f1 0.710256, total_cost 1.462625 bag_cost 0.457399 sent_cost 0.090429 penal_cost 0.124102
+Uing time 8.395951 m
+Uing time 8.395982 m
+Get best performance at 9 iteration 0.910828 
+Iteration 9, neg precision 0.943373, pos precision 0.730181, neg recall 0.950998 pos recall 0.699068 , neg f1 0.947170, pos f1 0.714286, total_cost 1.304992 bag_cost 0.406644 sent_cost 0.085059 penal_cost 0.106140
+Uing time 8.396171 m
+Uing time 8.396202 m
+Get best performance at 10 iteration 0.907643 
+Iteration 10, neg precision 0.951332, pos precision 0.696030, neg recall 0.938116 pos recall 0.747004 , neg f1 0.944678, pos f1 0.720617, total_cost 1.198866 bag_cost 0.372957 sent_cost 0.079996 penal_cost 0.095180
+Uing time 8.396716 m
+Uing time 8.396750 m
+Iteration 11, neg precision 0.952295, pos precision 0.680288, neg recall 0.932811 pos recall 0.753662 , neg f1 0.942452, pos f1 0.715098, total_cost 1.086415 bag_cost 0.337088 sent_cost 0.075151 penal_cost 0.086342
+Uing time 7.087135 m
+Uing time 7.087166 m
+Iteration 12, neg precision 0.947089, pos precision 0.713158, neg recall 0.944936 pos recall 0.721704 , neg f1 0.946011, pos f1 0.717406, total_cost 1.003924 bag_cost 0.310782 sent_cost 0.071579 penal_cost 0.078357
+Uing time 7.084085 m
+Uing time 7.084116 m
+Iteration 13, neg precision 0.948829, pos precision 0.703325, neg recall 0.941399 pos recall 0.732357 , neg f1 0.945100, pos f1 0.717547, total_cost 0.927320 bag_cost 0.286908 sent_cost 0.066596 penal_cost 0.071133
+Uing time 7.078942 m
+Uing time 7.078974 m
+Iteration 14, neg precision 0.942520, pos precision 0.719008, neg recall 0.948472 pos recall 0.695073 , neg f1 0.945487, pos f1 0.706838, total_cost 0.867421 bag_cost 0.268106 sent_cost 0.063103 penal_cost 0.065756
+Uing time 7.083202 m
+Uing time 7.083233 m
+Iteration 15, neg precision 0.950064, pos precision 0.690683, neg recall 0.937105 pos recall 0.740346 , neg f1 0.943540, pos f1 0.714653, total_cost 0.803466 bag_cost 0.248246 sent_cost 0.058729 penal_cost 0.060336
+Uing time 7.081645 m
+Uing time 7.081677 m
+Iteration 16, neg precision 0.953182, pos precision 0.675355, neg recall 0.930791 pos recall 0.758988 , neg f1 0.941853, pos f1 0.714734, total_cost 0.749035 bag_cost 0.230697 sent_cost 0.056945 penal_cost 0.054631
+Uing time 7.079200 m
+Uing time 7.079232 m
