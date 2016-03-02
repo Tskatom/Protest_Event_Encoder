@@ -411,6 +411,25 @@ def generate_protest_event_label():
                     otf.write(txt)
                     olf.write(label + "\n")
 
+def shuffle_train_set():
+    infolder = "../data/new_multi_label"
+    for i in range(5):
+        sub_folder = os.path.join(infolder, "%d" % i) 
+        phases = ["train"]
+        for phase in phases:
+            txt_file = os.path.join(sub_folder, "event_%s.txt.tok" % phase)
+            label_file = os.path.join(sub_folder, "event_%s.event_cat" % phase)
+
+            txts = [l for l in open(txt_file)]
+            labels = [l for l in open(label_file)]
+
+            random_idx = np.random.permutation(range(len(txts)))
+
+            with open(txt_file, 'w') as tf, open(label_file, 'w') as lf:
+                for id in random_idx:
+                    tf.write(txts[id])
+                    lf.write(labels[id])
+
 def main():
     args = parse_args()
     task = args.task
@@ -467,6 +486,9 @@ def main():
         split_autogsr_data_train_test(es_file, non_file, pop_file, type_file)
     elif task == "generate_protest":
         generate_protest_event_label()
+    elif task == "shuffle_train":
+        shuffle_train_set()
+
 
 
 if __name__ == "__main__":
