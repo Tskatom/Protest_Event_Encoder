@@ -26,29 +26,16 @@ def ReLU(x):
 def Tanh(x):
     return T.tanh(x)
 
-def keep_max(input, theta, k):
-    sig_input = T.nnet.sigmoid(T.dot(input, theta))
-    sig_input = sig_input * sent_mask
+def construct_sentence_flag(digit_dataset):
+    # construt a two dimention matrix indicating the flag  of the sentences 
+    sent_flag = []
+    for doc in digit_dataset:
+        flags = []
+        for sen in doc:
+            flags.append(1 if np.any(sen) else 0)
+        sent_flag.append(flags)
+    return np.asarray(sent_flag)
 
-    if k== 0:
-        result = input * T.addbroadcast(sig_input, 3)
-        return result
-
-    sort_idx = T.argsort(sig_input, axis=2)
-    k_max_ids = sort_idx[:,:,-k:,:]
-    dim0, dim1, dim2, dim3 = k_max_ids.shape
-    batchids = T.repeat(T.arange(dim0), dim1*dim2*dim3)
-    mapids = T.repeat(T.arange(dim1), dim2*dim3).reshape((1, dim2*dim3))
-    mapids = T.repeat(mapids, dim0, axis=0).flatten()
-    rowids = k_max_ids.flatten()
-    colids = T.arange(dim3).reshape((1, dim3))
-    colids = T.repeat(colids, dim0*dim1*dim2, axis=0).flatten()
-    sig_mask = T.zeros_like(sig_input)
-    choosed = sig_input[batchids, mapids, rowids, colids]
-    sig_mask = T.set_subtensor(sig_mask[batchids, mapids, rowids, colids], 1)
-    input_mask = sig_mask * sig_input
-    result = input * T.addbroadcast(input_mask, 3)
-    return result, sig_input
 
 class GICF(object):
     def __init__(self, options):
@@ -69,7 +56,8 @@ class GICF(object):
         epsilon = self.options["epsilon"]
         norm_lim = self.options["norm_lim"]
         max_iteration = self.options["max_iteration"]
-        k = self.options["k_max"]
+
+        # construct the sentence label for each
 
         sentence_len = len(dataset[0][0][0][0])
         sentence_num = len(dataset[0][0][0])
@@ -102,6 +90,7 @@ class GICF(object):
                 k=k_max_word)
         sent_vec_dim = num_maps_word*k_max_word
         dropout_sent_vec = dropout_word_conv.output.reshape((x.shape[0] * x.shape[1], sent_vec_dim))
+        dropout_sent_vec = nn.dropout_from_layer(rng, dropout_sent_vec, drop_rate_sentence)
 
         word_conv = nn.ConvPoolLayer(rng, 
                 input=dropout_x_emb*(1 - drop_rate_word),
@@ -114,17 +103,58 @@ class GICF(object):
                 b=dropout_word_conv.b)
         sent_vec = word_conv.output.reshape((x.shape[0] * x.shape[1], sent_vec_dim))
         
-        theta_value = np.random.random((sent_vec_dim,1))
-        theta = shared(value=np.asarray(theta_value, dtype=theano.config.floatX), name="theta", borrow=True)
-        weighted_drop_sent_vec, weighted_sen_score = keep_max(dropout_sent_vec.reshape((x.shape[0], 1, x.shape[1], sent_vec_dim)), theta, k)
-        drop_doc_vec = T.sum(weighted_drop_sent_vec, axis=2).flatten(2)
-        
-        weighted_sent_vec, sen_score = keep_max(sent_vec.reshape((x.shape[0], 1, x.shape[1], sent_vec_dim)), theta, k)
-        doc_vec = T.sum(weighted_sent_vec, axis=2).flatten(2)
-        # we need to constrain the number of positive sentences in positive
-        
+        # construct sentence level classifier
+        n_in = sent_vec_dim
+        n_out = 2
+        sen_W_values = np.zeros((n_in, n_out), dtype=theano.config.floatX)
+        sen_W = theano.shared(value=sen_W_values, borrow=True, name="logis_W")
+        sen_b_values = np.zeros((n_out,), dtype=theano.config.floatX)
+        sen_b = theano.shared(value=sen_b_values, borrow=True, name="logis_b")
 
+        drop_sent_prob = T.nnet.softmax(T.dot(dropout_sent_vec, sen_W) + sen_b)
+        sent_prob = T.nnet.softmax(T.dot(sent_vec, sen_W*(1-drop_rate_sentence)) + sen_b)
+
+        # reform the sent vec to doc level
+        drop_sent_prob = drop_sent_prob.reshape((x.shape[0], x.shape[1], n_out))
+        sent_prob = sent_prob.reshape((x.shape[0], x.shape[1], n_out))
         
+        """
+        # the pos probability bag label equals to 1 - all negative
+        drop_doc_prob = T.prod(drop_sent_prob, axis=1)
+        drop_doc_prob = T.set_subtensor(drop_doc_prob[:,1], 1 - drop_doc_prob[:,0])
+
+        doc_prob = T.prod(sent_prob, axis=1)
+        doc_prob = T.set_subtensor(doc_prob[:,1], 1 - doc_prob[:,0])
+        
+        """
+        # the pos probability bag label is the most positive probability
+        drop_doc_prob = T.max(drop_sent_prob, axis=1)
+        drop_doc_prob = T.set_subtensor(drop_doc_prob[:,0], 1 - drop_doc_prob[:,1])
+        doc_prob = T.max(sent_prob, axis=1)
+        doc_prob = T.set_subtensor(doc_prob[:,0], 1 - doc_prob[:,1])
+
+        drop_doc_preds = T.argmax(drop_doc_prob, axis=1)
+        doc_preds = T.argmax(doc_prob, axis=1)
+
+        # instance level cost
+        drop_sent_cost = T.mean(T.maximum(0.0, nn.as_floatX(3.0) - T.sgn(drop_sent_prob.reshape((x.shape[0]*x.shape[1], n_out))[:,0] - nn.as_floatX(0.5)) * T.dot(dropout_sent_vec, sen_W)[:,0]))
+
+        # we need that the most positive instance at least 0.7 in pos bags
+        # and at most 0.1 in neg bags
+        most_positive_prob = T.max(drop_sent_prob[:,:,1], axis=1)
+        pos_cost = T.maximum(0.0, nn.as_floatX(0.7) - most_positive_prob)
+        neg_cost = T.maximum(0.0, most_positive_prob - nn.as_floatX(0.05))
+        penal_cost = T.mean(pos_cost * y + neg_cost * (nn.as_floatX(1.0) - y))
+
+        # bag level cost
+        cost_mask = theano.shared(np.asarray([1., 3.], dtype=theano.config.floatX))
+        drop_mask_log = T.log(drop_doc_prob) * cost_mask
+        drop_bag_cost = -T.mean(drop_mask_log[T.arange(y.shape[0]), y])
+        drop_cost = drop_bag_cost * nn.as_floatX(3.0) + drop_sent_cost #+ nn.as_floatX(2.0) * penal_cost
+
+        cost = -T.mean(T.log(doc_prob)[T.arange(y.shape[0]), y])
+       
+
         # collect parameters
         self.params.append(words)
         self.params += dropout_word_conv.params
