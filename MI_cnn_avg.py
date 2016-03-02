@@ -193,12 +193,14 @@ class GICF(object):
         train_func = theano.function([index], [drop_cost, drop_bag_cost, drop_sent_cost, penal_cost], updates=grad_updates,
                 givens={
                     x: train_x[index*batch_size:(index+1)*batch_size],
-                    y: train_y[index*batch_size:(index+1)*batch_size]
+                    y: train_y[index*batch_size:(index+1)*batch_size],
+                    sen_flags: train_flags[index*batch_size:(index+1)*batch_size]
                     })
 
         test_func = theano.function([index], doc_preds,
                 givens={
-                    x:test_x[index*batch_size:(index+1)*batch_size]
+                    x:test_x[index*batch_size:(index+1)*batch_size],
+                    sen_flags: test_flags[index*batch_size:(index+1)*batch_size]
                     })
 
         get_train_sent_prob = theano.function([index], sent_prob,
