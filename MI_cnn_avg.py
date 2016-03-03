@@ -101,7 +101,6 @@ class GICF(object):
                 k=k_max_word)
         sent_vec_dim = num_maps_word*k_max_word
         dropout_sent_vec = dropout_word_conv.output.reshape((x.shape[0] * x.shape[1], sent_vec_dim))
-        dropout_sent_vec = nn.dropout_from_layer(rng, dropout_sent_vec, drop_rate_sentence)
 
         word_conv = nn.ConvPoolLayer(rng,
                 input=dropout_x_emb*(1 - drop_rate_word),
@@ -160,7 +159,7 @@ class GICF(object):
         # and non of the positive instances in the negative bags
         
         # compute the number of positive instance
-        positive_count = T.sum((drop_sent_prob * sen_flags) > 0.6, axis=1)
+        positive_count = T.sum((drop_sent_prob * sen_flags) > 0.5, axis=1)
         pos_cost = T.maximum(nn.as_floatX(0.0), nn.as_floatX(2) - positive_count)
         neg_cost = T.maximum(nn.as_floatX(0.0), positive_count)
         
@@ -172,9 +171,9 @@ class GICF(object):
         penal_cost = T.mean(pos_cost * y + neg_cost * (nn.as_floatX(1.0) - y))
 
         # bag level cost
-        drop_bag_cost = T.mean(-y * T.log(drop_doc_prob) * nn.as_floatX(4.) - (1 - y) * T.log(1 - drop_doc_prob))
+        drop_bag_cost = T.mean(-y * T.log(drop_doc_prob) * nn.as_floatX(0.6) - (1 - y) * T.log(1 - drop_doc_prob) * nn.as_floatX(0.4))
         #drop_cost = drop_bag_cost * nn.as_floatX(3.0) + drop_sent_cost + nn.as_floatX(2.0) * penal_cost
-        drop_cost = drop_bag_cost * nn.as_floatX(3.) + drop_sent_cost + 10. * penal_cost
+        drop_cost = drop_bag_cost * nn.as_floatX(0.6) + drop_sent_cost * nn.as_floatX(0.1) + penal_cost * nn.as_floatX(0.3)
 
 
         # collect parameters
@@ -252,7 +251,7 @@ class GICF(object):
 
                 precision, recall, beta, support = precision_recall_fscore_support(test_cpu_y, test_preds, pos_label=1)
 
-                if beta[1] > best_score:
+                if beta[1] > best_score or epoch % 5 == 0:
                     best_score = beta[1]
                     # save the sentence vectors
                     train_sens = [get_train_sent_prob(i) for i in range(n_train_batches)]
