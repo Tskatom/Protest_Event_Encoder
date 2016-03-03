@@ -152,19 +152,29 @@ class GICF(object):
         doc_preds = doc_prob > 0.5
 
         # instance level cost
-        drop_sent_cost = T.mean(T.maximum(0.0, nn.as_floatX(.5) - T.sgn(drop_sent_prob.reshape((x.shape[0]*x.shape[1], n_out)) - nn.as_floatX(0.6)) * T.dot(dropout_sent_vec, sen_W)))
+        drop_sent_cost = T.sum(T.maximum(0.0, nn.as_floatX(.5) - T.sgn(drop_sent_prob.reshape((x.shape[0]*x.shape[1], n_out)) - nn.as_floatX(0.6)) * T.dot(dropout_sent_vec, sen_W)) * sen_flags.reshape((x.shape[0]*x.shape[1], n_out))) / T.sum(sen_flags)
 
         # we need that the most positive instance at least 0.7 in pos bags
         # and at most 0.1 in neg bags
+        # we want the number of positive instance should at least ...
+        # and non of the positive instances in the negative bags
+        
+        # compute the number of positive instance
+        positive_count = T.sum((drop_sent_prob * sen_flags) > 0.6, axis=1)
+        pos_cost = T.maximum(nn.as_floatX(0.0), nn.as_floatX(2) - positive_count)
+        neg_cost = T.maximum(nn.as_floatX(0.0), positive_count)
+        
+        """
         most_positive_prob = T.max(drop_sent_prob, axis=1)
         pos_cost = T.maximum(0.0, nn.as_floatX(0.6) - most_positive_prob)
         neg_cost = T.maximum(0.0, most_positive_prob - nn.as_floatX(0.05))
+        """
         penal_cost = T.mean(pos_cost * y + neg_cost * (nn.as_floatX(1.0) - y))
 
         # bag level cost
         drop_bag_cost = T.mean(-y * T.log(drop_doc_prob) * nn.as_floatX(4.) - (1 - y) * T.log(1 - drop_doc_prob))
         #drop_cost = drop_bag_cost * nn.as_floatX(3.0) + drop_sent_cost + nn.as_floatX(2.0) * penal_cost
-        drop_cost = drop_bag_cost * nn.as_floatX(3.) + drop_sent_cost + penal_cost
+        drop_cost = drop_bag_cost * nn.as_floatX(3.) + drop_sent_cost + 10. * penal_cost
 
 
         # collect parameters
@@ -245,17 +255,17 @@ class GICF(object):
                 if beta[1] > best_score:
                     best_score = beta[1]
                     # save the sentence vectors
-                    #train_sens = [get_train_sent_prob(i) for i in range(n_train_batches)]
+                    train_sens = [get_train_sent_prob(i) for i in range(n_train_batches)]
                     test_sens = [get_test_sent_prob(i) for i in range(n_test_batches)]
 
-                    #train_sens = np.concatenate(train_sens, axis=0)
+                    train_sens = np.concatenate(train_sens, axis=0)
                     test_sens = np.concatenate(test_sens, axis=0)
 
-                    #out_train_sent_file = "./results/%s_train_sent.vec" % exp_name
-                    out_test_sent_file = "./results/%s_test_sent.vec" % exp_name
+                    out_train_sent_file = "./results/%s_train_sent_%d.vec" % (exp_name, epoch)
+                    out_test_sent_file = "./results/%s_test_sent_%d.vec" % (exp_name, epoch)
 
-                    with open(out_test_sent_file, 'w') as test_f:
-                        #cPickle.dump(train_sens, train_f)
+                    with open(out_test_sent_file, 'w') as test_f, open(out_train_sent_file, 'w') as train_f:
+                        cPickle.dump(train_sens, train_f)
                         cPickle.dump(test_sens, test_f)
                     print "Get best performace at %d iteration %f" % (epoch, test_score)
                     log_file.write("Get best performance at %d iteration %f \n" % (epoch, test_score))

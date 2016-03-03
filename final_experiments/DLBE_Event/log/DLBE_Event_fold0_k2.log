@@ -3,3 +3,14 @@ Epoch 2 test event perf 0.840552, precision [0.840552, 0.000000], recall[1.00000
 Epoch 3 test event perf 0.865605, precision [0.868246, 0.804124], recall[0.990402 0.207723] , f1[0.925310, 0.330159], train cost 0.442805
 Epoch 4 test event perf 0.891083, precision [0.897738, 0.814815], recall[0.982319 0.410120] , f1[0.938126, 0.545616], train cost 0.358153
 Epoch 5 test event perf 0.896391, precision [0.929686, 0.695976], recall[0.948472 0.621838] , f1[0.938985, 0.656821], train cost 0.319761
+Epoch 6 test event perf 0.900425, precision [0.927277, 0.725240], recall[0.956555 0.604527] , f1[0.941688, 0.659405], train cost 0.295383
+Epoch 7 test event perf 0.884289, precision [0.887955, 0.832258], recall[0.986865 0.343542] , f1[0.934801, 0.486334], train cost 0.272810
+Epoch 8 test event perf 0.892144, precision [0.898775, 0.817232], recall[0.982319 0.416778] , f1[0.938692, 0.552028], train cost 0.254510
+Epoch 9 test event perf 0.886837, precision [0.889318, 0.851613], recall[0.988381 0.351531] , f1[0.936236, 0.497644], train cost 0.231744
+Epoch 10 test event perf 0.901486, precision [0.921389, 0.754885], recall[0.965143 0.565912] , f1[0.942758, 0.646880], train cost 0.213736
+Epoch 11 test event perf 0.887898, precision [0.890864, 0.847352], recall[0.987623 0.362184] , f1[0.936751, 0.507463], train cost 0.190022
+Epoch 12 test event perf 0.887686, precision [0.891374, 0.838415], recall[0.986613 0.366178] , f1[0.936578, 0.509731], train cost 0.172564
+Epoch 13 test event perf 0.897877, precision [0.908024, 0.801339], recall[0.977520 0.478029] , f1[0.941491, 0.598832], train cost 0.151153
+Epoch 14 test event perf 0.890234, precision [0.895996, 0.821429], recall[0.983582 0.398136] , f1[0.937748, 0.536323], train cost 0.137926
+Epoch 15 test event perf 0.896178, precision [0.905563, 0.803241], recall[0.978530 0.462051] , f1[0.940634, 0.586644], train cost 0.121613
+Epoch 16 test event perf 0.889597, precision [0.893029, 0.844776], recall[0.986865 0.376831] , f1[0.937605, 0.521179], train cost 0.107220
