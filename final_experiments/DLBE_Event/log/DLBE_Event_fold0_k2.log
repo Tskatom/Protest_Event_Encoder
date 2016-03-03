@@ -1,0 +1,5 @@
+Epoch 1 test event perf 0.840552, precision [0.840552, 0.000000], recall[1.000000 0.000000] , f1[0.913369, 0.000000], train cost 0.610722
+Epoch 2 test event perf 0.840552, precision [0.840552, 0.000000], recall[1.000000 0.000000] , f1[0.913369, 0.000000], train cost 0.548890
+Epoch 3 test event perf 0.865605, precision [0.868246, 0.804124], recall[0.990402 0.207723] , f1[0.925310, 0.330159], train cost 0.442805
+Epoch 4 test event perf 0.891083, precision [0.897738, 0.814815], recall[0.982319 0.410120] , f1[0.938126, 0.545616], train cost 0.358153
+Epoch 5 test event perf 0.896391, precision [0.929686, 0.695976], recall[0.948472 0.621838] , f1[0.938985, 0.656821], train cost 0.319761

@@ -389,7 +389,7 @@ def run_cnn(exp_name,
                 freq_x: train_freq_x[index*batch_size:(index+1)*batch_size],
                 pos_x: train_pos_x[index*batch_size:(index+1)*batch_size],
                 sent_x:train_sent_x[index*batch_size:(index+1)*batch_size],
-                y_event: train_pop_y[index*batch_size:(index+1)*batch_size],
+                y_event: train_event_y[index*batch_size:(index+1)*batch_size],
                 })
 
     test_pred = function([index], total_preds,
@@ -454,12 +454,12 @@ def run_cnn(exp_name,
             pos_set_zero(pos_zero_vec)
 
 
-        if epoch % print_freq == 0:
+        if epoch % 1 == 0:
             # do test
             test_event_preds = np.concatenate([test_pred(i) for i in xrange(n_test_batches)])
-            test_event_score = compute_score(cpu_tst_pop_y, test_event_preds)
+            test_event_score = compute_score(cpu_tst_event_y, test_event_preds)
 
-            precision, recall, beta, support = precision_recall_fscore_support(test_cpu_y, test_event_preds, pos_label=1)
+            precision, recall, beta, support = precision_recall_fscore_support(cpu_tst_event_y, test_event_preds, pos_label=1)
 
             with open(os.path.join(perf_fn, "%s_%d.event_pred" % (exp_name, epoch)), 'w') as epf:
                 for p in test_event_preds:
