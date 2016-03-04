@@ -189,7 +189,7 @@ class GICF(object):
         # bag level cost
         drop_bag_cost = T.mean(-y * T.log(drop_doc_prob) * nn.as_floatX(0.6) - (1 - y) * T.log(1 - drop_doc_prob) * nn.as_floatX(0.4))
         #drop_cost = drop_bag_cost * nn.as_floatX(3.0) + drop_sent_cost + nn.as_floatX(2.0) * penal_cost
-        drop_cost = drop_bag_cost * nn.as_floatX(0.6) + drop_sent_cost * nn.as_floatX(0.1) + penal_cost * nn.as_floatX(0.3)  + sen_sim_cost * nn.as_floatX(0.5)
+        drop_cost = drop_bag_cost * nn.as_floatX(0.6) + drop_sent_cost * nn.as_floatX(0.1) + penal_cost * nn.as_floatX(0.3)  + sen_sim_cost * nn.as_floatX(0.001)
 
 
         # collect parameters
@@ -255,7 +255,7 @@ class GICF(object):
                 set_zero(zero_vec)
 
             total_train_cost, train_bag_cost, train_sent_cost, train_penal_cost, train_sim_cost = zip(*costs)
-            print "Iteration %d, total_cost %f bag_cost %f sent_cost %f penal_cost %f %f sim cost %f\n" %  (epoch, np.mean(total_train_cost), np.mean(train_bag_cost), np.mean(train_sent_cost), np.mean(train_penal_cost), np.mean(train_sim_cost))
+            print "Iteration %d, total_cost %f bag_cost %f sent_cost %f penal_cost %f sim cost %f\n" %  (epoch, np.mean(total_train_cost), np.mean(train_bag_cost), np.mean(train_sent_cost), np.mean(train_penal_cost), np.mean(train_sim_cost))
 
             if epoch % 1 == 0:
                 test_preds = []
