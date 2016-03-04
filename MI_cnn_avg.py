@@ -189,7 +189,7 @@ class GICF(object):
         # bag level cost
         drop_bag_cost = T.mean(-y * T.log(drop_doc_prob) * nn.as_floatX(0.6) - (1 - y) * T.log(1 - drop_doc_prob) * nn.as_floatX(0.4))
         #drop_cost = drop_bag_cost * nn.as_floatX(3.0) + drop_sent_cost + nn.as_floatX(2.0) * penal_cost
-        drop_cost = drop_bag_cost * nn.as_floatX(0.6) + drop_sent_cost * nn.as_floatX(0.1) + penal_cost * nn.as_floatX(0.3)  + sen_sim_cost * nn.as_floatX(0.001)
+        drop_cost = drop_bag_cost * nn.as_floatX(0.6) + drop_sent_cost * nn.as_floatX(0.1) + penal_cost * nn.as_floatX(0.5)  + sen_sim_cost * nn.as_floatX(0.0001)
 
 
         # collect parameters
