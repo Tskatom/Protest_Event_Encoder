@@ -170,10 +170,26 @@ class GICF(object):
         """
         penal_cost = T.mean(pos_cost * y + neg_cost * (nn.as_floatX(1.0) - y))
 
+        # add the sentence similarity constrains
+        sen_sen = T.dot(dropout_sent_vec, dropout_sent_vec.T)
+        sen_sqr = T.sum(dropout_sent_vec ** 2, axis=1)
+        sen_sqr_left = sen_sqr.dimshuffle(0, 'x')
+        sen_sqr_right = sen_sqr.dimshuffle('x', 0)
+        sen_sim_matrix = sen_sqr_left - 2 * sen_sqr + sen_sqr_right
+        sen_sim_matrix = T.exp(-1 * sen_sim_matrix)
+
+        sen_sim_prob = drop_sent_prob.reshape((x.shape[0]*x.shape[1], 1)) - drop_sent_prob.flatten()
+        sen_sim_prob = sen_smi_prob ** 2
+
+        sen_sim_flag = T.dot(sen_flags.reshape((x.shape[0]*x.shape[1],1)), sen_flags.reshape((1,x.shape[0]*x.shape[1])))
+
+        sen_sim_cost = T.sum(sen_sim_matrix * sen_sim_prob * sen_sim_flag) / T.sum(sen_sim_flag)
+
+
         # bag level cost
         drop_bag_cost = T.mean(-y * T.log(drop_doc_prob) * nn.as_floatX(0.6) - (1 - y) * T.log(1 - drop_doc_prob) * nn.as_floatX(0.4))
         #drop_cost = drop_bag_cost * nn.as_floatX(3.0) + drop_sent_cost + nn.as_floatX(2.0) * penal_cost
-        drop_cost = drop_bag_cost * nn.as_floatX(0.6) + drop_sent_cost * nn.as_floatX(0.1) + penal_cost * nn.as_floatX(0.3)
+        drop_cost = drop_bag_cost * nn.as_floatX(0.6) + drop_sent_cost * nn.as_floatX(0.1) + penal_cost * nn.as_floatX(0.3)  + sen_smi_cost * nn.as_floatX(0.5)
 
 
         # collect parameters
@@ -199,7 +215,7 @@ class GICF(object):
 
         # construt the model
         index = T.iscalar()
-        train_func = theano.function([index], [drop_cost, drop_bag_cost, drop_sent_cost, penal_cost], updates=grad_updates,
+        train_func = theano.function([index], [drop_cost, drop_bag_cost, drop_sent_cost, penal_cost, sen_sim_cost], updates=grad_updates,
                 givens={
                     x: train_x[index*batch_size:(index+1)*batch_size],
                     y: train_y[index*batch_size:(index+1)*batch_size],
@@ -238,8 +254,8 @@ class GICF(object):
                 costs.append(cost_epoch)
                 set_zero(zero_vec)
 
-            total_train_cost, train_bag_cost, train_sent_cost, train_penal_cost = zip(*costs)
-            print "Iteration %d, total_cost %f bag_cost %f sent_cost %f penal_cost %f\n" %  (epoch, np.mean(total_train_cost), np.mean(train_bag_cost), np.mean(train_sent_cost), np.mean(train_penal_cost))
+            total_train_cost, train_bag_cost, train_sent_cost, train_penal_cost, train_sim_cost = zip(*costs)
+            print "Iteration %d, total_cost %f bag_cost %f sent_cost %f penal_cost %f %f sim cost %f\n" %  (epoch, np.mean(total_train_cost), np.mean(train_bag_cost), np.mean(train_sent_cost), np.mean(train_penal_cost), np.mean(train_sim_cost))
 
             if epoch % 1 == 0:
                 test_preds = []
