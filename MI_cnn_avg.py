@@ -179,7 +179,7 @@ class GICF(object):
         sen_sim_matrix = T.exp(-1 * sen_sim_matrix)
 
         sen_sim_prob = drop_sent_prob.reshape((x.shape[0]*x.shape[1], 1)) - drop_sent_prob.flatten()
-        sen_sim_prob = sen_smi_prob ** 2
+        sen_sim_prob = sen_sim_prob ** 2
 
         sen_sim_flag = T.dot(sen_flags.reshape((x.shape[0]*x.shape[1],1)), sen_flags.reshape((1,x.shape[0]*x.shape[1])))
 
@@ -189,7 +189,7 @@ class GICF(object):
         # bag level cost
         drop_bag_cost = T.mean(-y * T.log(drop_doc_prob) * nn.as_floatX(0.6) - (1 - y) * T.log(1 - drop_doc_prob) * nn.as_floatX(0.4))
         #drop_cost = drop_bag_cost * nn.as_floatX(3.0) + drop_sent_cost + nn.as_floatX(2.0) * penal_cost
-        drop_cost = drop_bag_cost * nn.as_floatX(0.6) + drop_sent_cost * nn.as_floatX(0.1) + penal_cost * nn.as_floatX(0.3)  + sen_smi_cost * nn.as_floatX(0.5)
+        drop_cost = drop_bag_cost * nn.as_floatX(0.6) + drop_sent_cost * nn.as_floatX(0.1) + penal_cost * nn.as_floatX(0.3)  + sen_sim_cost * nn.as_floatX(0.5)
 
 
         # collect parameters
