@@ -15,6 +15,6 @@
 "rho": 0.95,
 "epsilon": 1e-6,
 "norm_lim": 9,
-"max_iteration": 30,
+"max_iteration": 20,
 "k_portion": 0.2
 }

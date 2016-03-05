@@ -80,8 +80,8 @@ class GICF(object):
         train_flags = theano.shared(value=np.asarray(train_flags, dtype=theano.config.floatX), borrow=True)
         test_flags = theano.shared(value=np.asarray(test_flags, dtype=theano.config.floatX), borrow=True)
         
-        train_k_value = construct_dynamic_k(train_flags)
-        test_k_value = construct_dynamic_k(test_flags)
+        train_k_value = construct_dynamic_k(train_flags, k_portion)
+        test_k_value = construct_dynamic_k(test_flags, k_portion)
         
         train_k = theano.shared(value=np.asarray(train_k_value, dtype=theano.config.floatX), borrow=True)
         test_k = theano.shared(value=np.asarray(test_k_value, dtype=theano.config.floatX), borrow=True)
@@ -266,7 +266,6 @@ class GICF(object):
         test_func = theano.function([index], doc_preds,
                 givens={
                     x:test_x[index*batch_size:(index+1)*batch_size],
-                    sen_flags: test_flags[index*batch_size:(index+1)*batch_size],
                     sen_k: test_k[index*batch_size:(index+1)*batch_size]
                     })
 
