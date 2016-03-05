@@ -72,16 +72,18 @@ class GICF(object):
         norm_lim = self.options["norm_lim"]
         max_iteration = self.options["max_iteration"]
         k_portion = self.options["k_portion"]
+        num_maps_sentence = self.options["num_maps_sentence"]
+        sentence_window = self.options["sentence_window"]
 
         sentence_len = len(dataset[0][0][0][0])
 
         # compute the sentence flags
         train_flags, test_flags = construct_sentence_flag(dataset)
-        train_flags = theano.shared(value=np.asarray(train_flags, dtype=theano.config.floatX), borrow=True)
-        test_flags = theano.shared(value=np.asarray(test_flags, dtype=theano.config.floatX), borrow=True)
-        
         train_k_value = construct_dynamic_k(train_flags, k_portion)
         test_k_value = construct_dynamic_k(test_flags, k_portion)
+        
+        train_flags = theano.shared(value=np.asarray(train_flags, dtype=theano.config.floatX), borrow=True)
+        test_flags = theano.shared(value=np.asarray(test_flags, dtype=theano.config.floatX), borrow=True)
         
         train_k = theano.shared(value=np.asarray(train_k_value, dtype=theano.config.floatX), borrow=True)
         test_k = theano.shared(value=np.asarray(test_k_value, dtype=theano.config.floatX), borrow=True)
