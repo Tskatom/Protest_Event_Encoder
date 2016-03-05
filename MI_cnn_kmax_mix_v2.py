@@ -262,7 +262,7 @@ class GICF(object):
         # compute the number of positive instance
         positive_count = T.sum((drop_sent_prob * sen_flags) > 0.5, axis=1)
         pos_cost = T.maximum(nn.as_floatX(0.0),
-                             positive_count - T.sum(sen_k, ax=1))
+                             positive_count - T.sum(sen_k, axis=1))
         neg_cost = T.maximum(nn.as_floatX(0.0), positive_count)
         penal_cost = T.mean(pos_cost * y + neg_cost * (nn.as_floatX(1.0) - y))
 
@@ -278,7 +278,7 @@ class GICF(object):
             (x.shape[0]*x.shape[1], 1)) - drop_sent_prob.flatten()
         sen_sim_prob = sen_sim_prob ** 2
         
-        pos_sen_flags = sen_flags * y
+        pos_sen_flags = sen_flags * y.dimshuffle(0,'x')
         sen_sim_flag = T.dot(
             pos_sen_flags.reshape((x.shape[0] * x.shape[1], 1)),
             pos_sen_flags.reshape((1, x.shape[0] * x.shape[1])))
