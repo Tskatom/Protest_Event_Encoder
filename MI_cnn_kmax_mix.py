@@ -167,7 +167,7 @@ class GICF(object):
             input_shape=None,
             filter_shape=sent_filter_shape,
             pool_size=sent_pool_size,
-            ctivation=Tanh,
+            activation=Tanh,
             k=k_max_sentence)
 
         sent_conv = nn.ConvPoolLayer(
@@ -246,7 +246,7 @@ class GICF(object):
             T.maximum(0.0, nn.as_floatX(.5) -
                       T.sgn(drop_sent_prob.reshape(
                           (x.shape[0]*x.shape[1], n_out)) -
-                          nn.as_floatX(0.6)) * T.dot(dropout_sent_vec, sen_W)) *
+                          nn.as_floatX(0.6)) * T.dot(con_dropout_sent_vec, sen_W)) *
             sen_flags.reshape(
                 (x.shape[0]*x.shape[1], n_out))) / T.sum(sen_flags)
 
@@ -263,8 +263,8 @@ class GICF(object):
         penal_cost = T.mean(pos_cost * y + neg_cost * (nn.as_floatX(1.0) - y))
 
         # add the sentence similarity constrains
-        sen_sen = T.dot(dropout_sent_vec, dropout_sent_vec.T)
-        sen_sqr = T.sum(dropout_sent_vec ** 2, axis=1)
+        sen_sen = T.dot(con_dropout_sent_vec, con_dropout_sent_vec.T)
+        sen_sqr = T.sum(con_dropout_sent_vec ** 2, axis=1)
         sen_sqr_left = sen_sqr.dimshuffle(0, 'x')
         sen_sqr_right = sen_sqr.dimshuffle('x', 0)
         sen_sim_matrix = sen_sqr_left - 2 * sen_sen + sen_sqr_right
