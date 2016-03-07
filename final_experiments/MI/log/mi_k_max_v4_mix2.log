@@ -1,0 +1,8 @@
+Get best performance at 1 iteration 0.791083 
+Iteration 1, neg precision 0.912850, pos precision 0.394761, neg recall 0.830765 pos recall 0.581891 , neg f1 0.869876, pos f1 0.470398, total_cost 0.131240 bag_cost 0.217469 sent_cost 0.003795 penal_cost 0.000000
+Uing time 13.764696 m
+Uing time 13.764724 m
+Get best performance at 2 iteration 0.779618 
+Iteration 2, neg precision 0.961453, pos precision 0.407120, neg recall 0.768628 pos recall 0.837550 , neg f1 0.854295, pos f1 0.547909, total_cost 0.478858 bag_cost 0.174966 sent_cost 0.007617 penal_cost 0.531935
+Uing time 13.768238 m
+Uing time 13.768266 m
