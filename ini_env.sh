@@ -7,7 +7,7 @@ mkdir -p /home/ubuntu/workspace/ssd/data
 scp tskatom@embers4.cs.vt.edu:/home/tskatom/workspace/word2vec/100d_vectors_w2v.txt ${ssd}/data
 
 # download new label data
-scp -r tskatom@embers4.cs.vt.edu:/home/tskatom/workspace/Protest_Event_Encoder/data/new_multi_label ./data
+scp -r tskatom@embers4.cs.vt.edu:/home/tskatom/workspace/Protest_Event_Encoder/data/balanced_set ./data
 
 
 # install ipython
