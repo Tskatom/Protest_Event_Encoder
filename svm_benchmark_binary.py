@@ -32,27 +32,22 @@ def parse_args():
 
 
 def run(folder):
-    train_protest_file = os.path.join(folder, "spanish_protest_train.txt.tok")
-    train_non_protest_file = os.path.join(folder, "spanish_nonprotest_train.txt.tok")
+    train_file = os.path.join(folder, "event_train.txt.tok")
+    test_file = os.path.join(folder, "event_test.txt.tok")
 
-    test_protest_file = os.path.join(folder, "spanish_protest_test.txt.tok")
-    test_non_protest_file = os.path.join(folder, "spanish_nonprotest_test.txt.tok")
+    train_label_file = os.path.join(folder, "event_train.event_cat")
+    test_label_file = os.path.join(folder, "event_test.event_cat")
 
-    train_protest_doc = [' '.join(json.loads(doc)) for doc in open(train_protest_file)]
-    train_non_protest_doc = [' '.join(json.loads(doc)) for doc in open(train_non_protest_file)]
-    
-    test_protest_doc = [' '.join(json.loads(doc)) for doc in open(test_protest_file)]
-    test_non_protest_doc = [' '.join(json.loads(doc)) for doc in open(test_non_protest_file)]
+    train_doc = [' '.join(json.loads(doc)) for doc in open(train_file)]
+    test_doc = [' '.join(json.loads(doc)) for doc in open(test_file)]
 
     tfidf_vec = TfidfVectorizer()
-    train_event_x = tfidf_vec.fit_transform(train_protest_doc + train_non_protest_doc)
-    train_event_y = [1] * len(train_protest_doc) + [0] * len(train_non_protest_doc)
+    train_event_x = tfidf_vec.fit_transform(train_doc)
+    train_event_y = [1 if l.strip()=="protest" else 0 for l in open(train_label_file)]
 
-    test_event_x = tfidf_vec.transform(test_protest_doc + test_non_protest_doc)
-    test_event_y = [1] * len(test_protest_doc) + [0] * len(test_non_protest_doc)
+    test_event_x = tfidf_vec.transform(test_doc)
+    test_event_y = [1 if l.strip()=="protest" else 0 for l in open(test_label_file)]
 
-    test_protest_x = tfidf_vec.transform(test_protest_doc)
-    test_non_protest_x = tfidf_vec.transform(test_non_protest_doc)
 
     # construct event detection classifier
     event_classifier = svm.LinearSVC()
