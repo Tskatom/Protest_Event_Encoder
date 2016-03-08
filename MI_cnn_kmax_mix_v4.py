@@ -286,9 +286,9 @@ class GICF(object):
             sen_sim_matrix * sen_sim_prob * sen_sim_flag) / T.sum(sen_sim_flag)
 
         # bag level cost
-        drop_bag_cost = T.mean(-y * T.log(drop_doc_prob) * nn.as_floatX(0.6) -
+        drop_bag_cost = T.mean(-y * T.log(drop_doc_prob) * nn.as_floatX(0.5) -
                                (1 - y) *
-                               T.log(1 - drop_doc_prob) * nn.as_floatX(0.4))
+                               T.log(1 - drop_doc_prob) * nn.as_floatX(0.5))
         drop_cost = drop_bag_cost * nn.as_floatX(0.6) + \
             drop_sent_cost * nn.as_floatX(0.2) + \
             penal_cost * nn.as_floatX(0.7) + \

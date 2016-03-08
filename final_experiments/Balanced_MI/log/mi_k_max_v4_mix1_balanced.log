@@ -1,0 +1,26 @@
+Get best performance at 1 iteration 0.462420 
+Iteration 1, neg precision 0.991053, pos precision 0.226589, neg recall 0.363728 pos recall 0.982690 , neg f1 0.532151, pos f1 0.368263, total_cost 0.337103 bag_cost 0.296505 sent_cost 0.007847 penal_cost 0.225186
+Uing time 20.753270 m
+Uing time 20.753304 m
+Get best performance at 2 iteration 0.902760 
+Iteration 2, neg precision 0.948042, pos precision 0.682441, neg recall 0.935590 pos recall 0.729694 , neg f1 0.941775, pos f1 0.705277, total_cost 3.690532 bag_cost 0.151593 sent_cost 0.021507 penal_cost 5.136107
+Uing time 20.770822 m
+Uing time 20.770856 m
+Get best performance at 3 iteration 0.891507 
+Iteration 3, neg precision 0.972588, pos precision 0.612994, neg recall 0.896186 pos recall 0.866844 , neg f1 0.932825, pos f1 0.718147, total_cost 4.622283 bag_cost 0.105087 sent_cost 0.014573 penal_cost 6.509024
+Uing time 20.764247 m
+Uing time 20.764280 m
+Get best performance at 4 iteration 0.908917 
+Iteration 4, neg precision 0.960836, pos precision 0.682955, neg recall 0.929528 pos recall 0.800266 , neg f1 0.944922, pos f1 0.736971, total_cost 4.793301 bag_cost 0.089933 sent_cost 0.012366 penal_cost 6.766955
+Uing time 20.759294 m
+Uing time 20.759326 m
+Get best performance at 5 iteration 0.918259 
+Iteration 5, neg precision 0.953784, pos precision 0.737047, neg recall 0.948724 pos recall 0.757656 , neg f1 0.951247, pos f1 0.747209, total_cost 4.875121 bag_cost 0.080892 sent_cost 0.011100 penal_cost 6.891952
+Uing time 20.752698 m
+Uing time 20.752730 m
+Iteration 6, neg precision 0.967434, pos precision 0.673098, neg recall 0.922960 pos recall 0.836218 , neg f1 0.944674, pos f1 0.745843, total_cost 4.983866 bag_cost 0.074853 sent_cost 0.009692 penal_cost 7.052880
+Uing time 10.863777 m
+Uing time 10.863809 m
+Iteration 7, neg precision 0.957892, pos precision 0.700834, neg recall 0.936600 pos recall 0.782956 , neg f1 0.947126, pos f1 0.739623, total_cost 5.057806 bag_cost 0.069126 sent_cost 0.008985 penal_cost 7.163620
+Uing time 10.868902 m
+Uing time 10.868933 m
