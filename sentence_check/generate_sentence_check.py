@@ -29,7 +29,13 @@ def choose_first_sentence(docs):
     sent_k = generate_k_num(docs)
     out_docs = []
     for i, doc in enumerate(docs):
-        out_docs.append(doc[:sent_k[i]])
+        if sent_k[i] == 1:
+            out_docs.append([doc[0]])
+        elif sent_k[i] == 2:
+            out_docs.append([doc[0], doc[-1]])
+        else:
+            out_docs.append([doc[0], doc[1], doc[-1]])
+
     return out_docs
 
 def protest_key_sentence(docs, keyword_file):
