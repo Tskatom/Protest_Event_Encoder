@@ -27,6 +27,7 @@ from scipy.sparse import issparse, vstack as parse_vstack
 import random
 import math
 import json
+from sklearn.metrics import precision_recall_fscore_support
 
 def sigmoid(x):
   return 1. / (1. + math.exp(-x))
@@ -141,12 +142,12 @@ class GICF:
         """
 
         lambd = 0.05; beta = 1.0;
-        iteration = 2000 
+        iteration = 10001
         x_dimension = 150
         w = np.random.rand(x_dimension)
         for t in range(iteration):
             eta = 1./ ((t + 1) * lambd)#lambd#
-            kset = random.sample(range(0, len(train_X) - 1), 3)
+            kset = random.sample(range(0, len(train_X) - 1), 5)
 
             X = [train_X[k] for k in kset]
             Y = [train_Y[k] for k in kset]
@@ -172,10 +173,8 @@ class GICF:
                         pred_testY.append(1)
                     else:
                         pred_testY.append(0)
-                print pred_testY
-                print test_Y
                 test_score = sklearn.metrics.f1_score(test_Y, pred_testY)
-
+                test_precision, test_recall, test_f1, test_support = precision_recall_fscore_support(test_Y, pred_testY, pos_label=1)
                 pred_trainY = []
                 for idx, tx in enumerate(train_X):
                     p_ij_list = []
@@ -190,9 +189,10 @@ class GICF:
                 # print pred_trainY
                 # print train_Y
                 train_score = sklearn.metrics.f1_score(train_Y, pred_trainY)
-                print "Test f1-score: {}".format(test_score)
-                print "Train f1-score: {}".format(train_score)
-        return self, test_score, train_score
+                train_precision, train_recall, train_f1, train_support = precision_recall_fscore_support(train_Y, pred_trainY, pos_label=1)
+                print "Test f1-score: {}".format(test_score), test_precision, test_recall
+                print "Train f1-score: {}".format(train_score), train_precision, train_recall
+        return self, [test_score, test_precision[1], test_recall[1]], [train_score, train_precision[1], train_recall[1]]
 
 
 def compute_similarity_mat(dataX, idmap_f, k_matf):
@@ -268,10 +268,10 @@ def main(args):
     train_set, test_set = dataset
     train_x, train_y = train_set
     test_x, test_y = test_set
-    with open("group2ind_result_%d.txt" % args.fold, 'w') as writer:
+    with open("group2ind_v3_result_%d.txt" % args.fold, 'w') as writer:
         model = GICF()
         model, perf1, perf2 = model.SGD(train_x, train_y, test_x, test_y)
-        writer.write("F1-Test:%f \t F1-Train: %f\n" % (perf1, perf2))
+        writer.write("F1-Test:%s \t F1-Train: %s\n" % (json.dumps(perf1), json.dumps(perf2)))
 
 if __name__ == "__main__":
     import argparse

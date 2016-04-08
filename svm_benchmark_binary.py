@@ -37,7 +37,13 @@ def run(folder):
 
     train_label_file = os.path.join(folder, "event_train.event_cat")
     test_label_file = os.path.join(folder, "event_test.event_cat")
-
+    
+    for i, doc in enumerate(open(train_file)):
+        try:
+            ' '.join(json.loads(doc))
+        except:
+            print i, doc
+            sys.exit()
     train_doc = [' '.join(json.loads(doc)) for doc in open(train_file)]
     test_doc = [' '.join(json.loads(doc)) for doc in open(test_file)]
 

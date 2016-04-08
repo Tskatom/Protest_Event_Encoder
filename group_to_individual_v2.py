@@ -27,6 +27,7 @@ from scipy.sparse import issparse, vstack as parse_vstack
 import random
 import math
 import json
+from sklearn.metrics import precision_recall_fscore_support
 
 def sigmoid(x):
   return 1. / (1. + math.exp(-x))
@@ -141,26 +142,30 @@ class GICF:
         """
 
         lambd = 0.05; beta = 1.0;
-        iteration = 2000 
+        iteration = 50
         x_dimension = 150
         w = np.random.rand(x_dimension)
+        batch_size = 10
+        n_train_batches = len(train_x) / batch_size
+        train_indexs = range(len(train_X))
         for t in range(iteration):
-            eta = 1./ ((t + 1) * lambd)#lambd#
-            kset = random.sample(range(0, len(train_X) - 1), 3)
+            for bid, mini_batch_index in enumerate(np.random.permutation(range(n_train_batches))):
+                kset = train_indexs[mini_batch_index*batch_size:(mini_batch_index+1)*batch_size]
+                eta = 1./ ((t*bid + 1) * lambd)#lambd#
 
-            X = [train_X[k] for k in kset]
-            Y = [train_Y[k] for k in kset]
-            delta_w = grad_func(X, Y, w)
-            # print check_grad(X, Y, w)
-            new_w = w - eta * delta_w
+                X = [train_X[k] for k in kset]
+                Y = [train_Y[k] for k in kset]
+                delta_w = grad_func(X, Y, w)
+                # print check_grad(X, Y, w)
+                new_w = w - eta * delta_w
 
-            rate = (1./np.sqrt(lambd)) * (1./la.norm(new_w))
-            if  rate < 1.:
-                w = np.dot(rate, new_w)
-            else:
-                w = new_w
+                rate = (1./np.sqrt(lambd)) * (1./la.norm(new_w))
+                if  rate < 1.:
+                    w = np.dot(rate, new_w)
+                else:
+                    w = new_w
 
-            if (t % 500) == 0:
+            if (t % 5) == 0:
                 pred_testY = []
                 for idx, testx in enumerate(test_X):
                     p_ij_list = []
@@ -172,10 +177,11 @@ class GICF:
                         pred_testY.append(1)
                     else:
                         pred_testY.append(0)
-                print pred_testY
-                print test_Y
+                #print pred_testY
+                #print test_Y
                 test_score = sklearn.metrics.f1_score(test_Y, pred_testY)
-
+                precision, recall, beta, support = precision_recall_fscore_support(test_Y, pred_testY, pos_label=1)
+                print "---Test ", precision, recall, beta, support
                 pred_trainY = []
                 for idx, tx in enumerate(train_X):
                     p_ij_list = []
@@ -190,6 +196,8 @@ class GICF:
                 # print pred_trainY
                 # print train_Y
                 train_score = sklearn.metrics.f1_score(train_Y, pred_trainY)
+                precision, recall, beta, support = precision_recall_fscore_support(train_Y, pred_trainY, pos_label=1)
+                print "Train: ", precision, recall, beta, support
                 print "Test f1-score: {}".format(test_score)
                 print "Train f1-score: {}".format(train_score)
         return self, test_score, train_score
